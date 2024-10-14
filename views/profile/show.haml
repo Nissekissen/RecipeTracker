@@ -1,0 +1,6 @@
+%h2.page-title= "#{@profile.name}'s profile"
+
+%p= "Epost: #{@profile.email}"
+
+- if @is_owner
+  %a{ href: "/auth/signout" } Sign out

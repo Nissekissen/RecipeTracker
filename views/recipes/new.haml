@@ -1,0 +1,8 @@
+%h2.page-title Nytt Recept
+
+%form#addForm{:method => 'post', :action => '/recipes'}
+    .recipe-input
+        %label{:for => "url"} URL
+        %input#name{:name => 'url', :placeholder => 'Recipe URL'}
+    %input.addrecipe-btn.btn-primary{:type => 'submit'}
+    

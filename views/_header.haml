@@ -1,0 +1,10 @@
+-# views/_header.haml
+%header
+  %a.logo{ href: "/" } RecipeTracker
+  %nav
+    %a{ href: "/" } Home
+    %a{ href: "/recipes" } Recipes
+    - if @user != nil
+      %a{ href: "/profile/#{@user.id}" }= "Signed in as #{@user.name}"
+    - else
+      %a{ href: "/auth/signin" } Sign in

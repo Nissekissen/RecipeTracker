@@ -1,0 +1,31 @@
+task :seed do 
+    require "bundler"
+    Bundler.require
+    require_relative 'db/seeder'
+    Seeder.seed!
+end
+
+task :migrate do
+    require "bundler"
+    Bundler.require
+    require_relative 'db/migrator'
+    Migrator.migrate!
+end
+
+task :dev do
+    sh 'bundle exec rerun --ignore "*.{erb,js,css}" --force-polling "rackup --host 0.0.0.0"'
+end
+
+task :run do
+    #todo
+end
+
+task :test do
+    #todo
+end
+
+#sudo rake kill med lösenordet wsp
+#todo testa på windowsdator
+task :kill do
+    sh 'killall ruby && killall rack && killall rerun'
+end

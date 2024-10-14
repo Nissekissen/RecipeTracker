@@ -1,0 +1,13 @@
+%html
+  %head
+    %title My site
+    %link{ :rel => "stylesheet", :href => "/styles.css?#{Time.now}" }
+    %link{ rel: "preconnect", href: "https://fonts.googleapis.com" }
+    %link{ rel: "preconnect", href: "https://fonts.gstatic.com", crossorigin: true }
+    %link{ :rel => "stylesheet", :href => "https://fonts.googleapis.com/css2?family=PT+Sans:ital,wght@0,400;0,700;1,400;1,700&display=swap" }
+    %meta{ :name => "viewport", :content => "width=device-width, initial-scale=1.0"}
+  %body
+    != haml :_header
+    %main
+      != yield
+    != haml :_footer
