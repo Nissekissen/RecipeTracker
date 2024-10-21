@@ -31,62 +31,36 @@ class MyApp < Sinatra::Application
     end
 
     get '/google/callback' do
-      user_id = session['user_id']
-      user_id = 'default' if user_id.nil?
-      credentials, redirect_uri = settings.authorizer.handle_auth_callback(user_id, request)
+      credentials, redirect_uri = handle_auth_callback(request)
 
-      if credentials.nil?
-        redirect redirect_uri
+      access_token = credentials.access_token
+      refresh_token = credentials.refresh_token
+      expires_at = credentials.expires_at
+      id_token = credentials.id_token
+
+      payload = verify_and_decode_id_token(id_token)
+
+      user_id = payload['sub']
+
+      db_user = User.find(db, user_id)
+
+      if db_user.nil?
+        # create a new user
+        
+        user_info = Google::Apis::Oauth2V2::Oauth2Service.new.get_userinfo_v2(fields: 'email,name', options: {authorization: credentials})
+
+        db_user = User.create(db, user_id, user_info.name, user_info.email)
       end
 
-      # check if the user exists in the database
-      user = User.find(db, user_id)
-
-      if user.nil?
-        # get the user info
-        user_info = get_user_info(user_id)
-
-        if !User.find(db, user_info[:id]).nil?
-          p "User already exists with id: #{user_info[:id]}"
-
-          session['user_id'] = user_info[:id]
-
-          redirect '/'
-        end
-
-        p user_info
-
-        # create the user
-        user = User.create(db, user_info[:id], user_info[:name], user_info[:email])
-
-        p "User created with id: #{user_info[:id]}"
-
-      end
       
-      
-      redirect '/'
     end
 
     get '/signin' do
-      @client_id = settings.client_id.id
-      @login_uri = "/auth/google/callback"
-
-      # check if the user is already signed in
-      if is_signed_in?
-        redirect '/'
-      else
-        haml :'auth/signin'
-      end
+      haml :'auth/signin'
     end
 
     get '/signout' do
-      # clear storage
-      settings.authorizer.clear_credentials(session['user_id'])
 
-      # clear session
-      session['user_id'] = nil
-
-      redirect '/'
     end
   end
 end
