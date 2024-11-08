@@ -7,6 +7,7 @@ Sequel.migration do
       String :title, null: false
       String :description, null: false
       String :image_url
+      String :site_name
       String :url, null: false
       Integer :created_at, null: false
     end

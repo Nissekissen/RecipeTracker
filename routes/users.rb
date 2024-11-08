@@ -11,7 +11,9 @@ class MyApp < Sinatra::Application
       @is_owner = true
     end
 
-    @saved_recipes = Recipe.join(:saved_recipes, recipe_id: :id).where(user_id: @profile.id).all
+    @saved_recipes = Recipe.join(:saved_recipes, recipe_id: :id).select(Sequel[:recipes][:id], :title, :description, :image_url, :url).where(user_id: @profile.id).all
+
+    p Recipe.join(:saved_recipes, recipe_id: :id).select(:"recipe.id", :title, :description, :image_url, :url).where(user_id: @profile.id).sql
 
     p @saved_recipes
 

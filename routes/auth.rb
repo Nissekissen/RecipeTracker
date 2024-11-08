@@ -12,15 +12,15 @@ class MyApp < Sinatra::Application
   namespace '/auth' do
 
     get '/google' do
-      _session = Session[session['token']]
+      db_session = Session[session['token']]
 
 
-      if _session.nil?
+      if db_session.nil?
         redirect settings.authorizer.get_authorization_url(request: request)
       end
 
-      if !UserSession.is_valid?(db, _session.token)
-        redirect settings.authorizer.get_authorization_url(login_hint: _session.user_id, request: request)
+      if !valid_session_token(db_session.token)
+        redirect settings.authorizer.get_authorization_url(login_hint: db_session.user_id, request: request)
       end
 
       if params[:redirect] != nil
@@ -40,24 +40,18 @@ class MyApp < Sinatra::Application
 
       payload = verify_and_decode_id_token(id_token)
 
-      p payload
-
       user_id = payload['sub']
       email = payload['email']
 
       db_user = User.where(email: email).first
-
       if db_user.nil?
         # create a new user
-        
         user_info = Google::Apis::Oauth2V2::Oauth2Service.new.get_userinfo_v2(options: {authorization: credentials})
         db_user = User.create(name: user_info.name, email: user_info.email, avatar_url: user_info.picture)
       end
 
-      _session = Session.where(user_id: db_user.id).first
-
-      if !_session.nil?
-        Session.where(user_id: db_user.id).delete
+      if (db_session = Session.find(user_id: db_user.id))
+        db_session.delete
       end
 
       # create new session
@@ -77,8 +71,8 @@ class MyApp < Sinatra::Application
     get '/signout' do
       # delete the session
       session_id = session['token']
-      if session_id && (session = Session.find(id: session_id))
-        session.delete
+      if session_id && (db_session = Session.find(id: session_id))
+        db_session.delete
         session['token'] = nil
       end
 

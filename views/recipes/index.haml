@@ -1,4 +1,4 @@
 %h2.page-title Recept
 .recipe-list
     - @recipes.each do |recipe|
-        != haml :_recipe_brief, locals: { recipe: recipe }
+        != haml :"recipes/_brief", locals: { recipe: recipe }

@@ -1,0 +1,9 @@
+.recipe-brief
+    %a{ :href => recipe.url, :target => "_blank" }
+        %img.recipe-img{ :src => recipe.image_url }
+    %div.recipe-brief-content
+        %div
+            %h3.recipe-title= recipe.title
+            %p.recipe-desc= shorten_description(recipe.description, 100)
+        .recipe-brief-btn-wrapper
+            %img.recipe-brief-btn{ :src => "/bookmark.svg", :alt => "Save", :width => "24px", :data => { :name => "bookmark", :clicked => 'false', :recipe_id => recipe.id } }

@@ -5,8 +5,9 @@
 ## TODO:
 
 - [ ] Recept
-  - [ ] Visa en kort variant av receptet
-  - [ ] Sequel-modell
+  - [x] Visa en kort variant av receptet
+  - [x] Sequel-modell
+  - [x] Spara recept
   - [ ] Ingredienser
     - [ ] Egen tabell
 - [ ] Sök
@@ -16,6 +17,7 @@
 - [ ] Användare
   - [x] Inlogg med Google
   - [ ] Profilsida
+    - [x] Prototyp
 - [ ] Taggar
   - [ ] Automatiska recepttaggar
 - [ ] Grupper

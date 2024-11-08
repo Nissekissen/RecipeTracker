@@ -18,21 +18,23 @@ module OGParser
     title = nil
     image = nil
     description = nil
+    site = nil
 
     metatags.each do |tag|
-      if tag['name'] == 'og:title' || tag['property'] == 'og:title'
-        title = tag['content']
-      end
-
-      if tag['name'] == 'og:image' || tag['property'] == 'og:image'
-        image = tag['content']
-      end
-
-      if tag['name'] == 'og:description' || tag['property'] == 'og:description'
-        description = tag['content']
-      end
+      title = get_property(tag, 'og:title') unless get_property(tag, 'og:title').nil?
+      image = get_property(tag, 'og:image') unless get_property(tag, 'og:image').nil?
+      description = get_property(tag, 'og:description') unless get_property(tag, 'og:description').nil?
+      site = get_property(tag, 'og:site_name') unless get_property(tag, 'og:site_name').nil?
     end
 
     return title, image, description
+  end
+
+  def get_property(tag, name)
+    if tag['name'] == name || tag['property'] == name
+      return tag['content']
+    end
+
+    return nil
   end
 end
