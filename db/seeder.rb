@@ -14,6 +14,8 @@ class Seeder
 
   def self.drop_tables
     db.execute('DROP TABLE IF EXISTS recipes')
+    db.execute('DROP TABLE IF EXISTS users')
+    db.execute('DROP TABLE IF EXISTS sessions')
   end
 
   def self.create_tables
@@ -22,12 +24,19 @@ class Seeder
                 name TEXT,
                 image_url TEXT,
                 url TEXT,
-                created_by TEXT FOREIGN KEY,
-                timestamp DATETIME DEFAULT CURRENT_TIMESTAMP)')
+                timestamp DATETIME DEFAULT CURRENT_TIMESTAMP
+                )')
     db.execute('CREATE TABLE IF NOT EXISTS users (
                 id TEXT PRIMARY KEY,
                 name TEXT,
-                email TEXT)')
+                email TEXT,
+                avatar_url TEXT)')
+    db.execute('CREATE TABLE IF NOT EXISTS sessions (
+                session_id INTEGER PRIMARY KEY,
+                user_id TEXT,
+                token TEXT,
+                expires_at INTEGER
+                )')
   end
 
   def self.populate_tables

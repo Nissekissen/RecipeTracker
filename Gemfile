@@ -11,3 +11,8 @@ gem 'ogpr'
 gem 'googleauth'
 gem 'google-api-client', '~> 0.53.0'
 gem 'redis', ">= 4.0", "< 6"
+gem 'puma'
+gem 'falcon'
+gem 'thin'
+gem 'webrick'
+gem 'sequel'

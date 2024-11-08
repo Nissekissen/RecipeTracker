@@ -7,8 +7,8 @@ class MyApp < Sinatra::Application
   end
 
   get '/recipes/:id' do | id |
-    @recipe = Recipe.find(db, id)
-    if !@recipe
+    @recipe = Recipe[id]
+    if @recipe.nil?
       halt 404, 'Recipe not found'
     end
 
@@ -24,17 +24,14 @@ class MyApp < Sinatra::Application
     end
 
     # get the title and image from the url
-    title, image = get_title_and_image(params['url'])
+    title, image, description = get_opengraph_data(params['url'])
 
-    if !title || !image
-      halt 400, 'url does not contain og:title and og:image'
+    if !title || !image || !description
+      halt 400, 'url does not contain og:title, og:image and og:description'
     end
 
     # create a new recipe
-    @recipe = Recipe.new(title, image, params['url'])
-
-    # save the recipe
-    @recipe.save(db)
+    Recipe.create(title: title, image_url: image, url: params['url'], description: description, created_at: Time.now.to_i)
 
     # redirect to recipes
     redirect "/recipes"
@@ -42,12 +39,13 @@ class MyApp < Sinatra::Application
   end
 
   get '/recipes' do
-    @recipes = Recipe.all(db)
+    @recipes = Recipe.all
     haml :'recipes/index'
   end
 
   get '/recipes/:id/delete' do | id |
-    Recipe.find(db, id).delete(db)
+    recipe = Recipe.where(id: id).first
+    recipe.delete
     redirect '/recipes'
   end
 

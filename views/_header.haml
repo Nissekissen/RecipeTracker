@@ -1,10 +1,15 @@
 -# views/_header.haml
 %header
-  %a.logo{ href: "/" } RecipeTracker
+  %a.logo{ href: "/" } ReceptBasen
   %nav
     %a{ href: "/" } Home
     %a{ href: "/recipes" } Recipes
+  .header-profile-wrapper
     - if @user != nil
-      %a{ href: "/profile/#{@user.id}" }= "Signed in as #{@user.name}"
+      %a.btn.btn-secondary.new-recipe#dumbass{ :href => "/recipes/new" }
+        = "Nytt Recept"
+        %img.svg{ :src => "/plus.svg", :width => "18", :height => "18"}
+      != haml :"profile/_brief"
     - else
-      %a{ href: "/auth/signin" } Sign in
+      %a.btn.btn-secondary{ href: "/auth/google" } Logga in
+  

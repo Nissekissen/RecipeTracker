@@ -1,3 +1,6 @@
+require 'sequel'
+require 'sequel/extensions/migration'
+
 task :seed do 
     require "bundler"
     Bundler.require
@@ -8,8 +11,16 @@ end
 task :migrate do
     require "bundler"
     Bundler.require
-    require_relative 'db/migrator'
-    Migrator.migrate!
+    
+end
+
+namespace :db do
+    desc "Run migrations"
+    task :migrate do
+        DB = Sequel.sqlite('db/development.sqlite3')
+        Sequel::Migrator.run(DB, 'migrations')
+        puts 'Migrations are up to date.'
+    end
 end
 
 task :dev do

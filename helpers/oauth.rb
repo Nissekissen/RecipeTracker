@@ -30,9 +30,32 @@ module OAuth
     
   end
 
-  def generate_new_session user_id
+  def generate_session_token user_id
 
     # generate token
-    token = JWT.encode({ user_id: user_id}, settings.secret, 'HS256')
+    token = JWT.encode({ user_id: user_id}, settings.client_id.secret, 'HS256')
   end
+
+  def is_valid_session_token? token, user_id
+
+    secret = Google::Auth::ClientId.from_file('client_secret.json').secret
+
+    begin
+      decoded_token = JWT.decode(token, settings.client_id.secret, true, { algorithm: 'HS256' })
+    rescue JWT::DecodeError
+      return false
+    end
+
+    return true
+  end
+
+  def valid_session_token? token
+    _session = Session.find(token: token)
+    return false if _session.nil?
+    return false if _session.expires_at < Time.now.to_i
+    return false if !is_valid_session_token?(token, _session.user_id)
+
+    true
+  end
+  
 end

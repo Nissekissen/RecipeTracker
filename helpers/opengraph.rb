@@ -2,7 +2,7 @@ require 'rest-client'
 require 'nokogiri'
 
 module OGParser
-  def get_title_and_image(url)
+  def get_opengraph_data(url)
     response = RestClient::Request.execute(
       {
         method: :get,
@@ -17,6 +17,7 @@ module OGParser
     
     title = nil
     image = nil
+    description = nil
 
     metatags.each do |tag|
       if tag['name'] == 'og:title' || tag['property'] == 'og:title'
@@ -26,8 +27,12 @@ module OGParser
       if tag['name'] == 'og:image' || tag['property'] == 'og:image'
         image = tag['content']
       end
+
+      if tag['name'] == 'og:description' || tag['property'] == 'og:description'
+        description = tag['content']
+      end
     end
 
-    return title, image
+    return title, image, description
   end
 end

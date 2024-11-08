@@ -4,6 +4,7 @@ require 'google/apis/oauth2_v2'
 require 'googleauth'
 require 'googleauth/id_tokens'
 require 'sinatra/namespace'
+require 'sequel'
 
 class MyApp < Sinatra::Application
 
@@ -11,16 +12,15 @@ class MyApp < Sinatra::Application
   namespace '/auth' do
 
     get '/google' do
-      user_id = session['user_id']
-      client_id = settings.client_id.id
+      _session = Session[session['token']]
 
-      if user_id.nil?
+
+      if _session.nil?
         redirect settings.authorizer.get_authorization_url(request: request)
       end
 
-      credentials = settings.authorizer.get_credentials(user_id, request)
-      if credentials.nil?
-        redirect settings.authorizer.get_authorization_url(login_hint: user_id, request: request)
+      if !UserSession.is_valid?(db, _session.token)
+        redirect settings.authorizer.get_authorization_url(login_hint: _session.user_id, request: request)
       end
 
       if params[:redirect] != nil
@@ -40,19 +40,34 @@ class MyApp < Sinatra::Application
 
       payload = verify_and_decode_id_token(id_token)
 
-      user_id = payload['sub']
+      p payload
 
-      db_user = User.find(db, user_id)
+      user_id = payload['sub']
+      email = payload['email']
+
+      db_user = User.where(email: email).first
 
       if db_user.nil?
         # create a new user
         
-        user_info = Google::Apis::Oauth2V2::Oauth2Service.new.get_userinfo_v2(fields: 'email,name', options: {authorization: credentials})
-
-        db_user = User.create(db, user_id, user_info.name, user_info.email)
+        user_info = Google::Apis::Oauth2V2::Oauth2Service.new.get_userinfo_v2(options: {authorization: credentials})
+        db_user = User.create(name: user_info.name, email: user_info.email, avatar_url: user_info.picture)
       end
 
-      
+      _session = Session.where(user_id: db_user.id).first
+
+      if !_session.nil?
+        Session.where(user_id: db_user.id).delete
+      end
+
+      # create new session
+      session_token = generate_session_token(db_user.id)
+
+      Session.create(user_id: db_user.id, token: session_token, expires_at: expires_at.to_i)
+
+      session['token'] = session_token
+
+      redirect '/'
     end
 
     get '/signin' do
@@ -60,7 +75,14 @@ class MyApp < Sinatra::Application
     end
 
     get '/signout' do
+      # delete the session
+      session_id = session['token']
+      if session_id && (session = Session.find(id: session_id))
+        session.delete
+        session['token'] = nil
+      end
 
+      redirect '/'
     end
   end
 end

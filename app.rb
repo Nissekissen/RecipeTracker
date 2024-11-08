@@ -3,6 +3,7 @@ require 'sinatra'
 require 'haml'
 require 'googleauth'
 require 'googleauth/stores/file_token_store'
+require 'sequel'
 
 # Haml::Template.options[:hyphenate_data_attrs] = false
 
@@ -20,6 +21,7 @@ class MyApp < Sinatra::Application
       
       set :haml, { :hyphenate_data_attrs => false }
 
+      DB = Sequel.sqlite('db/development.sqlite3')
     end
 
     def db
@@ -32,6 +34,6 @@ class MyApp < Sinatra::Application
     end
 end
 
-require_relative 'models/init'
 require_relative 'helpers/init'
+require_relative 'models/init'
 require_relative 'routes/init'

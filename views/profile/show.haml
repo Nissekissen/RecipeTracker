@@ -4,3 +4,10 @@
 
 - if @is_owner
   %a{ href: "/auth/signout" } Sign out
+
+
+%h3.page-title Sparade recept
+
+.recipe-list
+  - @saved_recipes.each do | recipe |
+    != haml :_recipe_brief, locals: { recipe: recipe }

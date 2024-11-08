@@ -1,0 +1,5 @@
+%a.profile-brief{ :href => "/profile/#{@user.id}" }
+    %img.avatar{ :src => @user.avatar_url }
+    %p
+        = @user.name
+        %img.arrow{ :src => "/arrow_down.svg"}
