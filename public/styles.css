@@ -3,7 +3,7 @@
     --background-2: #eeeeee;
     --background-3: #dddddd;
 
-    --color-primary: #5cff85;
+    --color-primary: #FFA726;
 
     --size-title: 3rem;
     --size-subtitle: 2rem;
@@ -90,6 +90,9 @@ header nav a:hover {
     color: black;
 }
 
+
+
+
 .profile-brief img.avatar {
     width: 32px;
     height: 32px;
@@ -106,6 +109,33 @@ header nav a:hover {
     display: flex;
     align-items: center;
     gap: 0.3rem;
+}
+
+.profile-brief-dropdown {
+    position: absolute;
+    display: none;
+    flex-direction: column;
+    top: 100%;
+    right: 0;
+}
+
+.profile-brief:hover > .profile-brief-dropdown {
+    display: flex;
+}
+
+.profile-brief-dropdown a {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+    text-decoration: none;
+    color: black;
+    background: white;
+    padding: 0.5rem 2rem 0.5rem 1rem;
+}
+
+.profile-brief-dropdown a:hover {
+    background: var(--background-3);
 }
 
 header .btn {
@@ -314,35 +344,42 @@ body:has(.intro-backdrop) footer {
 
 .search-wrapper {
     --bar-height: 60px;
-	--bar-width: 500px;
+	--bar-width: 550px;
 	--icon-size: 32px;
+    --border-radius: 10px;
 	width: var(--bar-width);
 	height: var(--bar-height);
 	display: flex;
 	--icon-offset: calc(var(--bar-height) / 2 - var(--icon-size) / 2);
+    align-items: center;
+    gap: 5px;
 }
 
 .search-wrapper input {
     width: 100%;
     height: 100%;
     border: 1px solid #ccc;
-    border-radius: 10px;
+    /* border-radius: 10px; */
+    border-radius: var(--border-radius) 0 0 var(--border-radius);
     padding: 0 calc(var(--icon-offset) * 4.5) 0 20px;
 	font-size: 1rem;
 }
 
 .search-icon {
-    width: var(--icon-size);
-	height: var(--icon-size);
+    height: var(--bar-height);
+    aspect-ratio: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
 	/* position: relative; */
 	/* top: var(--icon-offset);
     right: calc(var(--icon-offset) * 3); */
-	transform: translate(
-		calc(var(--icon-offset) * -3.5),
-		calc(var(--icon-offset))
-	);
 	color: var(--primary-color);
     cursor: pointer;
+    
+    background: var(--color-primary);
+    border-radius: 0 var(--border-radius) var(--border-radius) 0;
+    /* border: 1px solid #555; */
 }
 
 main {
@@ -464,6 +501,11 @@ main {
     display: flex;
     gap: 1rem;
     align-items: center;
+}
+
+.recipe-brief-site {
+    font-size: var(--size-text-small);
+    color: #333;
 }
 
 .recipe-brief-btn {

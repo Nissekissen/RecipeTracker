@@ -15,3 +15,4 @@ Thumbs.db
 client_secret.json
 
 tokens.yaml
+.env

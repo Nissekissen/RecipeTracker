@@ -1,5 +1,22 @@
-%a.profile-brief{ :href => "/profile/#{@user.id}" }
+.profile-brief
     %img.avatar{ :src => @user.avatar_url }
     %p
         = @user.name
         %img.arrow{ :src => "/arrow_down.svg"}
+    .profile-brief-dropdown
+        %a{ :href => "/profile/#{@user.id}" }
+            Min profil
+            %img{ :src => "/user.svg", :alt => "Profil", :width => "32px" }
+        %a{ :href => "/profile/#{@user.id}/bookmarks" }
+            Sparade recept
+            %img{ :src => "/recipe.svg", :alt => "Recept", :width => "32px" }
+        %a{ :href => "/profile/#{@user.id}/groups" }
+            Mina grupper
+            %img{ :src => "/group.svg", :alt => "Grupper", :width => "32px" }
+        %a{ :href => "/profile/#{@user.id}/settings" }
+            Inställningar
+            %img{ :src => "/settings.svg", :alt => "Inställningar", :width => "32px" }
+        %a{ :href => "/logout" }
+            Logga ut
+            %img{ :src => "/logout.svg", :alt => "Logga ut", :width => "32px" }
+    

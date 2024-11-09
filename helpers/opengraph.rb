@@ -1,5 +1,6 @@
 require 'rest-client'
 require 'nokogiri'
+require 'dotenv/load'
 
 module OGParser
   def get_opengraph_data(url)
@@ -27,7 +28,7 @@ module OGParser
       site = get_property(tag, 'og:site_name') unless get_property(tag, 'og:site_name').nil?
     end
 
-    return title, image, description
+    return title, image, description, site
   end
 
   def get_property(tag, name)
@@ -36,5 +37,19 @@ module OGParser
     end
 
     return nil
+  end
+
+  def get_ingredients(url)
+    response = RestClient::Request.execute(
+      {
+        method: :get,
+        url: 'https://api.spoonacular.com/recipes/extract?url=' + url + '&apiKey=' + ENV['SPOONACULAR_TOKEN'],
+        timeout: 5
+      }
+    )
+
+
+    return JSON.parse(response.body)['extendedIngredients'].map { |ingredient| ingredient['original']}
+
   end
 end
