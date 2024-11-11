@@ -8,12 +8,6 @@ task :seed do
     Seeder.seed!
 end
 
-task :migrate do
-    require "bundler"
-    Bundler.require
-    
-end
-
 namespace :db do
     desc "Run migrations"
     task :migrate do

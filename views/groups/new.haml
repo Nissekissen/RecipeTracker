@@ -1,0 +1,10 @@
+%h2.page-title New Group
+
+%form{ :method => "post", :action => "/groups/" }
+    %label{ :for => "name" } Name
+    %input{ :type => "text", :name => "name", :id => "name" }
+    %label{ :for => "description" } Description
+    %textarea{ :name => "description", :id => "description" }
+    %input{ :type => "hidden", :name => "is_private", :id => "is_private", :value => 'false' }
+    %input{ :type => "submit", :value => "Create" }
+    %a{ :href => "/groups" } Cancel

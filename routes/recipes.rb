@@ -90,8 +90,8 @@ class MyApp < Sinatra::Application
     title, image, description, site = get_opengraph_data(params['url'])
 
 
-    if !title || !image || !description
-      halt 400, 'url does not contain og:title, og:image and og:description'
+    if title.nil? || image.nil? || description.nil?
+      halt 400
     end
 
     # create a new recipe
@@ -100,7 +100,6 @@ class MyApp < Sinatra::Application
     get_ingredients(params['url']).each do |ingredient|
       Ingredient.create(name: ingredient, recipe_id: Recipe.where(url: params['url']).first.id)
     end
-
 
     # Save the recipe for the user
 

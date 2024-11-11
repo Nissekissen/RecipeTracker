@@ -1,0 +1,6 @@
+%h2.page-title= "#{@group.name} members"
+
+%ul
+    - @members.each do | member |
+        %li
+            %a{ :href => "/profile/#{member.id}"}= member.name

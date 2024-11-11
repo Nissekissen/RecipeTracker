@@ -1,13 +1,11 @@
-%h2.page-title= "#{@profile.name}'s profile"
-
-%p= "Epost: #{@profile.email}"
-
-- if @is_owner
-  %a{ href: "/auth/signout" } Sign out
-
-
-%h3.page-title Sparade recept
-
-.recipe-list
-  - @saved_recipes.each do | recipe |
-    != haml :"recipes/_brief", locals: { recipe: recipe }
+.profile
+    != haml :"profile/_profile_intro", :locals => { :profile => @profile }
+    .profile-content
+        .profile-content-nav
+            %a{ :href => "/profile/#{@profile.id}?tab=bookmarks", :class => "profile-content-nav-item #{'active' if @tab == 'bookmarks'}" } Saved Recipes
+            %a{ :href => "/profile/#{@profile.id}?tab=groups", :class => "profile-content-nav-item #{'active' if @tab == 'groups'}" } Groups
+        .profile-content-body
+            - if @tab == 'bookmarks'
+                != haml :"profile/_bookmarks", :locals => { :profile => @profile, :bookmarks => @bookmarks }
+            - elsif @tab == 'groups'
+                != haml :"profile/_groups", :locals => { :profile => @profile, :groups => @groups }

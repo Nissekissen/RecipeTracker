@@ -11,12 +11,23 @@ class MyApp < Sinatra::Application
       @is_owner = true
     end
 
-    @saved_recipes = Recipe.join(:saved_recipes, recipe_id: :id).select(Sequel[:recipes][:id], :title, :description, :image_url, :url).where(user_id: @profile.id).all
+    @tab = params["tab"] || "bookmarks"
 
-    p Recipe.join(:saved_recipes, recipe_id: :id).select(:"recipe.id", :title, :description, :image_url, :url).where(user_id: @profile.id).sql
+    if @tab == "bookmarks"
+      @bookmarks = Recipe.join(:saved_recipes, recipe_id: :id).select(Sequel[:recipes][:id], :title, :description, :image_url, :url).where(user_id: @profile.id).all
+    elsif @tab == "groups"
+      @groups = @profile.groups
+    end
 
-    p @saved_recipes
 
     haml :'profile/show'
+  end
+
+  get '/profile/:id/bookmarks' do | id |
+    redirect "/profile/#{id}?tab=bookmarks"
+  end
+
+  get '/profile/:id/groups' do | id |
+    redirect "/profile/#{id}?tab=groups"
   end
 end

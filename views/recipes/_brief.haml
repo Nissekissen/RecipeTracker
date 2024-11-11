@@ -7,4 +7,6 @@
             %p.recipe-desc= shorten_description(recipe.description, 100)
         .recipe-brief-btn-wrapper
             %p.recipe-brief-site= recipe.site_name
-            %img.recipe-brief-btn{ :src => "/bookmark.svg", :alt => "Save", :width => "24px", :data => { :name => "bookmark", :clicked => 'false', :recipe_id => recipe.id } }
+            %div
+                %img.recipe-brief-btn{ :src => "/bookmark.svg", :alt => "Save", :width => "24px", :data => { :name => "bookmark", :clicked => 'false', :recipe_id => recipe.id } }
+                %img.recipe-brief-btn{ :src => "/dots.svg", :alt => "More", :width => "24px", :data => { :name => "more", :recipe_id => recipe.id } }

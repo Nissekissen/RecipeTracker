@@ -499,7 +499,7 @@ main {
 
 .recipe-brief-btn-wrapper {
     display: flex;
-    gap: 1rem;
+    justify-content: space-between;
     align-items: center;
 }
 
@@ -632,7 +632,54 @@ form#addForm {
     cursor: pointer;
 }
 
-/* .btn-primary:hover {
-    background: #2a8f00;
-    cursor: pointer;
-} */
+.profile-intro {
+    display: flex;
+    gap: 1rem;
+    align-items: center;
+    margin: 1rem 0;
+    justify-content: center;
+    padding: 2rem 0;
+}
+
+.profile-img {
+    width: 100px;
+    height: 100px;
+    border-radius: 100%;
+    object-fit: cover;
+}
+
+.profile-name {
+    font-size: var(--size-text-large);
+}
+
+.profile-content {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    width: 80vw;
+    margin: 0 auto;
+}
+
+.profile-content-nav {
+    display: flex;
+    gap: 5rem;
+    justify-content: space-evenly;
+}
+
+.profile-content-nav a {
+    text-decoration: none;
+    color: #333;
+    font-size: var(--size-text-medium);
+}
+
+.profile-content-nav a.active {
+    text-decoration: underline;
+}
+
+.profile-content-body {
+    padding: 2rem 0;
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    align-items: center;
+}
