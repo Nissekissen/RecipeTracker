@@ -6,6 +6,7 @@ Sequel.migration do
       String :name, null: false
       String :description, null: false
       Boolean :is_private, null: false, default: false
+      String :image_url
     end
   end
 end

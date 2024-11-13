@@ -1,0 +1,11 @@
+- content_for :head do
+    %title Receptbasen - Skapa gruppinbjudan
+    %meta{ :property => "og:title", :content => "Receptbasen - Skapa gruppinbjudan" }
+    %meta{ :property => "og:description", :content => "Skapa en gruppinbjudan till Receptbasen" }
+
+%h2.page-title Skapa inbjudan
+
+%form{ :method => "post", :action => "/invites" }
+    %input{ :type => "number", :name => "uses", :placeholder => "Antal användningar", :required => "true" }
+    %input{ :type => "hidden", :name => "group_id", :value => params[:group_id]}
+    %input{ :type => "submit", :value => "Skapa inbjudan" }

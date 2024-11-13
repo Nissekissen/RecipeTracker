@@ -1,10 +1,10 @@
 
 require 'sinatra'
+require 'sinatra/content_for'
 require 'haml'
 require 'googleauth'
 require 'googleauth/stores/file_token_store'
 require 'sequel'
-
 # Haml::Template.options[:hyphenate_data_attrs] = false
 
 class MyApp < Sinatra::Application

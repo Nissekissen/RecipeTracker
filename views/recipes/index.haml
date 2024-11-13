@@ -1,3 +1,9 @@
+- content_for :head do
+    %title Receptbasen
+    %meta{property: "og:title", content: "Receptbasen"}
+    %meta{property: "og:type", content: "website"}
+    %meta{property: "og:url", content: "https://receptbasen.se"}
+
 %h2.page-title Recept
 .recipe-list
     - @recipes.each do |recipe|

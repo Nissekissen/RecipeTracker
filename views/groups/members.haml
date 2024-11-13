@@ -1,4 +1,12 @@
+- content_for :head do
+    %title= "Receptbasen - #{@group.name} medlemmar"
+    %meta{ :property => "og:title", :content => "Receptbasen - #{@group.name} medlemmar" }
+    %meta{ :property => "og:type", :content => "website" }
+    %meta{ :property => "og:url", :content => "https://receptbasen.se/groups/#{@group.name}/members" }
+
 %h2.page-title= "#{@group.name} members"
+
+%a{ :href => "/groups/#{@group.id}"} Visa grupp
 
 %ul
     - @members.each do | member |

@@ -1,3 +1,9 @@
+- content_for :head do
+    %title Receptbasen - Grupper
+    %meta{ :property => "og:title", :content => "Receptbasen - Grupper" }
+    %meta{ :property => "og:type", :content => "website" }
+    %meta{ :property => "og:url", :content => "https://receptbasen.se/groups/" }
+
 %h2.page-title Groups
 %ul
     - @groups.each do | group |

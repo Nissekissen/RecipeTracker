@@ -1,0 +1,9 @@
+- content_for :head do
+    %title Receptbasen - Inbjudan till grupp
+    %meta{ :property => "og:title", :content => "Receptbasen - Inbjudan till grupp" }
+
+%h2.page-title Inbjudan till grupp
+
+%p= "Grupp: #{@group.name}"
+
+%a{ :href => "/invite/#{@invite.token}/accept"} Gå med i gruppen

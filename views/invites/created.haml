@@ -1,0 +1,8 @@
+- content_for :head do
+    %title Receptbasen - Inbjudan skapad
+    %meta{ :property => "og:title", :content => "Receptbasen - Inbjudan skapad" }
+    %meta{ :property => "og:description", :content => "Inbjudan skapad till Receptbasen" }
+
+%h2.page-title Inbjudan skapad
+
+%p= "Länk: http://localhost:9292/invite/#{@invite.token}"

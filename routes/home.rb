@@ -1,3 +1,4 @@
+require 'sinatra/content_for'
 
 class MyApp < Sinatra::Application
   enable :sessions

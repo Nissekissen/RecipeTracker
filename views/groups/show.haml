@@ -1,2 +1,19 @@
+- content_for :head do
+    %title= "Receptbasen - #{@group.name}"
+    %meta{ :property => "og:title", :content => "Receptbasen - #{@group.name}" }
+    %meta{ :property => "og:type", :content => "website" }
+    %meta{ :property => "og:url", :content => "https://receptbasen.se/groups/#{@group.name}" }
+
 %h2.page-title= @group.name
 %div.group-description= @group.description
+
+%a{ :href => "/groups/#{@group.id}/members"} Visa medlemmar
+
+
+- if @is_member
+    %form{ :method => "post", :action => "/groups/#{@group.id}/leave"}
+        %input{ :type => "submit", :value => "Lämna" }
+- else
+    %form{ :method => "post", :action => "/groups/#{@group.id}/join"}
+        %input{ :type => "submit", :value => "Gå med" }
+

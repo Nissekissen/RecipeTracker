@@ -1,10 +1,17 @@
-%h2.page-title New Group
+- content_for :head do
+    %title Receptbasen - Ny grupp
+    %meta{ :property => "og:title", :content => "Receptbasen - Ny grupp" }
+    %meta{ :property => "og:type", :content => "website" }
+    %meta{ :property => "og:url", :content => "https://receptbasen.se/groups/new" }
 
-%form{ :method => "post", :action => "/groups/" }
+%h2.page-title Ny grupp
+
+%form{ :method => "post", :action => "/groups/", :enctype => "multipart/form-data" }
     %label{ :for => "name" } Name
     %input{ :type => "text", :name => "name", :id => "name" }
     %label{ :for => "description" } Description
     %textarea{ :name => "description", :id => "description" }
     %input{ :type => "hidden", :name => "is_private", :id => "is_private", :value => 'false' }
+    %input{ :type => "text", :id => "image", :name => "image" }
     %input{ :type => "submit", :value => "Create" }
     %a{ :href => "/groups" } Cancel

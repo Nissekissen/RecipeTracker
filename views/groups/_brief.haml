@@ -1,1 +1,8 @@
-%a.group-brief-name{ :href => "/groups/#{group.id}"}= group.name
+.group-brief
+    %img{ :src => group.image_url }
+    .group-brief-content
+        %p.group-name= group.name
+        %p.group-btn-row
+            %a.group-btn.btn-primary{ :href => "/groups/#{group.id}"} Visa
+            %a.group-btn.btn-primary{ :href => "/groups/#{group.id}/join"} Gå med
+    
