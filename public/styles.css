@@ -747,3 +747,27 @@ form#addForm {
     display: flex;
     gap: 1rem;
 }
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+    /* border: 1px solid black; */
+}
+
+th {
+    background: var(--background-3);
+    padding: 0.5rem;
+    text-align: left;
+}
+
+tr {
+    border-bottom: 1px solid var(--background-3);
+}
+
+tr:nth-child(even) {
+    background: var(--background-2);
+}
+
+td {
+    padding: 0.5rem;
+}

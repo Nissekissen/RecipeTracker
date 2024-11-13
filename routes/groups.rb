@@ -11,8 +11,16 @@ class MyApp < Sinatra::Application
     get '/:id' do | id |
       # get group info
       @group = Group.where(id: id).first
+
+      
       if @group.nil?
         halt 404, 'Group not found'
+      end
+      
+      if @group.is_private
+        if @user.nil? || !@user.groups.include?(@group)
+          halt 401, 'You must be logged in to view this group'
+        end
       end
 
       @is_member = @user.nil? ? false : @user.groups.include?(@group)
@@ -23,10 +31,18 @@ class MyApp < Sinatra::Application
     get '/:id/members' do | id |
       # get group members
       @group = Group.where(id: id).first
+      
+      
       if @group.nil?
         halt 404, 'Group not found'
       end
-
+      
+      if @group.is_private
+        if @user.nil? || !@user.groups.include?(@group)
+          halt 401, 'You must be logged in to view this group'
+        end
+      end
+      
       @members = @group.users
       haml :'groups/members'
     end
@@ -77,6 +93,22 @@ class MyApp < Sinatra::Application
       redirect "/groups/#{group.id}"
     end
 
+    get '/:id/invites' do | id |
+      # get group invites
+      @group = Group.where(id: id).first
+
+      if @group.nil?
+        halt 404, 'Group not found'
+      end
+
+      if @user.nil? || !@user.groups.include?(@group)
+        halt 401, 'You must be logged in to view this group'
+      end
+
+      @invites = @group.invites
+      haml :'groups/invites'
+    end
+
     
 
     get '/' do 
@@ -98,7 +130,7 @@ class MyApp < Sinatra::Application
       # get group info from request
       name = params[:name]
       description = params[:description]
-      is_private = params[:is_private] == 'true'
+      is_private = params[:is_private] == 'on'
       image_url = params[:image]
 
       if name.nil? || description.nil? || is_private.nil?

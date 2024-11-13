@@ -9,6 +9,9 @@
 
 %a{ :href => "/groups/#{@group.id}/members"} Visa medlemmar
 
+%a{ :href => "/invites/new?group_id=#{@group.id}"} Bjud in medlemmar
+
+%a{ :href => "/groups/#{@group.id}/invites"} Visa inbjudningslänkar
 
 - if @is_member
     %form{ :method => "post", :action => "/groups/#{@group.id}/leave"}

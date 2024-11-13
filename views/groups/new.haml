@@ -9,9 +9,15 @@
 %form{ :method => "post", :action => "/groups/", :enctype => "multipart/form-data" }
     %label{ :for => "name" } Name
     %input{ :type => "text", :name => "name", :id => "name" }
+    %br
     %label{ :for => "description" } Description
     %textarea{ :name => "description", :id => "description" }
-    %input{ :type => "hidden", :name => "is_private", :id => "is_private", :value => 'false' }
+    %br
+    %label{ :for => "is_private"} Privat grupp
+    %input{ :type => "checkbox", :name => "is_private", :id => "is_private" }
+    %br
+    %label{ :for => "image" } Image URL
     %input{ :type => "text", :id => "image", :name => "image" }
+    %br
     %input{ :type => "submit", :value => "Create" }
     %a{ :href => "/groups" } Cancel
