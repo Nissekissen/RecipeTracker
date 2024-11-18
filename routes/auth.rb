@@ -8,11 +8,19 @@ require 'sequel'
 
 class MyApp < Sinatra::Application
 
+  before do
+    
+    user_session = Session.find(token: cookies[:session])
+    if !session.nil? && valid_session_token?(cookies[:session])
+      @user = User.find(id: user_session.user_id)
+    end
+  end
+
 
   namespace '/auth' do
 
     get '/google' do
-      db_session = Session[session['token']]
+      db_session = Session[cookies[:session]]
 
 
       if db_session.nil?
@@ -59,7 +67,7 @@ class MyApp < Sinatra::Application
 
       Session.create(user_id: db_user.id, token: session_token, expires_at: expires_at.to_i)
 
-      session['token'] = session_token
+      cookies[:session] = session_token
 
       redirect '/'
     end
@@ -70,13 +78,16 @@ class MyApp < Sinatra::Application
 
     get '/signout' do
       # delete the session
-      session_id = session['token']
-      if session_id && (db_session = Session.find(id: session_id))
-        db_session.delete
-        session['token'] = nil
+      session_token = cookies[:session]
+      cookies.delete(:session)
+      if !session_token.nil?
+        Session.find(token: session_token).delete
       end
-
       redirect '/'
     end
+  end
+
+  get '/logout' do
+    redirect '/auth/signout'
   end
 end

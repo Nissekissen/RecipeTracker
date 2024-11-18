@@ -1,17 +1,8 @@
 require 'sinatra/content_for'
+require 'sinatra/cookies'
 
 class MyApp < Sinatra::Application
-  enable :sessions
-
-  before do
-    # check if the user is signed in
-    # p session['token']
-
-    _session = Session.find(token: session['token'])
-    if !_session.nil? && valid_session_token?(session['token'])
-      @user = User.find(id: _session.user_id)
-    end
-  end
+  # enable :sessions
 
   get '/' do
     haml :home
