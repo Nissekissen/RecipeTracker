@@ -26,8 +26,12 @@ class MyApp < Sinatra::Application
       @is_member = @user.nil? ? false : @user.groups.include?(@group)
 
       @tab = params["tab"] || "recipes"
-
-      @recipes = @group.recipes
+      
+      @recipes = Recipe
+        .join(:group_recipes, recipe_id: :id)
+        .select(Sequel[:recipes][:id], :title, :description, :image_url, :url)
+        .where(group_id: @group.id)
+        .all
       @members = @group.users
       @invites = @group.invites
 
