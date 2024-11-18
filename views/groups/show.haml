@@ -4,19 +4,11 @@
     %meta{ :property => "og:type", :content => "website" }
     %meta{ :property => "og:url", :content => "https://receptbasen.se/groups/#{@group.name}" }
 
-%h2.page-title= @group.name
-%div.group-description= @group.description
-
-%a{ :href => "/groups/#{@group.id}/members"} Visa medlemmar
-
-%a{ :href => "/invites/new?group_id=#{@group.id}"} Bjud in medlemmar
-
-%a{ :href => "/groups/#{@group.id}/invites"} Visa inbjudningslänkar
-
-- if @is_member
-    %form{ :method => "post", :action => "/groups/#{@group.id}/leave"}
-        %input{ :type => "submit", :value => "Lämna" }
-- else
-    %form{ :method => "post", :action => "/groups/#{@group.id}/join"}
-        %input{ :type => "submit", :value => "Gå med" }
-
+.group
+    != haml :"groups/_group_intro", :locals => { :group => @group }
+    .group-content
+        .group-content-nav
+            %a{ :href => "/groups/#{@group.id}?tab=recipes", :class => "group-content-nav-item #{'active' if @tab == 'recipes'}" } Saved Recipes
+            %a{ :href => "/groups/#{@group.id}?tab=members", :class => "profile-content-nav-item #{'active' if @tab == 'members'}" } Medlemmar
+            %a{ :href => "/groups/#{@group.id}?tab=invites", :class => "profile-content-nav-item #{'active' if @tab == 'invites'}" } Inbjudningslänkar
+        

@@ -25,7 +25,50 @@ class MyApp < Sinatra::Application
 
       @is_member = @user.nil? ? false : @user.groups.include?(@group)
 
+      @tab = params["tab"] || "recipes"
+
+      @recipes = @group.recipes
+      @members = @group.users
+      @invites = @group.invites
+
       haml :'groups/show'
+    end
+
+    post '/:id/recipes' do | id |
+      # make sure user is logged in and is a member of the group
+      if @user.nil?
+        halt 401, 'You must be logged in to add a recipe to a group'
+      end
+
+      group = Group.where(id: id).first
+
+      if group.nil?
+        halt 404, 'Group not found'
+      end
+
+      if !@user.groups.include?(group)
+        halt 401, 'You must be a member of the group to add a recipe'
+      end
+
+      # get recipe info from request
+      recipe_id = params[:recipe_id]
+
+      if recipe_id.nil?
+        halt 400, 'Missing required parameters'
+      end
+
+      # get recipe
+      recipe = Recipe.where(id: recipe_id).first
+
+      if recipe.nil?
+        halt 404, 'Recipe not found'
+      end
+
+      # add recipe to group
+      GroupRecipe.create(group_id: group.id, recipe_id: recipe.id, user_id: @user.id)
+
+      redirect "/groups/#{group.id}"
+
     end
 
     get '/:id/members' do | id |

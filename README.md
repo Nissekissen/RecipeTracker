@@ -8,15 +8,16 @@
   - [x] Visa en kort variant av receptet
   - [x] Sequel-modell
   - [x] Spara recept
-  - [ ] Ingredienser
-    - [ ] Egen tabell
+    - [ ] Collections
+  - [x] Ingredienser
+    - [x] Egen tabell
 - [ ] Sök
   - [ ] Sök bland recept m.h.a taggar och ingredienser
   - [ ] Filter
   - [ ] 
 - [ ] Användare
   - [x] Inlogg med Google
-  - [ ] Profilsida
+  - [x] Profilsida
     - [x] Prototyp
 - [ ] Taggar
   - [ ] Automatiska recepttaggar
@@ -24,8 +25,10 @@
   - [ ] Gruppsida
   - [ ] Visa grupprecept
   - [ ] Visa gruppmedlemmar
-  - [ ] Bjuda in medlemmar
-  - [ ] publika eller privata
+  - [x] Bjuda in medlemmar
+  - [x] publika eller privata
+  - [ ] Grupprecept
+    - [ ] Gruppcollections
 - [ ] Kategorier
   - [ ] Filtrera bland kategorier
   - [ ] Inte helt säker om jag ska ersätta kategorier helt med taggar

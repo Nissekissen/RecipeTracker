@@ -9,16 +9,16 @@
         %thead
             %tr
                 %th Länk
-                %th Skapad
                 %th Går ut
                 %th Användningar kvar
+                %th Skapad av
         %tbody
             - @invites.each do |invite|
                 %tr
                     %td= "https://localhost:9292/invite/#{invite.token}"
-                    %td= invite.created_at
                     %td= invite.expires_at
                     %td= invite.uses_left
+                    %td= invite.user.name
 
 %form{ :method => "get", :action => "/invites/new" }
     %input{ :type => "hidden", :name => "group_id", :value => @group.id }
