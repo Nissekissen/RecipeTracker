@@ -2,6 +2,10 @@ require 'json'
 
 class MyApp < Sinatra::Application
 
+  get '/recipes/not-found' do
+    haml :'recipes/not_found'
+  end
+
   get '/recipes/new' do
     haml :'recipes/new'
   end
@@ -9,7 +13,8 @@ class MyApp < Sinatra::Application
   get '/recipes/:id' do | id |
     @recipe = Recipe[id]
     if @recipe.nil?
-      halt 404, 'Recipe not found'
+      status 404
+      redirect '/recipes/not-found'
     end
 
     # redirect to the recipe url
@@ -19,12 +24,12 @@ class MyApp < Sinatra::Application
   post '/recipes/:id/bookmark' do | id |
     # make sure user is logged in
     if @user.nil?
-      halt 401, 'You must be logged in to save a recipe'
+      halt 401, { :message => 'You must be logged in to save a recipe' }.to_json
     end
 
     recipe = Recipe.where(id: id).first
     if recipe.nil?
-      halt 404, 'Recipe not found'
+      halt 404, { :message => 'Recipe not found' }.to_json
     end
 
     # check if the recipe is already saved

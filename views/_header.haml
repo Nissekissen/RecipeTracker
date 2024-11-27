@@ -11,5 +11,5 @@
         %img.svg{ :src => "/plus.svg", :width => "18", :height => "18"}
       != haml :"profile/_brief"
     - else
-      %a.btn.btn-primary{ href: "/auth/google" } Logga in
+      %a.btn.btn-primary{ href: "/auth/google?redirect=#{request.url}" } Logga in
   

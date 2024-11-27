@@ -3,14 +3,21 @@
     --background-2: #eeeeee;
     --background-3: #dddddd;
 
-    --color-primary: #FFA726;
-    --color-secondary: #fff;
+    /* --color-primary: #FF69B4;
+    --color-secondary: #fff; */
 
     --size-title: 3rem;
     --size-subtitle: 2rem;
     --size-text-large: 1.5rem;
     --size-text-medium: 1.2rem;
     --size-text-small: 1rem;
+
+    --text: #050316;
+    --background: #fbfbfe;
+    --color-primary: #ffbc47;
+    --color-secondary: #e4e2ff;
+    --color-accent: #443dff;
+
 }
 
 *, *::before, *::after {
@@ -624,8 +631,8 @@ form.brief-dropdown-item input[type="submit"]:hover {
 
 form#addForm {
     display: flex;
-    flex-direction: column;
-    width: 60vw;
+    /* flex-direction: column; */
+    width: 600px;
     margin: 0 auto;
     /* outline: 1px solid black; */
     gap: 1rem;
@@ -634,11 +641,12 @@ form#addForm {
 .recipe-input {
     display: flex;
     flex-direction: column;
+    width: 100%;
 }
 
 .recipe-input input {
     padding: 0.65rem;
-    margin: 0.5rem 0;
+    /* margin: 0.5rem 0; */
     font-size: var(--size-text-medium);
     border-radius: 5px;
     /* outline: 1px solid black; */
@@ -646,6 +654,8 @@ form#addForm {
     color: #333;
     background: var(--background-2);
 }
+
+
 
 .ingredient-list, .instruction-list {
     display: flex;
@@ -703,7 +713,7 @@ form#addForm {
     border-radius: 5px;
     border: 1px solid var(--background-3);
     color: #333;
-    background: var(--background-2);
+    background: var(--color-primary);
     width: fit-content;
 }
 
@@ -727,7 +737,7 @@ form#addForm {
 } */
 
 .addrecipe-btn:hover {
-    background: var(--background-3);
+    /* background: var(--background-3); */
     cursor: pointer;
 }
 
@@ -806,11 +816,15 @@ form#addForm {
 .group-name {
     font-size: var(--size-text-medium);
     font-weight: bold;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
 }
 
-.group-btn-row {
-    display: flex;
-    gap: 1rem;
+.group-name a {
+    /* text-decoration: none; */
+    color: #333;
+    font-weight: normal;
 }
 
 table {
@@ -835,4 +849,10 @@ tr:nth-child(even) {
 
 td {
     padding: 0.5rem;
+}
+
+.error-title {
+    font-size: var(--size-title);
+    text-align: center;
+    margin: 3rem 0;
 }

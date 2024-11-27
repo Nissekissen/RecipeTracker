@@ -8,7 +8,14 @@
     != haml :"groups/_group_intro", :locals => { :group => @group }
     .group-content
         .group-content-nav
-            %a{ :href => "/groups/#{@group.id}?tab=recipes", :class => "group-content-nav-item #{'active' if @tab == 'recipes'}" } Saved Recipes
+            %a{ :href => "/groups/#{@group.id}?tab=recipes", :class => "group-content-nav-item #{'active' if @tab == 'recipes'}" } Sparade recept
             %a{ :href => "/groups/#{@group.id}?tab=members", :class => "profile-content-nav-item #{'active' if @tab == 'members'}" } Medlemmar
             %a{ :href => "/groups/#{@group.id}?tab=invites", :class => "profile-content-nav-item #{'active' if @tab == 'invites'}" } Inbjudningslänkar
+        .group-content-body
+            - if @tab == 'recipes'
+                != haml :"groups/_recipes", :locals => { :group => @group, :recipes => @recipes }
+            - elsif @tab == 'members'
+                != haml :"groups/_members", :locals => { :group => @group, :members => @members }
+            - elsif @tab == 'invites'
+                != haml :"groups/_invites", :locals => { :group => @group, :invites => @invites }
         

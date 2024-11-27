@@ -22,6 +22,9 @@ class MyApp < Sinatra::Application
     get '/google' do
       db_session = Session[cookies[:session]]
 
+      redirect_url = params[:redirect]
+      cookies[:redirect] = redirect_url if redirect_url
+
 
       if db_session.nil?
         redirect settings.authorizer.get_authorization_url(request: request)
@@ -31,11 +34,8 @@ class MyApp < Sinatra::Application
         redirect settings.authorizer.get_authorization_url(login_hint: db_session.user_id, request: request)
       end
 
-      if params[:redirect] != nil
-        redirect params[:redirect]
-      else
-        redirect '/'
-      end
+      redirect '/' if !redirect_url.nil?
+      redirect redirect_url 
     end
 
     get '/google/callback' do
@@ -68,8 +68,18 @@ class MyApp < Sinatra::Application
       Session.create(user_id: db_user.id, token: session_token, expires_at: expires_at.to_i)
 
       cookies[:session] = session_token
+      
+      p cookies[:redirect]
 
-      redirect '/'
+      if !cookies[:redirect].nil?
+        redirect_url = cookies[:redirect]
+        
+        cookies.delete(:redirect)
+        redirect redirect_url
+      end
+
+      redirect '/'  
+        
     end
 
     get '/signin' do

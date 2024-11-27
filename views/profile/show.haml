@@ -9,7 +9,7 @@
     != haml :"profile/_profile_intro", :locals => { :profile => @profile }
     .profile-content
         .profile-content-nav
-            %a{ :href => "/profile/#{@profile.id}?tab=bookmarks", :class => "profile-content-nav-item #{'active' if @tab == 'bookmarks'}" } Saved Recipes
+            %a{ :href => "/profile/#{@profile.id}?tab=bookmarks", :class => "profile-content-nav-item #{'active' if @tab == 'bookmarks'}" } Sparade recept
             %a{ :href => "/profile/#{@profile.id}?tab=groups", :class => "profile-content-nav-item #{'active' if @tab == 'groups'}" } Groups
         .profile-content-body
             - if @tab == 'bookmarks'

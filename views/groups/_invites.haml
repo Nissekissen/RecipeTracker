@@ -1,9 +1,3 @@
-- content_for :head do
-    %title= "Receptbasen - Inbjudningslänkar"
-    %meta{ :property => "og:title", :content => "Receptbasen - Inbjudningslänkar" }
-
-%h2.page-title Inbjudningslänkar
-
 - if @invites.any?
     %table
         %thead
@@ -18,7 +12,7 @@
                     %td= "https://localhost:9292/invite/#{invite.token}"
                     %td= invite.expires_at
                     %td= invite.uses_left
-                    %td= invite.user.name
+                    %td= invite.user.nil? ? "" : invite.user.name
 
 %form{ :method => "get", :action => "/invites/new" }
     %input{ :type => "hidden", :name => "group_id", :value => @group.id }

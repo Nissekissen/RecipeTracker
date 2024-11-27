@@ -1,0 +1,6 @@
+%a{ :href => "/groups/#{@group.id}"} Visa grupp
+
+%ul
+    - @members.each do | member |
+        %li
+            %a{ :href => "/profile/#{member.id}"}= member.name
