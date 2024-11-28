@@ -3,7 +3,7 @@ Sequel.migration do
   up do
     create_table :sessions do
       primary_key :id
-      foreign_key :user_id, :users, null: false
+      foreign_key :user_id, :users, null: false, type: String
       String :token, null: false
       Integer :expires_at, null: false
     end

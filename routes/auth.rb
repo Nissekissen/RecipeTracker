@@ -12,7 +12,9 @@ class MyApp < Sinatra::Application
     
     user_session = Session.find(token: cookies[:session])
     if !session.nil? && valid_session_token?(cookies[:session])
+      p user_session
       @user = User.find(id: user_session.user_id)
+      p @user
     end
   end
 
@@ -57,6 +59,9 @@ class MyApp < Sinatra::Application
         user_info = Google::Apis::Oauth2V2::Oauth2Service.new.get_userinfo_v2(options: {authorization: credentials})
         db_user = User.create(name: user_info.name, email: user_info.email, avatar_url: user_info.picture)
       end
+
+      print "DB USER: "
+      p db_user.id
 
       if (db_session = Session.find(user_id: db_user.id))
         db_session.delete

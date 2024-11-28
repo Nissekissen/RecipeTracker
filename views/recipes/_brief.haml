@@ -1,22 +1,3 @@
-.recipe-brief
-    %a{ :href => recipe.url, :target => "_blank" }
+.recipe-brief-container
+    .recipe-brief{ :href => recipe.url, :target => "_blank" }
         %img.recipe-img{ :src => recipe.image_url }
-    %div.recipe-brief-content
-        %div
-            %h3.recipe-title= recipe.title
-            %p.recipe-desc= shorten_description(recipe.description, 80)
-        .recipe-brief-btn-wrapper
-            %p.recipe-brief-site= recipe.site_name
-            %div
-                %img.recipe-brief-btn{ :src => "/bookmark.svg", :alt => "Save", :width => "24px", :data => { :name => "bookmark", :clicked => 'false', :recipe_id => recipe.id } }
-                .recipe-brief-dropdown-btn
-                    %img.recipe-brief-btn{ :src => "/dots.svg", :alt => "More", :width => "24px", :data => { :name => "more", :recipe_id => recipe.id } }
-                    .recipe-brief-dropdown-content
-                        .brief-dropdown-item.has-dropdown
-                            = "Spara i grupp"
-                            .recipe-brief-dropdown-content
-                                - if !@user.nil? 
-                                    - @user.groups.each do |group|
-                                        %form.brief-dropdown-item{ :method => "post", :action => "/groups/#{group.id}/recipes" }
-                                            %input{ :type => "hidden", :name => "recipe_id", :value => recipe.id }
-                                            %input{ :type => "submit", :value => group.name }
