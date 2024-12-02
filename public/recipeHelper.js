@@ -1,63 +1,20 @@
-document.querySelectorAll('.recipe-brief-btn').forEach(btn => {
 
-    // Set them to clicked if they are bookmarked
-    // Get whether the recipe is bookmarked from GET /recipes/:id/bookmark
+const modal = document.getElementById('saveRecipeModal');
 
-    if (btn.dataset.name === 'bookmark') {
-        const recipeId = btn.dataset.recipe_id
-        const url = `/recipes/${recipeId}/bookmark`
+const openBtns = document.querySelectorAll('.save-recipe');
 
-        fetch(url)
-            .then(response => response.json())
-            .then(data => {
-                if (data.bookmarked) {
-                    btn.src = '/bookmark_hover.svg'
-                    btn.dataset.clicked = 'true'
-                }
-            })
-    }
+// const closeBtn = document.getElementById('closeSaveRecipeModal');
 
-    // btn.addEventListener('mouseenter', () => {
-    //     console.log('pluh')
-    //     if (btn.dataset.clicked === 'true') {
-    //         return;
-    //     }
-    //     btn.src = `/${btn.dataset.name}_hover.svg`
-    // })
+openBtns.forEach(openBtn => openBtn.addEventListener('click', () => {
+    modal.style.display = 'block';
+}))
 
-    // btn.addEventListener('mouseleave', () => {
-    //     if (btn.dataset.clicked === 'true') {
-    //         return;
-    //     }
-    //     btn.src = `/${btn.dataset.name}.svg`
-    // })
+// closeBtn.addEventListener('click', () => {
+//     modal.style.display = 'none';
+// })
 
-    if (btn.dataset.name === 'bookmark') {
-        btn.addEventListener('click', () => {
-            const recipeId = btn.dataset.recipe_id
-            const url = `/recipes/${recipeId}/bookmark`
-
-            if (btn.dataset.clicked === 'true') {
-                btn.src = '/bookmark.svg'
-                btn.dataset.clicked = 'false'
-                fetch(url, { method: 'DELETE' })
-                    .catch(err => {
-                        console.error(err)
-                        btn.src = '/bookmark_hover.svg'
-                        btn.dataset.clicked = 'true'
-                    })
-                return;
-            }
-
-            btn.src = '/bookmark_hover.svg'
-            btn.dataset.clicked = 'true'
-            fetch(url, { method: 'POST' })
-                .catch(err => {
-                    console.error(err)
-                    btn.src = '/bookmark.svg'
-                    btn.dataset.clicked = 'false'
-                    
-                })
-        })
+window.addEventListener('click', (e) => {
+    if (e.target === modal) {
+        modal.style.display = 'none';
     }
 })

@@ -1,3 +1,12 @@
 .recipe-brief-container
     .recipe-brief{ :href => recipe.url, :target => "_blank" }
         %img.recipe-img{ :src => recipe.image_url }
+    .recipe-content
+        %h3= recipe.title
+        %p= recipe.description
+        .recipe-brief-btn-wrapper
+            .recipe-brief-btn Mer info
+            .recipe-brief-btn
+                Läs hela receptet
+                %img.svg{ :src => "/arrow_right.svg" }
+            .recipe-brief-btn.save-recipe Spara
