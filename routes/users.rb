@@ -19,7 +19,6 @@ class MyApp < Sinatra::Application
       @groups = @profile.groups.filter { |group| !group.is_private || group.users.include?(@user) }
     end
 
-
     haml :'profile/show'
   end
 

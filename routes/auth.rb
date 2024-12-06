@@ -58,10 +58,11 @@ class MyApp < Sinatra::Application
         # create a new user
         user_info = Google::Apis::Oauth2V2::Oauth2Service.new.get_userinfo_v2(options: {authorization: credentials})
         db_user = User.create(name: user_info.name, email: user_info.email, avatar_url: user_info.picture)
+        
+        # create default collection
+        UserCollection.create(user_id: db_user.id, name: 'Favoriter')
       end
 
-      print "DB USER: "
-      p db_user.id
 
       if (db_session = Session.find(user_id: db_user.id))
         db_session.delete
@@ -74,7 +75,6 @@ class MyApp < Sinatra::Application
 
       cookies[:session] = session_token
       
-      p cookies[:redirect]
 
       if !cookies[:redirect].nil?
         redirect_url = cookies[:redirect]

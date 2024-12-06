@@ -15,6 +15,7 @@
     --text: #050316;
     --background: #fbfbfe;
     --color-primary: #ffbc47;
+    --color-primary-dark: #eaa42b;
     --color-secondary: #e4e2ff;
     --color-accent: #443dff;
 
@@ -567,6 +568,7 @@ main {
 
 .recipe-brief-btn-wrapper {
     display: flex;
+    gap: 1rem;
 }
 
 .recipe-brief-btn {
@@ -848,4 +850,97 @@ td {
     padding: 20px;
     border: 1px solid #888;
     width: 500px;
+    border-radius: 5px;
+}
+
+.modal-header {
+    width: 100%;
+    font-size: var(--size-text-large);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0 20px 20px 0;
+}
+
+.modal-rows {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    border-top: 1px solid #ccc;
+}
+
+.modal-row {
+    display: flex;
+    padding: 10px 20px;
+    border-bottom: 1px solid #ccc;
+    align-items: center;
+    justify-content: space-between;
+    font-size: var(--size-text-medium);
+}
+
+.modal-row .save-btn {
+    background: none;
+    border: none;
+    width: 24px;
+    height: 24px;
+    box-sizing: content-box;
+    padding: 6px;
+    border-radius: 100%;
+}
+
+.modal-row .save-btn:hover {
+    background: var(--background-3);
+    cursor: pointer;
+}
+
+.modal-btn-primary {
+    --padding-w: 12px;
+    --padding-h: 4px;
+    padding: var(--padding-h) var(--padding-w);
+    margin: 16px auto 0 auto;
+    font-size: var(--size-text-small);
+    border-radius: 5px;
+    text-decoration: none;
+    transition: padding 0.1s, margin 0.1s;
+    line-height: 1.5rem;
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    background: var(--color-primary);
+    width: fit-content;
+
+}
+
+.modal-btn-primary:hover {
+    cursor: pointer;
+    background-color: var(--color-primary-dark);
+}
+
+.modal-add-collection {
+    display: none;
+    padding: 10px;
+    align-items: center;
+    gap: 1rem;
+}
+
+.modal-add-collection.show {
+    display: flex;
+}
+
+.modal-add-collection input {
+    padding: 0.65rem;
+    font-size: var(--size-text-medium);
+    border-radius: 5px;
+    border: 1px solid var(--background-3);
+    color: #333;
+    background: var(--background-2);
+}
+
+.modal-add-collection button {
+    padding: 0.65rem;
+    font-size: var(--size-text-medium);
+    border-radius: 5px;
+    border: 1px solid var(--background-3);
+    color: #333;
+    background: var(--color-primary);
 }
