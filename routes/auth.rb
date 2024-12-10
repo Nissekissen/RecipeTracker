@@ -9,13 +9,14 @@ require 'sequel'
 class MyApp < Sinatra::Application
 
   before do
-    
     user_session = Session.find(token: cookies[:session])
     if !session.nil? && valid_session_token?(cookies[:session])
-      p user_session
       @user = User.find(id: user_session.user_id)
-      p @user
     end
+  end
+
+  error 401 do
+    redirect '/auth/google?redirect=' + request.path
   end
 
 
@@ -60,7 +61,7 @@ class MyApp < Sinatra::Application
         db_user = User.create(name: user_info.name, email: user_info.email, avatar_url: user_info.picture)
         
         # create default collection
-        UserCollection.create(user_id: db_user.id, name: 'Favoriter')
+        Collection.create(owner_id: db_user.id, name: 'Favoriter')
       end
 
 

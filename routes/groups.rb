@@ -27,11 +27,16 @@ class MyApp < Sinatra::Application
 
       @tab = params["tab"] || "recipes"
       
+      # @recipes = Recipe
+      #   .join(:group_recipes, recipe_id: :id)
+      #   .select(Sequel[:recipes][:id], :title, :description, :image_url, :url)
+      #   .where(group_id: @group.id)
+      #   .all
       @recipes = Recipe
-        .join(:group_recipes, recipe_id: :id)
+        .join(:saved_recipes, recipe_id: :id)
         .select(Sequel[:recipes][:id], :title, :description, :image_url, :url)
         .where(group_id: @group.id)
-        .all
+        .group(:recipe_id).all
       @members = @group.users
       @invites = @group.invites
 
@@ -69,7 +74,7 @@ class MyApp < Sinatra::Application
       end
 
       # add recipe to group
-      GroupRecipe.create(group_id: group.id, recipe_id: recipe.id, user_id: @user.id)
+      SavedRecipe.create(recipe_id: recipe.id, user_id: @user.id, group_id: group.id)
 
       redirect "/groups/#{group.id}"
 
@@ -186,7 +191,10 @@ class MyApp < Sinatra::Application
 
       # create new group
       group = Group.create(name: name, description: description, is_private: is_private, image_url: image_url)
-    
+      
+      # create group collection
+      group_collection = Collection.create(owner_id: @user.id, group_id: group.id, name: 'Favoriter')
+
       @user.add_group(group)
       redirect "/groups/#{group.id}"
     end

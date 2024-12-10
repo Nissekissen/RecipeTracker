@@ -155,6 +155,7 @@ header .header-search img {
     flex-direction: column;
     top: 100%;
     right: 0;
+    translate: 0 -3px;
 }
 
 .profile-brief:hover > .profile-brief-dropdown {
@@ -872,13 +873,15 @@ td {
 .modal-row {
     display: flex;
     padding: 10px 20px;
+    border: none;
+    background: white;
     border-bottom: 1px solid #ccc;
     align-items: center;
     justify-content: space-between;
     font-size: var(--size-text-medium);
 }
 
-.modal-row .save-btn {
+.modal-row .save-btn, .modal-arrow {
     background: none;
     border: none;
     width: 24px;
@@ -891,6 +894,11 @@ td {
 .modal-row .save-btn:hover {
     background: var(--background-3);
     cursor: pointer;
+}
+
+.group-row:hover {
+    cursor: pointer;
+    background: var(--background-3);
 }
 
 .modal-btn-primary {

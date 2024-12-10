@@ -50,16 +50,16 @@ class MyApp < Sinatra::Application
     end
 
     # get the user collections
-    collection = UserCollection.where(user_id: @user.id, name: "Favoriter").first
+    collection = Collection.where(owner_id: @user.id, name: "Favoriter").first
 
     if collection.nil?
-      collection = UserCollection.first(user_id: @user.id).first
+      collection = Collection.first(owner_id: @user.id).first
     end
 
     # Save the recipe for the user
 
     recipe = Recipe.where(url: params['url']).first
-    SavedRecipe.create(user_id: @user.id, recipe_id: recipe.id, created_at: Time.now.to_i, collection_id: collection.id)
+    saved_recipe = SavedRecipe.create(user_id: @user.id, recipe_id: recipe.id, created_at: Time.now.to_i, collection_id: collection.id)
 
     # redirect to recipes
     redirect "/recipes"
@@ -72,29 +72,16 @@ class MyApp < Sinatra::Application
     # get the user collections and saved recipes
     if @user.nil?
       halt haml :'recipes/index'
-      p "pluh"
     end
 
+    # user_groups = @user.groups
 
-    db_collections = UserCollection.where(user_id: @user.id)
-    @collections = []
+    # get all collections where the user is the owner or a member of the group that owns it
+    @collections = Collection.where(owner_id: @user.id).or(
+      group_id: @user.groups.map(&:id)
+    ).all
 
-    @saved_recipes = SavedRecipe.where(user_id: @user.id)
-
-
-
-    # create an array of collections with the recipes in them
-    db_collections.each do |collection|
-      @collections << {collection: collection, recipes: []}
-    end
-
-    @saved_recipes.each do |saved_recipe|
-      @collections.each do |collection|
-        if collection[:collection].id == saved_recipe.collection_id
-          collection[:recipes] << Recipe[saved_recipe.recipe_id]
-        end
-      end
-    end
+    p @collections
 
     haml :'recipes/index'
   end
@@ -128,29 +115,26 @@ class MyApp < Sinatra::Application
 
       # make sure the collection exists
 
-      collection = UserCollection[collection_id]
+      collection = Collection[collection_id]
 
       if collection.nil?
         halt 404
       end
 
-      # If the recipe is already saved in this collection, remove it completely.
-      # If the recipe is saved in another collection, update the collection_id to the new one
-      # If the recipe is not saved, save it
+      # If the saved recipe exists, delete it. Otherwise, create it
+      saved_recipe = SavedRecipe.where(recipe_id: recipe.id, user_id: @user.id, collection_id: collection.id).first
 
-      saved_recipe = SavedRecipe.where(user_id: @user.id, recipe_id: recipe.id).first
-
+      group_id = nil
       if saved_recipe.nil?
-        # recipe is not saved, save it
-        SavedRecipe.create(user_id: @user.id, recipe_id: recipe.id, collection_id: collection.id, created_at: Time.now.to_i)
-      elsif saved_recipe.collection_id == collection.id
-        # recipe is already saved in this collection, remove it
-        SavedRecipe.where(user_id: @user.id, recipe_id: recipe.id).delete
-      else
-        # recipe is saved in another collection, update the collection_id
-        SavedRecipe.where(user_id: @user.id, recipe_id: recipe.id).update(collection_id: collection.id)
-      end
+        # if the collection has a group_id, make sure the user is a member of the group
+        if !collection.group_id.nil? && !@user.groups.any? { |group| group.id == collection.group_id }
+          halt 403
+        end
 
+        saved_recipe = SavedRecipe.create(recipe_id: recipe.id, user_id: @user.id, collection_id: collection.id, created_at: Time.now.to_i, group_id: collection.group_id)
+      else
+        saved_recipe.delete
+      end
       status 200
     end
 
@@ -168,12 +152,14 @@ class MyApp < Sinatra::Application
       saved_recipes = SavedRecipe.where(user_id: @user.id, recipe_id: recipe.id)
 
       # get all collections
-      collections = UserCollection.where(user_id: @user.id)
+      collections = Collection.where(owner_id: @user.id).or(
+        group_id: @user.groups.map(&:id)
+      ).all
 
       result = collections.map do |collection|
         {
           collection_id: collection.id,
-          saved: saved_recipes.any? { |saved_recipe| saved_recipe.collection_id == collection.id }
+          saved: collection.saved_recipes.any? { |saved_recipe| saved_recipe.recipe_id == recipe.id }
         }
       end
 
@@ -181,23 +167,6 @@ class MyApp < Sinatra::Application
       body result.to_json
 
       
-    end
-
-    post '/collections' do
-
-      if @user.nil?
-        halt 401
-      end
-
-      if params['name'].nil?
-        halt 400
-      end
-
-      collection = UserCollection.create(name: params['name'], user_id: @user.id)
-
-      status 201
-      body({ :id => collection.id, :name => collection.name, :recipes => []}.to_json)
-
     end
 
   end

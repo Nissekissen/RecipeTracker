@@ -4,22 +4,7 @@
     %meta{property: "og:type", content: "website"}
     %meta{property: "og:url", content: "https://receptbasen.se"}
 
-%input#recipeId{type: "hidden", value: ""}
-#saveRecipeModal.modal
-    .save-recipe-modal-content#saveRecipeModalContent
-        - if !@collections.nil?
-            %input#collections{type: "hidden", value: @collections.map { |c| { id: c[:collection][:id], name: c[:collection][:name], recipes: c[:recipes].map {|r| { id: r[:id] }} } }.to_json }
-        - else
-            %input#collections{type: "hidden", value: ""}
-        %h3.modal-header Spara recept
-        .modal-rows
-        .modal-btn-primary#newCollectionBtn 
-            Ny samling
-            %img.svg{ :src => "/plus.svg", :width => "18", :height => "18"}
-        .modal-add-collection#newCollectionInput
-            %input#collectionName{type: "text", placeholder: "Namn"}
-            %button#addCollectionBtn 
-                %img.svg{ :src => "/plus.svg", :width => "18", :height => "18"}
+
 %h2.page-title Recept
 .recipe-list
     - @recipes.each do |recipe|

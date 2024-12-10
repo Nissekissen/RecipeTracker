@@ -5,6 +5,8 @@ class User < Sequel::Model(:users)
   one_to_many :sessions
   one_to_many :saved_recipes
   many_to_many :groups
+  one_to_many :collections
+  one_to_many :invites
 
   def before_create
     self.id ||= generate_hex_key

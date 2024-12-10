@@ -1,0 +1,24 @@
+%input#recipeId{type: "hidden", value: ""}
+#saveRecipeModal.modal
+    .save-recipe-modal-content#saveRecipeModalContent
+        - if @user.nil?
+            %h3.modal-header Logga in för att spara recept
+            %a.modal-btn-primary#loginBtn{ :href => "auth/google"} Logga in
+        - else
+            -# - if !@collections.nil?
+                -# %input#collections{type: "hidden", value: @collections.map { |c| { id: c[:collection][:id], name: c[:collection][:name], recipes: c[:recipes].map {|r| { id: r[:id] }} } }.to_json }
+            -# - else
+                -# %input#collections{type: "hidden", value: ""}
+            -# - if !@groups.nil?
+            -#     %input#groups{type: "hidden", value: @groups.to_json }
+            -# - else
+            -#     %input#groups{type: "hidden", value: ""}
+            %h3.modal-header Spara recept
+            .modal-rows
+            .modal-btn-primary#newCollectionBtn 
+                Ny samling
+                %img.svg{ :src => "/plus.svg", :width => "18", :height => "18"}
+            .modal-add-collection#newCollectionInput
+                %input#collectionName{type: "text", placeholder: "Namn"}
+                %button#addCollectionBtn 
+                    %img.svg{ :src => "/plus.svg", :width => "18", :height => "18"}

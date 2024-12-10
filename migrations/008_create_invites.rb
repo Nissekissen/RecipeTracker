@@ -5,7 +5,7 @@ Sequel.migration do
     create_table :invites do
       primary_key :id
       foreign_key :group_id, :groups, null: false
-      foreign_key :user_id, :users, type: String
+      foreign_key :owner_id, :users, type: String
       String :token, null: false
       Integer :uses_left, default: 1
       DateTime :created_at, default: Sequel::CURRENT_TIMESTAMP

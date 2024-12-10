@@ -7,4 +7,8 @@ class MyApp < Sinatra::Application
   get '/' do
     haml :home
   end
+
+  not_found do
+    haml :'errors/not_found'
+  end
 end
