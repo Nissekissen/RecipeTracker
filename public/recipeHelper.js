@@ -76,6 +76,8 @@ function saveCollectionsToLocalStorage(collections) {
 function showGroups() {
 
     document.getElementById('newCollectionBtn').style.display = 'none';
+    document.getElementById('newCollectionInput').classList.remove('show');
+
 
     const groups = getCollectionsFromLocalStorage();
 
@@ -108,6 +110,7 @@ function showGroups() {
 
 function showCollections(groupId) {
     document.getElementById('newCollectionBtn').style.display = 'flex';
+    document.getElementById('newCollectionInput').classList.remove('show');
 
     
     const groups = getCollectionsFromLocalStorage();
@@ -115,7 +118,7 @@ function showCollections(groupId) {
     if (groupId == "null") {
         groupId = groups[0].id;
     }
-    
+
     const group = groups.find(group => group.id == groupId);
 
 

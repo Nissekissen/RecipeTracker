@@ -1,0 +1,4 @@
+
+.recipe-list
+    - recipes.each do |recipe|
+        != haml :"recipes/_brief", locals: { recipe: recipe }

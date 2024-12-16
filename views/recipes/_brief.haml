@@ -1,12 +1,10 @@
-.recipe-brief-container
-    .recipe-brief{ :href => recipe.url, :target => "_blank" }
-        %img.recipe-img{ :src => recipe.image_url }
-    .recipe-content
-        %h3= recipe.title
-        %p= recipe.description
-        .recipe-brief-btn-wrapper
-            .recipe-brief-btn Mer info
-            .recipe-brief-btn
-                Läs hela receptet
-                %img.svg{ :src => "/arrow_right.svg" }
-            .recipe-brief-btn.save-recipe{ data: { recipeId: recipe.id }} Spara
+.card-container
+    .card
+        .img-wrapper
+            %img.card-image{ :src => recipe.image_url }
+        .card-content
+            .card-title= recipe.title
+            .card-time= 'N/A'
+            .card-btn-row
+                %button.card-btn.card-btn--primary{ :title => "Mer information" } Mer info
+                %button.card-btn.card-btn--primary{ :title => "Läs hela receptet" } Läs hela receptet
