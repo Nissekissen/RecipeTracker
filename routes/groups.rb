@@ -5,6 +5,9 @@ class MyApp < Sinatra::Application
   namespace '/groups' do
 
     get '/new' do 
+
+      @part = 1
+
       haml :'groups/new'
     end
 
@@ -34,11 +37,19 @@ class MyApp < Sinatra::Application
       #   .all
       @recipes = Recipe
         .join(:saved_recipes, recipe_id: :id)
-        .select(Sequel[:recipes][:id], :title, :description, :image_url, :url)
+        .select(Sequel[:recipes][:id], :title, :description, :image_url, :url, :site_name, :time, :servings, :instructions)
         .where(group_id: @group.id)
         .group(:recipe_id).all
       @members = @group.users
-      @invites = @group.invites
+
+      @member_amount = @members.length
+      @is_member = @user.nil? ? false : @user.groups.include?(@group)
+
+      @invites = @group.invites.map do | invite |
+        owner_id = invite.owner_id
+        owner = User.where(id: owner_id).first
+        { :invite => invite, :owner => owner }
+      end
 
       haml :'groups/show'
     end
@@ -120,7 +131,7 @@ class MyApp < Sinatra::Application
       redirect "/groups/#{group.id}"
     end
 
-    post '/:id/leave' do | id |
+    get '/:id/leave' do | id |
       # leave group
 
       # make sure user is logged in
@@ -145,24 +156,6 @@ class MyApp < Sinatra::Application
       redirect "/groups/#{group.id}"
     end
 
-    get '/:id/invites' do | id |
-      # get group invites
-      @group = Group.where(id: id).first
-
-      if @group.nil?
-        halt 404, 'Group not found'
-      end
-
-      if @user.nil? || !@user.groups.include?(@group)
-        halt 401, 'You must be logged in to view this group'
-      end
-
-      @invites = @group.invites
-      haml :'groups/invites'
-    end
-
-    
-
     get '/' do 
       # get all groups
       @groups = Group.all
@@ -171,33 +164,72 @@ class MyApp < Sinatra::Application
 
     post '/' do
       # create new group
-      
-      # check if user is logged in
-      if @user.nil?
-        halt 401, 'You must be logged in to create a group'
-      end
 
-      puts "Params: #{params.inspect}"
-
-      # get group info from request
-      name = params[:name]
-      description = params[:description]
-      is_private = params[:is_private] == 'on'
-      image_url = params[:image]
-
-      if name.nil? || description.nil? || is_private.nil?
+      if params[:part].nil?
         halt 400, 'Missing required parameters'
       end
 
-      # create new group
-      group = Group.create(name: name, description: description, is_private: is_private, image_url: image_url)
-      
-      # create group collection
-      group_collection = Collection.create(owner_id: @user.id, group_id: group.id, name: 'Favoriter')
+      if params[:part] == "1"
+        @name = params[:name]
+        @description = params[:description]
+        @is_private = params[:is_private] == 'on'
 
-      @user.add_group(group)
-      redirect "/groups/#{group.id}"
+        if @name.nil? || @description.nil? || @is_private.nil?
+          redirect '/groups/new'
+        end
+
+        @part = 2
+        
+        haml :'groups/new'
+      elsif params[:part] == "2"
+        name = params[:name]
+        description = params[:description]
+        is_private = params[:is_private] == 'on'
+        image_url = params[:image]
+
+        if name.nil? || description.nil? || is_private.nil?
+          redirect '/groups/new'
+        end
+
+        # create new group
+
+        @group = Group.create(name: name, description: description, is_private: is_private, image_url: image_url)
+
+        # create group collection
+        group_collection = Collection.create(owner_id: @user.id, group_id: @group.id, name: 'Favoriter')
+
+        @user.add_group(@group)
+
+        @part = 3
+
+        haml :'groups/new'
+      end
+      
+      # # check if user is logged in
+      # if @user.nil?
+      #   halt 401, 'You must be logged in to create a group'
+      # end
+
+      # # get group info from request
+      # name = params[:name]
+      # description = params[:description]
+      # is_private = params[:is_private] == 'on'
+      # image_url = params[:image]
+
+      # if name.nil? || description.nil? || is_private.nil?
+      #   halt 400, 'Missing required parameters'
+      # end
+
+      # # create new group
+      # group = Group.create(name: name, description: description, is_private: is_private, image_url: image_url)
+      
+      # # create group collection
+      # group_collection = Collection.create(owner_id: @user.id, group_id: group.id, name: 'Favoriter')
+
+      # @user.add_group(group)
+      # redirect "/groups/#{group.id}"
     end
   end
+
 
 end

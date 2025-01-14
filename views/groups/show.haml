@@ -3,19 +3,18 @@
     %meta{ :property => "og:title", :content => "Receptbasen - #{@group.name}" }
     %meta{ :property => "og:type", :content => "website" }
     %meta{ :property => "og:url", :content => "https://receptbasen.se/groups/#{@group.name}" }
+    %script{ :src => "/navHelper.js", :defer => true }
 
 .group
-    != haml :"groups/_group_intro", :locals => { :group => @group }
+    != haml :"groups/_group_header", :locals => { :group => @group, :member_amount => @member_amount, :is_member => @is_member }
+    .group-nav
+        .group-nav-content
+            #activeDisplay
+            %a{ :href => "/groups/#{@group.id}?tab=recipes", :class => "group-content-nav-item #{'active' if @tab == 'recipes'}" } Recept
+            %a{ :href => "/groups/#{@group.id}?tab=about",   :class => "group-content-nav-item #{'active' if @tab == 'about'}" } Om
     .group-content
-        .group-content-nav
-            %a{ :href => "/groups/#{@group.id}?tab=recipes", :class => "group-content-nav-item #{'active' if @tab == 'recipes'}" } Sparade recept
-            %a{ :href => "/groups/#{@group.id}?tab=members", :class => "profile-content-nav-item #{'active' if @tab == 'members'}" } Medlemmar
-            %a{ :href => "/groups/#{@group.id}?tab=invites", :class => "profile-content-nav-item #{'active' if @tab == 'invites'}" } Inbjudningslänkar
-        .group-content-body
-            - if @tab == 'recipes'
-                != haml :"groups/_recipes", :locals => { :group => @group, :recipes => @recipes }
-            - elsif @tab == 'members'
-                != haml :"groups/_members", :locals => { :group => @group, :members => @members }
-            - elsif @tab == 'invites'
-                != haml :"groups/_invites", :locals => { :group => @group, :invites => @invites }
+        - if @tab == 'recipes'
+            != haml :"groups/_recipes", :locals => { :group => @group, :recipes => @recipes }
+        - elsif @tab == 'about'
+            != haml :"groups/_about", :locals => { :group => @group, :members => @members }
         

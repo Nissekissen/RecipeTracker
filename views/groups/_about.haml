@@ -1,0 +1,7 @@
+.group-about
+    %p.group-description= @group.description
+    .group-members
+        %h3 Medlemmar
+        .group-members-list
+            - @members.each do |member|
+                != haml :'profile/_members_display', :locals => { :member => member }

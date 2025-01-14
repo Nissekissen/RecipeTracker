@@ -9,7 +9,10 @@ Sequel.migration do
       String :image_url
       String :site_name
       String :url, null: false
-      Integer :created_at, null: false
+      String :time
+      String :servings
+      String :instructions, text: true
+      DateTime :created_at, default: Sequel::CURRENT_TIMESTAMP
     end
   end
 end

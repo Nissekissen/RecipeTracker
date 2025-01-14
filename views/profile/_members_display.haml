@@ -1,0 +1,4 @@
+-# for displaying a profile on the group members page.
+%a.member{:href => "/profile/#{member.id}"}
+    %img.profile-picture{:src => member.avatar_url}
+    %h4= member.name

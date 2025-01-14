@@ -2,7 +2,7 @@
 %header
   %a.logo{ href: "/" } ReceptBasen
   .header-search
-    %input{ :type => "text", :id => "search", :placeholder => "Sök recept" }
+    %input{ :type => "text", :id => "search", :placeholder => "Sök bland sparade recept" }
     %img{ :src => "/search.svg", :alt => "Search", :width => "16px", :id => "search-btn" }
   .header-profile-wrapper
     - if @user != nil

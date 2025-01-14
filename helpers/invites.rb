@@ -20,10 +20,5 @@ module Invites
     if invite.uses_left <= 0
       halt 403, 'Invite has no uses left'
     end
-
-    # if invite.user_id is set, make sure user is the invitee
-    if !invite.owner_id.nil? && invite.user_id != user.id
-      halt 403, 'You are not the invitee'
-    end
   end
 end

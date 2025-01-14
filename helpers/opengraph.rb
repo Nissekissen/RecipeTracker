@@ -3,34 +3,6 @@ require 'nokogiri'
 require 'dotenv/load'
 
 module OGParser
-  def get_opengraph_data(url)
-    response = RestClient::Request.execute(
-      {
-        method: :get,
-        url: url,
-        timeout: 5
-      }
-    )
-    
-    parsed_data = Nokogiri::HTML.parse(response.body)
-
-    metatags = parsed_data.css('meta')
-    
-    title = nil
-    image = nil
-    description = nil
-    site = nil
-
-    metatags.each do |tag|
-      title = get_property(tag, 'og:title') unless get_property(tag, 'og:title').nil?
-      image = get_property(tag, 'og:image') unless get_property(tag, 'og:image').nil?
-      description = get_property(tag, 'og:description') unless get_property(tag, 'og:description').nil?
-      site = get_property(tag, 'og:site_name') unless get_property(tag, 'og:site_name').nil?
-    end
-
-    return title, image, description, site
-  end
-
   def get_property(tag, name)
     if tag['name'] == name || tag['property'] == name
       return tag['content']
@@ -39,17 +11,70 @@ module OGParser
     return nil
   end
 
-  def get_ingredients(url)
+  def get_description(url)
+    # omagah bullshit api doesn't give the original description
+    # enter opengraph
+
     response = RestClient::Request.execute(
       {
         method: :get,
-        url: 'https://api.spoonacular.com/recipes/extract?url=' + url + '&apiKey=' + ENV['SPOONACULAR_TOKEN'],
+        url: url,
         timeout: 5
       }
     )
 
+    parsed_data = Nokogiri::HTML.parse(response.body)
 
-    return JSON.parse(response.body)['extendedIngredients'].map { |ingredient| ingredient['original']}
+    metatags = parsed_data.css('meta')
+
+    description = nil
+
+    metatags.each do |tag|
+      description = get_property(tag, 'description') unless get_property(tag, 'description').nil?
+    end
+
+    return description
+  end
+
+  def get_all_tags(data)
+    # the data is json parsed api response
+    # get the tags from 'cuisines', maybe we expand later
+
+    data['cuisines']
+  end
+
+  def get_recipe_data(url)
+    response = RestClient::Request.execute(
+      {
+        method: :get,
+        url: 'https://api.spoonacular.com/recipes/extract?url=' + url + '&apiKey=' + ENV['SPOONACULAR_TOKEN'] + '&analyze=true',
+        timeout: 5
+      }
+    )
+
+    parsed_data = JSON.parse(response.body)
+
+    title = parsed_data['title']
+    image = parsed_data['image']
+    time = parsed_data['readyInMinutes']
+    servings = parsed_data['servings']
+    ingredients = parsed_data['extendedIngredients'].map { |i| i['original'] }
+    instructions = parsed_data['instructions']
+    description = get_description(url)
+    tags = get_all_tags(parsed_data)
+    site = parsed_data['sourceName']
+
+    return {
+      title: title,
+      image: image,
+      time: time,
+      servings: servings,
+      ingredients: ingredients,
+      instructions: instructions,
+      description: description,
+      tags: tags,
+      site: site
+    }
 
   end
 end

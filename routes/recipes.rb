@@ -34,20 +34,34 @@ class MyApp < Sinatra::Application
       halt 400, 'url is required'
     end
 
-    # get the title and image from the url
-    title, image, description, site = get_opengraph_data(params['url'])
-
-
-    if title.nil? || image.nil? || description.nil?
-      halt 400
+    # make sure the recipe doesn't already exist
+    if Recipe.where(url: params['url']).first
+      halt 400, 'Recipe already exists'
     end
+
+    # get the title and image from the url
+    recipe_data = get_recipe_data(params['url'])
+
+    title = recipe_data[:title]
+    image = recipe_data[:image]
+    description = recipe_data[:description]
+    time = recipe_data[:time]
+    servings = recipe_data[:servings]
+    instructions = recipe_data[:instructions]
+    ingredients = recipe_data[:ingredients]
+    site = recipe_data[:site]
 
     # create a new recipe
-    Recipe.create(title: title, image_url: image, url: params['url'], description: description, created_at: Time.now.to_i, site_name: site)
-
-    get_ingredients(params['url']).each do |ingredient|
-      Ingredient.create(name: ingredient, recipe_id: Recipe.where(url: params['url']).first.id)
-    end
+    Recipe.create(
+      title: title,
+      description: description,
+      image_url: image,
+      site_name: site,
+      url: params['url'],
+      time: time,
+      servings: servings,
+      instructions: instructions
+    )
 
     # get the user collections
     collection = Collection.where(owner_id: @user.id, name: "Favoriter").first
@@ -167,6 +181,32 @@ class MyApp < Sinatra::Application
       body result.to_json
 
       
+    end
+
+    get '/recipes/check' do
+      # check if a recipe is valid or not by using the helper function
+      
+      if @user.nil?
+        p 'user is nil'
+        halt 401
+      end
+
+      url = params['url']
+
+      if url.nil?
+        p 'url is nil'
+        halt 400
+      end
+
+      recipe_data = nil
+
+      begin
+        recipe_data = get_recipe_data(url)
+      rescue
+        return { valid: false }.to_json
+      end
+
+      return { valid: true, data: recipe_data }.to_json 
     end
 
   end

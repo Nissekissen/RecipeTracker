@@ -2,9 +2,13 @@
     .card
         .img-wrapper
             %img.card-image{ :src => recipe.image_url }
+            %button.bookmark-btn.save-recipe{ :title => "Bookmark", :data => { :recipeid => recipe.id } }
+                %img{ :src => "/bookmark.svg" }
         .card-content
             .card-title= recipe.title
-            .card-time= 'N/A'
+            .card-time
+                %img.icon{ :src => "/time.svg" }
+                = recipe.time + " min"
             .card-btn-row
                 %button.card-btn.card-btn--primary{ :title => "Mer information" } Mer info
                 %button.card-btn.card-btn--primary{ :title => "Läs hela receptet" } Läs hela receptet

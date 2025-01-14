@@ -3,11 +3,28 @@
     %meta{property: "og:title", content: "Receptbasen"}
     %meta{property: "og:type", content: "website"}
     %meta{property: "og:url", content: "https://receptbasen.se"}
+    %script{ src: "/addRecipe.js", defer: true}
 
-%h2.page-title Nytt Recept
+.container.justify-center
+    .corners
+        %img.corner{src: "/corner.svg"}
+        %img.corner{src: "/corner.svg"}
+        %img.corner{src: "/corner.svg"}
+        %img.corner{src: "/corner.svg"}
+    
+    %h2.page-title Nytt Recept
+    %p.error-display{ :style => "display: none;" }
+    %form#addForm{ :method => "post", :action => "/recipes" }
+        .input-group
+            %label{ :for => "url" } Länk till recept
+            %input#url{ :name => "url", :placeholder => "Länk till recept", :type => "text" }
+        %button#submitBtn.btn.btn--primary.full-width{ :type => "submit"} Lägg till recept
+    
 
-%form#addForm{:method => 'post', :action => '/recipes'}
-    .recipe-input
-        %input#name{:name => 'url', :placeholder => 'Länk till recept', :type => 'text'}
-    %input.addrecipe-btn.btn-primary{:type => 'submit', :value => "Lägg till"}
+
+
+-# %form#addForm{:method => 'post', :action => '/recipes'}
+-#     .recipe-input
+-#         %input#name{:name => 'url', :placeholder => 'Länk till recept', :type => 'text'}
+-#     %input.addrecipe-btn.btn-primary{:type => 'submit', :value => "Lägg till"}
     

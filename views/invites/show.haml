@@ -2,8 +2,21 @@
     %title Receptbasen - Inbjudan till grupp
     %meta{ :property => "og:title", :content => "Receptbasen - Inbjudan till grupp" }
 
-%h2.page-title Inbjudan till grupp
-
-%p= "Grupp: #{@group.name}"
-
-%a{ :href => "/invite/#{@invite.token}/accept"} Gå med i gruppen
+.container
+    .corners
+        %img.corner{ :src => "/corner.svg" }
+        %img.corner{ :src => "/corner.svg" }
+        %img.corner{ :src => "/corner.svg" }
+        %img.corner{ :src => "/corner.svg" }
+    - if @error
+        .info-group
+            %img{ :src => '/gray.png' }
+            %p.invite-text Fråga ägaren om en ny
+            %h2.group-name Ogiltig inbjudan
+        %a.btn.btn--primary{ :title => "Tillbaka till startsidan", :href => "/" } Tillbaka till startsidan
+    - else 
+        .info-group
+            %img{ :src => @group.image_url }
+            %p.invite-text= "#{@owner.name} bjöd in dig till en grupp"
+            %h2.group-name= @group.name
+        %a.btn.btn--primary{ :title => "Gå med i grupp", :href => "/invite/#{@invite.token}/accept" } Gå med i grupp

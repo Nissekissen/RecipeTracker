@@ -3,9 +3,25 @@
     %meta{ :property => "og:title", :content => "Receptbasen - Skapa gruppinbjudan" }
     %meta{ :property => "og:description", :content => "Skapa en gruppinbjudan till Receptbasen" }
 
-%h2.page-title Skapa inbjudan
+.container
+    .corners
+        %img.corner{ :src => "/corner.svg" }
+        %img.corner{ :src => "/corner.svg" }
+        %img.corner{ :src => "/corner.svg" }
+        %img.corner{ :src => "/corner.svg" }
+    .info-group
+        %img{ :src => @group.image_url }
+        %h2.group-name Skapa inbjudan
+    - if @invite.nil?
+        .button-group
+            %form{ :method => "post", :action => "/invites" }
+                %input{ :type => "number", :name => "uses", :placeholder => "Antal användningar", :required => "true" }
+                %input{ :type => "hidden", :name => "group_id", :value => params[:group_id]}
+                %input{ :type => "submit", :value => "Skapa inbjudan" }
+    - else
+        .button-group
+            .row
+                %input{ :type => "text", :value => "http://localhost:9292/invite/#{@invite.token}", :readonly => "true" }
+                -# %input{ :type => "button", :value => "Kopiera", :onclick => "copyToClipboard()" }
+                %button{ :onclick => "copyToClipboard()" } Kopiera
 
-%form{ :method => "post", :action => "/invites" }
-    %input{ :type => "number", :name => "uses", :placeholder => "Antal användningar", :required => "true" }
-    %input{ :type => "hidden", :name => "group_id", :value => params[:group_id]}
-    %input{ :type => "submit", :value => "Skapa inbjudan" }

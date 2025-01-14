@@ -3,21 +3,74 @@
     %meta{ :property => "og:title", :content => "Receptbasen - Ny grupp" }
     %meta{ :property => "og:type", :content => "website" }
     %meta{ :property => "og:url", :content => "https://receptbasen.se/groups/new" }
+    %script{ :src => "/imageHelper.js" }
+    %script{ :src => "/inviteHelper.js", :defer => true}
 
-%h2.page-title Ny grupp
+-# %h2.page-title Ny grupp
 
-%form{ :method => "post", :action => "/groups/", :enctype => "multipart/form-data" }
-    %label{ :for => "name" } Name
-    %input{ :type => "text", :name => "name", :id => "name" }
-    %br
-    %label{ :for => "description" } Description
-    %textarea{ :name => "description", :id => "description" }
-    %br
-    %label{ :for => "is_private"} Privat grupp
-    %input{ :type => "checkbox", :name => "is_private", :id => "is_private" }
-    %br
-    %label{ :for => "image" } Image URL
-    %input{ :type => "text", :id => "image", :name => "image" }
-    %br
-    %input{ :type => "submit", :value => "Create" }
-    %a{ :href => "/groups" } Cancel
+.container.justify-center
+    .corners
+        %img.corner{ :src => "/corner.svg" }
+        %img.corner{ :src => "/corner.svg" }
+        %img.corner{ :src => "/corner.svg" }
+        %img.corner{ :src => "/corner.svg" }
+    - if @part == 1
+        %h2.page-title Ny grupp
+        %form.info-group{ :method => "post", :action => "/groups/"}
+            %input{ :type => "hidden", :name => "part", :value => "1"}
+            .input-group
+                %label{ :for => "name" } Namn
+                %input{ :type => "text", :name => "name", :id => "name", :maxlength => "50", :required => "true" }
+            .input-group
+                %label{ :for => "description" } Beskrivning
+                %textarea{ :name => "description", :id => "description", :rows => "4", :cols => "30", :maxlength => "200", :required => "true" }
+            .input-group
+                %label{ :for => "is_private"} Privat grupp
+                %input{ :type => "checkbox", :name => "is_private", :id => "is_private" }
+            %input.btn.btn--primary.full-width{ :type => "submit", :value => "Nästa" }
+    - elsif @part == 2
+        .info-group
+            %img{ :src => "/gray.png", :id => "imagePreview" }
+            %h2.page-title Välj en bild
+        %form.info-group{ :method => "post", :action => "/groups/"}
+            %input{ :type => "hidden", :name => "part", :value => "2"}
+            %input{ :type => "hidden", :name => "name", :value => @name }
+            %input{ :type => "hidden", :name => "description", :value => @description }
+            %input{ :type => "hidden", :name => "is_private", :value => @is_private }
+            .input-group
+                %label{ :for => "image" } Bild URL
+                .input-row
+                    %input{ :type => "hidden", :name => "image", :id => "imageInput", :required => "false" }
+                    %input{ :type => "text", :name => "imagePreview", :id => "image", :required => "false" }
+                    %button.btn.btn--primary{ :type => "button", :onclick => "chooseImage()" } Välj
+            %input.btn.btn--secondary.full-width{ :type => "submit", :value => "Hoppa över", :id => "nextBtn" }
+    - elsif @part == 3
+        %h2.page-title Bjud in vänner
+        .info-group
+            .button-group
+                %form#createInviteForm{ :method => "post", :action => "/invites" }
+                    %input#uses{ :type => "number", :name => "uses", :placeholder => "Antal användningar", :required => "true" }
+                    %input#groupId{ :type => "hidden", :name => "group_id", :value => @group.id}
+                    %input{ :type => "submit", :value => "Skapa inbjudan" }
+                #inviteCodeRow{ :style => "display: none;" }
+                    %input{ :type => "text", :name => "invite_code", :id => "inviteCode", :placeholder => "Inbjudningskod" }
+                    %button.btn.btn--primary{ :type => "button", :onclick => "copyCode()" } Kopiera
+            %a.btn.btn--primary.full-width{ :href => "/groups/#{@group.id}" } Klar
+
+
+
+-# %form{ :method => "post", :action => "/groups/", :enctype => "multipart/form-data" }
+-#     %label{ :for => "name" } Name
+-#     %input{ :type => "text", :name => "name", :id => "name" }
+-#     %br
+-#     %label{ :for => "description" } Description
+-#     %textarea{ :name => "description", :id => "description" }
+-#     %br
+-#     %label{ :for => "is_private"} Privat grupp
+-#     %input{ :type => "checkbox", :name => "is_private", :id => "is_private" }
+-#     %br
+-#     %label{ :for => "image" } Image URL
+-#     %input{ :type => "text", :id => "image", :name => "image" }
+-#     %br
+-#     %input{ :type => "submit", :value => "Create" }
+-#     %a{ :href => "/groups" } Cancel

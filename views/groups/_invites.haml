@@ -9,10 +9,10 @@
         %tbody
             - @invites.each do |invite|
                 %tr
-                    %td= "https://localhost:9292/invite/#{invite.token}"
-                    %td= invite.expires_at
-                    %td= invite.uses_left
-                    %td= invite.user.nil? ? "" : invite.user.name
+                    %td= "https://localhost:9292/invite/#{invite[:invite].token}"
+                    %td= invite[:invite].expires_at
+                    %td= invite[:invite].uses_left
+                    %td= invite[:owner].nil? ? "" : invite[:owner].name
 
 %form{ :method => "get", :action => "/invites/new" }
     %input{ :type => "hidden", :name => "group_id", :value => @group.id }

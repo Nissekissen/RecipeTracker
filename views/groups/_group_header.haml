@@ -1,0 +1,13 @@
+.group-header
+    .group-info
+        .group-info--img
+            %img{ :src => @group.image_url }
+        .group-info--text
+            %h2.group-name= @group.name
+            %p.group-member-amount= @member_amount.to_s  + " medlemmar"
+    .group-btns
+        - if @is_member
+            %a.btn.btn--primary{ :title => "Bjud in medlemmar", :href => "/invite/new"} Bjud in
+            %a.btn.btn--primary{ :title => "Lämna grupp", :href => "/group/#{@group.id}/leave"} Lämna
+        - else
+            %button.btn.btn--primary{ :title => "Gå med i grupp"} Gå med
