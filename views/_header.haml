@@ -1,9 +1,10 @@
 -# views/_header.haml
 %header
   %a.logo{ href: "/" } ReceptBasen
-  .header-search
-    %input{ :type => "text", :id => "search", :placeholder => "Sök bland sparade recept" }
-    %img{ :src => "/search.svg", :alt => "Search", :width => "16px", :id => "search-btn" }
+  %form.header-search{ :method => "get", :action => "/search" }
+    %input{ :type => "text", :id => "search", :placeholder => "Sök bland sparade recept", :name => "q", :value => params[:q] || "", :autocomplete => "off" }
+    %button#searchSubmit{ :type => "submit" }
+      %img{ :src => "/search.svg", :alt => "Search", :width => "16px", :id => "search-btn" }
   .header-profile-wrapper
     - if @user != nil
       %a.btn.btn-primary.new-recipe#dumbass{ :href => "/recipes/new" }

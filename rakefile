@@ -15,6 +15,13 @@ namespace :db do
         Sequel::Migrator.run(DB, 'migrations')
         puts 'Migrations are up to date.'
     end
+
+    task :syncsearch do
+        require_relative 'helpers/search'
+        DB = Sequel.sqlite('db/development.sqlite3')
+        sync_search_table
+        puts "Search table synced"
+    end
 end
 
 task :dev do

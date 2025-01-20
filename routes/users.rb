@@ -13,7 +13,7 @@ class MyApp < Sinatra::Application
     @tab = params["tab"] || "bookmarks"
 
     if @tab == "bookmarks"
-      @bookmarks = Recipe.join(:saved_recipes, recipe_id: :id).select(Sequel[:recipes][:id], :title, :description, :image_url, :url).where(user_id: @profile.id).group(:recipe_id).all
+      @bookmarks = Recipe.join(:saved_recipes, recipe_id: :id).select(Sequel[:recipes][:id], :title, :description, :image_url, :url, :site_name, :servings, :time, :instructions).where(user_id: @profile.id).group(:recipe_id).all
     elsif @tab == "groups"
       @groups = @profile.groups.filter { |group| !group.is_private || group.users.include?(@user) }
     end

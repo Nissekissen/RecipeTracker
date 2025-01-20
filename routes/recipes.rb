@@ -111,29 +111,21 @@ class MyApp < Sinatra::Application
 
     get '/recipes/:id/save' do | id |
 
-      if @user.nil?
-        halt 401
-      end
+      halt 401 if @user.nil?
       
       # make sure the recipe exists
       recipe = Recipe[id]
-      if recipe.nil?
-        halt 404
-      end
+      halt 404 if recipe.nil?
       
       collection_id = params['collection_id']
 
-      if collection_id.nil?
-        halt 400
-      end
+      halt 400 if collection_id.nil?
 
       # make sure the collection exists
 
       collection = Collection[collection_id]
 
-      if collection.nil?
-        halt 404
-      end
+      halt 404 if collection.nil?
 
       # If the saved recipe exists, delete it. Otherwise, create it
       saved_recipe = SavedRecipe.where(recipe_id: recipe.id, user_id: @user.id, collection_id: collection.id).first
@@ -153,15 +145,12 @@ class MyApp < Sinatra::Application
     end
 
     get '/recipes/:id/saved' do | id |
-      if @user.nil?
-        halt 401
-      end
-
+      
+      halt 401 if @user.nil?
+      
       recipe = Recipe[id]
-
-      if recipe.nil?
-        halt 404
-      end
+      
+      halt 404 if recipe.nil?
 
       saved_recipes = SavedRecipe.where(user_id: @user.id, recipe_id: recipe.id)
 
@@ -185,28 +174,106 @@ class MyApp < Sinatra::Application
 
     get '/recipes/check' do
       # check if a recipe is valid or not by using the helper function
+      url = params['url']
       
+      halt 401 if @user.nil?
+      halt 400 if url.nil?
+
+      recipe = Recipe.where(url: url).first
+      return {valid: true}.to_json if !recipe.nil?
+
+      return {valid: is_valid_recipe_with_ai(url)}.to_json
+    end
+
+    post '/recipes' do
+
+
       if @user.nil?
-        p 'user is nil'
         halt 401
       end
 
       url = params['url']
+      verified = params['alreadyVerified']
 
       if url.nil?
-        p 'url is nil'
         halt 400
       end
 
-      recipe_data = nil
+      # if the recipe already exists, save it for the user
+      recipe = Recipe.where(url: url).first
 
-      begin
-        recipe_data = get_recipe_data(url)
-      rescue
-        return { valid: false }.to_json
+      if !recipe.nil?
+        # get the user collections
+        collection = Collection.where(owner_id: @user.id, name: "Favoriter").first
+        
+        collection = Collection.first(owner_id: @user.id).first if collection.nil?
+
+        # Save the recipe for the user
+        saved_recipe = SavedRecipe.create(user_id: @user.id, recipe_id: recipe.id, created_at: Time.now.to_i, collection_id: collection.id)
+
+        status 200
       end
 
-      return { valid: true, data: recipe_data }.to_json 
+      if verified.nil? || verified == false
+        if !is_valid_recipe_with_ai(url)
+          halt 400
+        end
+      end
+
+      recipe_data = get_recipe_data_with_ai(url)
+
+      p recipe_data
+
+      title = recipe_data["title"]
+      image = recipe_data["image_url"]
+      description = recipe_data["description"]
+      time = recipe_data["time"]
+      servings = recipe_data["servings"]
+      instructions = recipe_data["instructions"]
+      ingredients = recipe_data["ingredients"]
+      site = recipe_data["site"]
+      tags = recipe_data["tags"]
+      difficutly = recipe_data["difficulty"]
+
+      if instructions.is_a?(Array) # dumb ai
+        instructions = instructions.join("\n")
+      end
+
+
+      # create a new recipe
+      recipe = Recipe.create(
+        title: title,
+        description: description,
+        image_url: image,
+        site_name: site,
+        url: url,
+        time: time,
+        servings: servings,
+        instructions: instructions,
+        difficulty: difficutly
+      )
+
+      # ingredients
+      ingredients.each do |ingredient|
+        Ingredient.create(recipe_id: recipe.id, name: ingredient)
+      end
+
+      # tags
+      tags.each do |tag|
+        Tag.create(recipe_id: recipe.id, name: tag)
+      end
+
+      # get the user collections
+      collection = Collection.where(owner_id: @user.id, name: "Favoriter").first
+
+      if collection.nil?
+        collection = Collection.first(owner_id: @user.id).first
+      end
+
+      # Save the recipe for the user
+      saved_recipe = SavedRecipe.create(user_id: @user.id, recipe_id: recipe.id, created_at: Time.now.to_i, collection_id: collection.id)
+
+      status 200
     end
 
   end

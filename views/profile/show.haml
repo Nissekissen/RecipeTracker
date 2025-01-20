@@ -4,15 +4,17 @@
     %meta{ :property => "og:type", :content => "website" }
     %meta{ :property => "og:url", :content => "https://receptbasen.se/profile/#{@profile.id}" }
     %meta{ :property => "og:image", :content => @profile.avatar_url }
+    %script{ :src => "/navHelper.js?dkfjaölksdjf", :defer => true }
 
 .profile
     != haml :"profile/_profile_intro", :locals => { :profile => @profile }
+    .profile-nav
+        .profile-nav-content
+            #activeDisplay
+            %a.profile-content-nav-item{ :href => "/profile/#{@profile.id}?tab=bookmarks", :class => "#{'active' if @tab == 'bookmarks'}" } Sparade recept
+            %a.profile-content-nav-item{ :href => "/profile/#{@profile.id}?tab=groups", :class => "#{'active' if @tab == 'groups'}" } Grupper
     .profile-content
-        .profile-content-nav
-            %a{ :href => "/profile/#{@profile.id}?tab=bookmarks", :class => "profile-content-nav-item #{'active' if @tab == 'bookmarks'}" } Sparade recept
-            %a{ :href => "/profile/#{@profile.id}?tab=groups", :class => "profile-content-nav-item #{'active' if @tab == 'groups'}" } Groups
-        .profile-content-body
-            - if @tab == 'bookmarks'
-                != haml :"profile/_bookmarks", :locals => { :profile => @profile, :bookmarks => @bookmarks }
-            - elsif @tab == 'groups'
-                != haml :"profile/_groups", :locals => { :profile => @profile, :groups => @groups }
+        - if @tab == 'bookmarks'
+            != haml :"profile/_bookmarks", :locals => { :profile => @profile, :bookmarks => @bookmarks }
+        - elsif @tab == 'groups'
+            != haml :"profile/_groups", :locals => { :profile => @profile, :groups => @groups }

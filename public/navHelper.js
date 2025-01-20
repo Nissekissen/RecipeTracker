@@ -1,8 +1,11 @@
-var activeDisplay = document.getElementById("activeDisplay");
 
-var currentTab = document.querySelector("a.active");
+setTimeout(() => {
 
-console.log(currentTab.innerHTML)
+    var activeDisplay = document.getElementById("activeDisplay");
 
-activeDisplay.style.width = currentTab.offsetWidth + "px";
-activeDisplay.style.left = (currentTab.offsetLeft == 0 ? 0 : 10 * 16 + 69) + "px";
+    var currentTab = document.querySelector("a.active");
+
+    activeDisplay.style.width = currentTab.offsetWidth + "px";
+    activeDisplay.style.left = (currentTab.offsetLeft == 0 ? 0 : 10 * 16 + document.querySelectorAll('a.profile-content-nav-item')[0].clientWidth) + "px";
+
+}, 100);

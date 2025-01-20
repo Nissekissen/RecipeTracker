@@ -102,7 +102,7 @@ header .header-search input {
 	font-size: 0.8rem;
 }
 
-header .header-search img {
+header .header-search button {
 	--width: 18px;
 	width: var(--width);
 	height: var(--width);
@@ -110,7 +110,17 @@ header .header-search img {
 	box-sizing: content-box;
 	background: var(--color-primary);
 	border-radius: 0 5px 5px 0;
-	/* border: 1px solid #ccc; */
+	border: none;
+}
+
+header .header-search button:hover {
+	background: var(--color-primary-dark);
+	cursor: pointer;
+}
+
+header .header-search button img {
+	width: 100%;
+	height: 100%;
 }
 
 .header-profile-wrapper {
@@ -611,10 +621,17 @@ main {
 }
 
 /* Tid */
-.card-time {
+.card-subtitle {
 	font-size: 1rem;
 	color: #666;
 	margin-bottom: 16px;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	gap: 0.5rem;
+}
+
+.card-subtitle-box {
 	display: flex;
 	align-items: center;
 	justify-content: center;
@@ -636,6 +653,16 @@ main {
 	font-size: 0.875rem;
 	cursor: pointer;
 	transition: background-color 0.3s;
+	text-decoration: none;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	gap: 4px;
+}
+
+.card-btn img {
+	width: 18px;
+	height: 18px;
 }
 
 /* Primär knappstil */
@@ -772,80 +799,29 @@ main {
 	cursor: pointer;
 }
 
-.profile-intro,
-.group-intro {
+.profile-intro {
 	display: flex;
-	gap: 1rem;
 	align-items: center;
-	margin: 1rem 0;
-	justify-content: center;
-	padding: 2rem 0;
+	padding: 20px 40px;
+	/* background-color: white; */
+	/* border-bottom: 1px solid #ddd; */
+	width: 100%;
 }
 
-.profile-img,
-.group-img {
-	width: 100px;
-	height: 100px;
-	border-radius: 100%;
-	object-fit: cover;
-}
-
-.profile-name,
-.group-name {
-	font-size: var(--size-text-large);
-}
-
-.profile-content {
-	display: flex;
-	flex-direction: column;
-	gap: 1rem;
-	width: 80vw;
-	margin: 0 auto;
-}
-
-.profile-content-nav {
-	display: flex;
-	gap: 5rem;
-	justify-content: space-evenly;
-}
-
-.profile-content-nav a {
-	text-decoration: none;
-	color: #333;
-	font-size: var(--size-text-medium);
-}
-
-.profile-content-nav a.active {
-	text-decoration: underline;
-}
-
-.profile-content-body,
-.group-content-body {
-	padding: 2rem 0;
-	display: flex;
-	flex-direction: column;
-	gap: 1rem;
-	align-items: center;
-}
-
-.group-brief {
-	display: flex;
-	gap: 1rem;
-	align-items: center;
-	padding: 1rem;
-}
-
-.group-brief img {
-	width: 100px;
-	height: 100px;
+.profile-img {
+	width: 120px;
+	height: 120px;
 	object-fit: cover;
 	border-radius: 100%;
+	margin-right: 20px;
+	border: 3px solid #ddd;
 }
 
-.group-brief-content {
-	display: flex;
-	flex-direction: column;
-	gap: 1rem;
+.profile-name {
+	font-size: 1.8rem;
+	font-weight: 700;
+	color: #222;
+	margin: 0;
 }
 
 .group-name {
@@ -1237,7 +1213,8 @@ td {
 	gap: 1rem;
 }
 
-.group-nav {
+.group-nav,
+.profile-nav {
 	width: calc(100vw - 1rem);
 	translate: -1rem 0;
 	/* border-bottom: 1px solid #aaa; */
@@ -1246,13 +1223,15 @@ td {
 	margin-bottom: 2rem;
 }
 
-.group-nav-content {
+.group-nav-content,
+.profile-nav-content {
 	display: flex;
 	gap: 10rem;
 	position: relative;
 }
 
-.group-nav-content a {
+.group-nav-content a,
+.profile-nav-content a {
 	text-decoration: none;
 	color: #333;
 	font-size: var(--size-text-large);
@@ -1268,7 +1247,8 @@ td {
 	z-index: 1;
 }
 
-.group-about {
+.group-about,
+.profile-groups {
 	padding: 1rem 2rem;
 }
 
@@ -1276,7 +1256,8 @@ td {
 	font-size: var(--size-text-medium)
 }
 
-.group-members h3 {
+.group-members h3,
+.profile-groups h3 {
 	margin: 1rem 0;
 	font-size: var(--size-subtitle);
 }
@@ -1329,14 +1310,16 @@ form.info-group {
 	height: 100%;
 }
 
-.group-members-list {
+.group-members-list,
+.profile-groups-list {
 	display: flex;
 	flex-wrap: wrap;
 	gap: 2rem;
 	width: 100%;
 }
 
-.member {
+.member,
+.group-display {
 	display: flex;
 	align-items: center;
 	gap: 1rem;
@@ -1344,7 +1327,8 @@ form.info-group {
 	color: black;
 }
 
-.member img {
+.member img,
+.group-display img {
 	width: 64px;
 	height: 64px;
 	object-fit: cover;

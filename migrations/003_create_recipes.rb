@@ -12,6 +12,7 @@ Sequel.migration do
       String :time
       String :servings
       String :instructions, text: true
+      String :difficulty
       DateTime :created_at, default: Sequel::CURRENT_TIMESTAMP
     end
   end

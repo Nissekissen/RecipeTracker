@@ -1,0 +1,8 @@
+- content_for :head do
+    %title Receptbasen - Spara dina favoritrecept
+    %meta{ :name => "description", :content => "Spara dina favoritrecept och hitta nya att prova." }
+    %meta{ :property => "og:title", :content => "Receptbasen" }
+    %meta{ :property => "og:type", :content => "website" }
+    %meta{ :property => "og:url", :content => "https://receptbasen.se" }
+
+!= haml :'recipes/_list', locals: { recipes: @recipes }

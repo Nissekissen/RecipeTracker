@@ -7,12 +7,12 @@ document.getElementById('addForm').addEventListener('submit', async (e) => {
 
     submitBtn.classList.add('btn--loading');
 
-    submitBtn.innerHTML = '<img src="/loading.svg" alt="Loading" class="loading-icon" />';
+    submitBtn.innerHTML = 'Verifierar <img src="/loading.svg" alt="Loading" class="loading-icon" />';
 
     const url = document.getElementById('url').value;
     
     
-    const response = await fetch('/api/v1/recipes/check?url=' + encodeURIComponent(url), {
+    let response = await fetch('/api/v1/recipes/check?url=' + encodeURIComponent(url), {
         method: 'GET'
     });
     
@@ -30,7 +30,21 @@ document.getElementById('addForm').addEventListener('submit', async (e) => {
         return;
     }
 
-    
-    document.getElementById('addForm').submit();
+    submitBtn.innerHTML = 'Skapar recept <img src="/loading.svg" alt="Loading" class="loading-icon" />';
+
+    response = await fetch('/api/v1/recipes?alreadyVerified=true&url=' + encodeURIComponent(url), {
+        method: 'POST'
+    })
+
+    if (response.status == 200) {
+        window.location.href = '/recipes';
+    } else {
+        submitBtn.classList.remove('btn--loading');
+        submitBtn.innerHTML = 'Lägg till recept';
+        document.querySelector('.error-display').innerText = "Receptet finns redan";
+        document.querySelector('.error-display').style.display = "block";
+    }
+
+
 
 });

@@ -6,3 +6,5 @@ require_relative 'recipes'
 MyApp.helpers Recipes
 require_relative 'invites'
 MyApp.helpers Invites
+require_relative 'openai'
+MyApp.helpers OpenAI
