@@ -1,1 +1,8 @@
+.collections-dropdown
+    %button.collections-dropdown-toggle#collectionsSelect{ :type => "button" } Välj samlingar
+    %ul.collections-dropdown-menu
+        - @collections.each do |collection|
+            %li
+                %label
+                    %input{ :type => "checkbox", :value => collection.name, :name => collection.id }= collection.name
 != haml :'recipes/_list', :locals => { :recipes => bookmarks }

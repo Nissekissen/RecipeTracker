@@ -19,14 +19,13 @@ class MyApp < Sinatra::Application
       if @group.nil?
         halt 404, 'Group not found'
       end
-      
-      if @group.is_private
-        if @user.nil? || !@user.groups.include?(@group)
-          halt 401, 'You must be logged in to view this group'
-        end
-      end
 
       @is_member = @user.nil? ? false : @user.groups.include?(@group)
+      
+      if @group.is_private
+        halt 404 if !@is_member
+      end
+
 
       @tab = params["tab"] || "recipes"
       
@@ -37,10 +36,14 @@ class MyApp < Sinatra::Application
       #   .all
       @recipes = Recipe
         .join(:saved_recipes, recipe_id: :id)
-        .select(Sequel[:recipes][:id], :title, :description, :image_url, :url, :site_name, :time, :servings, :instructions)
+        .select(Sequel[:recipes][:id], :title, :description, :image_url, :url, :site_name, :time, :servings, :difficulty)
         .where(group_id: @group.id)
         .group(:recipe_id).all
       @members = @group.users
+
+      @collections = Collection.where(group_id: @group.id).all
+
+      p @collections
 
       @member_amount = @members.length
       @is_member = @user.nil? ? false : @user.groups.include?(@group)

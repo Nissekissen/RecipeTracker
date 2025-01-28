@@ -18,8 +18,7 @@ class MyApp < Sinatra::Application
       redirect '/recipes/not-found'
     end
 
-    # redirect to the recipe url
-    redirect @recipe.url
+    haml :'recipes/show'
   end
 
   post '/recipes' do
@@ -47,7 +46,6 @@ class MyApp < Sinatra::Application
     description = recipe_data[:description]
     time = recipe_data[:time]
     servings = recipe_data[:servings]
-    instructions = recipe_data[:instructions]
     ingredients = recipe_data[:ingredients]
     site = recipe_data[:site]
 
@@ -60,7 +58,6 @@ class MyApp < Sinatra::Application
       url: params['url'],
       time: time,
       servings: servings,
-      instructions: instructions
     )
 
     # get the user collections
@@ -202,6 +199,8 @@ class MyApp < Sinatra::Application
       # if the recipe already exists, save it for the user
       recipe = Recipe.where(url: url).first
 
+      p recipe
+
       if !recipe.nil?
         # get the user collections
         collection = Collection.where(owner_id: @user.id, name: "Favoriter").first
@@ -212,6 +211,7 @@ class MyApp < Sinatra::Application
         saved_recipe = SavedRecipe.create(user_id: @user.id, recipe_id: recipe.id, created_at: Time.now.to_i, collection_id: collection.id)
 
         status 200
+        halt
       end
 
       if verified.nil? || verified == false
@@ -229,15 +229,10 @@ class MyApp < Sinatra::Application
       description = recipe_data["description"]
       time = recipe_data["time"]
       servings = recipe_data["servings"]
-      instructions = recipe_data["instructions"]
       ingredients = recipe_data["ingredients"]
       site = recipe_data["site"]
       tags = recipe_data["tags"]
       difficutly = recipe_data["difficulty"]
-
-      if instructions.is_a?(Array) # dumb ai
-        instructions = instructions.join("\n")
-      end
 
 
       # create a new recipe
@@ -249,7 +244,6 @@ class MyApp < Sinatra::Application
         url: url,
         time: time,
         servings: servings,
-        instructions: instructions,
         difficulty: difficutly
       )
 
@@ -274,6 +268,23 @@ class MyApp < Sinatra::Application
       saved_recipe = SavedRecipe.create(user_id: @user.id, recipe_id: recipe.id, created_at: Time.now.to_i, collection_id: collection.id)
 
       status 200
+    end
+
+    post '/recipes/filter' do 
+      halt 401 if @user.nil?
+
+      group_id = params['group_id']
+
+      collection_ids = JSON.parse(request.body.read)['collections']
+      recipes = nil
+
+      if group_id.nil?
+        recipes = SavedRecipe.where(collection_id: collection_ids).map(&:recipe)
+      else
+        recipes = SavedRecipe.where(collection_id: collection_ids, group_id: group_id).map(&:recipe)
+      end
+      
+      haml :'recipes/_list', locals: { recipes: recipes }, layout: false
     end
 
   end

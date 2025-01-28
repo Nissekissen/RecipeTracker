@@ -59,7 +59,6 @@ module OGParser
     time = parsed_data['readyInMinutes']
     servings = parsed_data['servings']
     ingredients = parsed_data['extendedIngredients'].map { |i| i['original'] }
-    instructions = parsed_data['instructions']
     description = get_description(url)
     tags = get_all_tags(parsed_data)
     site = parsed_data['sourceName']
@@ -70,7 +69,6 @@ module OGParser
       time: time,
       servings: servings,
       ingredients: ingredients,
-      instructions: instructions,
       description: description,
       tags: tags,
       site: site

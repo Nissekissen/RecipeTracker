@@ -1,0 +1,18 @@
+- content_for :head do
+    %title= "Receptbasen - #{@recipe.title}"
+    %meta{property: "og:title", content: "Receptbasen"}
+    %meta{property: "og:type", content: "website"}
+    %meta{property: "og:url", content: "https://receptbasen.se"}
+    %script{ src: "/js/addRecipe.js", defer: true}
+    %script{ src: "/js/recipeHelper.js", defer: true}
+
+.recipe
+    != haml :"recipes/_recipe_intro", :locals => { :recipe => @recipe }
+    .recipe-content
+        .recipe-ingredients-container
+            %h3 Ingredienser
+            %ul
+                - @recipe.ingredients.each do |ingredient|
+                    %li= ingredient.name
+        .recipe-discussion-container
+            %h3 Diskussion

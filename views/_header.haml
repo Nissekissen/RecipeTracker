@@ -4,12 +4,12 @@
   %form.header-search{ :method => "get", :action => "/search" }
     %input{ :type => "text", :id => "search", :placeholder => "Sök bland sparade recept", :name => "q", :value => params[:q] || "", :autocomplete => "off" }
     %button#searchSubmit{ :type => "submit" }
-      %img{ :src => "/search.svg", :alt => "Search", :width => "16px", :id => "search-btn" }
+      %img{ :src => "/assets/svg/search.svg", :alt => "Search", :width => "16px", :id => "search-btn" }
   .header-profile-wrapper
     - if @user != nil
       %a.btn.btn-primary.new-recipe#dumbass{ :href => "/recipes/new" }
-        = "Nytt Recept"
-        %img.svg{ :src => "/plus.svg", :width => "18", :height => "18"}
+        %span Nytt Recept
+        %img.svg{ :src => "/assets/svg/plus.svg", :width => "18", :height => "18"}
       != haml :"profile/_brief"
     - else
       %a.btn.btn-primary{ href: "/auth/google?redirect=#{request.url}" } Logga in

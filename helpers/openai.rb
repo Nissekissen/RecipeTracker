@@ -39,10 +39,9 @@ module OpenAI
               "image_url": "string",
               "time": "string" (number of minutes, no unit),
               "site": "string" (arla.se, koket.se, etc),
-              "instructions": "string",
               "servings": "string",
               "ingredients": ["string"],
-              "difficulty": "string" (answer with easy, medium or hard),
+              "difficulty": "string" (answer with easy, medium or hard in english),
               "tags": ["string"] (at least 5 keywords that help to identify the recipe. Might be cousine, diet, priceclass, main ingredient etc.)
             }'
           },

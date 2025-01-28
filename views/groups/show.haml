@@ -3,7 +3,9 @@
     %meta{ :property => "og:title", :content => "Receptbasen - #{@group.name}" }
     %meta{ :property => "og:type", :content => "website" }
     %meta{ :property => "og:url", :content => "https://receptbasen.se/groups/#{@group.name}" }
-    %script{ :src => "/navHelper.js", :defer => true }
+    %script{ :src => "/js/navHelper.js", :defer => true }
+    %script{ :src => "/js/recipeHelper.js", :defer => true }
+    %script{ :src => "/js/collectionHelper.js", :defer => true }
 
 .group
     != haml :"groups/_group_header", :locals => { :group => @group, :member_amount => @member_amount, :is_member => @is_member }
@@ -14,7 +16,7 @@
             %a{ :href => "/groups/#{@group.id}?tab=about",   :class => "group-content-nav-item #{'active' if @tab == 'about'}" } Om
     .group-content
         - if @tab == 'recipes'
-            != haml :"groups/_recipes", :locals => { :group => @group, :recipes => @recipes }
+            != haml :"groups/_recipes", :locals => { :group => @group, :recipes => @recipes, :collections => @collections }
         - elsif @tab == 'about'
             != haml :"groups/_about", :locals => { :group => @group, :members => @members }
         

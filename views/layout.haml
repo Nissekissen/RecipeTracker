@@ -7,9 +7,7 @@
     %link{ :rel => "stylesheet", :href => "https://fonts.googleapis.com/css2?family=PT+Sans:ital,wght@0,400;0,700;1,400;1,700&display=swap" }
     %link{ :rel => "stylesheet", :href => "https://fonts.googleapis.com/css2?family=Lobster&display=swap" }
     %meta{ :name => "viewport", :content => "width=device-width, initial-scale=1.0" }
-    %script{ :src => "/recipeHelper.js?#{Time.now}", :defer => true }
-    %script{ :src => "/searchHelper.js?#{Time.now}", :defer => true }
-    %script{ :src => "/cardHelper.js?#{Time.now}", :defer => true }
+    %script{ :src => "/js/searchHelper.js?#{Time.now}", :defer => true }
     = yield_content :head
   %body
     != haml :_header

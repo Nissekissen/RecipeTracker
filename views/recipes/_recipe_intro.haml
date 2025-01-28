@@ -1,0 +1,31 @@
+.recipe-intro
+    .recipe-img
+        %img{ :src => @recipe.image_url, :alt => @recipe.title }
+    .recipe-info
+        .recipe-info-group
+            %h2.recipe-title= @recipe.title
+            %img.mobile-img{ :src => @recipe.image_url, :alt => @recipe.title }
+            .recipe-info-bar
+                .recipe-info-bar-item
+                    %img.icon{ :src => "/assets/svg/time.svg" }
+                    = @recipe.time + " min"
+                .recipe-info-bar-item
+                    %img.icon{ :src => "/assets/svg/#{@recipe.difficulty}.svg" }
+                    = difficulty_display(@recipe.difficulty)
+            %p.recipe-description= @recipe.description
+        .recipe-info-group
+            .recipe-info-btns
+                %button.recipe-info-btn{ :title => "Spara recept"}
+                    .info-btn-content
+                        %img.info-btn-icon{ :src => "/assets/svg/bookmark.svg" }
+                        Spara
+                %button.recipe-info-btn{ :title => "Läs hela receptet", :onclick => "window.open('#{@recipe.url}', '_blank')"}
+                    .info-btn-content
+                        %img.info-btn-icon{ :src => "/assets/svg/external-link.svg" }
+                        Läs
+                %button.recipe-info-btn{ :title => "Lägg till i inköpslisa"}
+                    .info-btn-content
+                        %img.info-btn-icon{ :src => "/assets/svg/cart.svg" }
+                        Inköpslista
+                
+        

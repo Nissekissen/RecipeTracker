@@ -3,17 +3,17 @@
     %meta{ :property => "og:title", :content => "Receptbasen - Ny grupp" }
     %meta{ :property => "og:type", :content => "website" }
     %meta{ :property => "og:url", :content => "https://receptbasen.se/groups/new" }
-    %script{ :src => "/imageHelper.js" }
-    %script{ :src => "/inviteHelper.js", :defer => true}
+    %script{ :src => "/js/imageHelper.js" }
+    %script{ :src => "/js/inviteHelper.js", :defer => true}
 
 -# %h2.page-title Ny grupp
 
 .container.justify-center
     .corners
-        %img.corner{ :src => "/corner.svg" }
-        %img.corner{ :src => "/corner.svg" }
-        %img.corner{ :src => "/corner.svg" }
-        %img.corner{ :src => "/corner.svg" }
+        %img.corner{ :src => "/assets/svg/corner.svg" }
+        %img.corner{ :src => "/assets/svg/corner.svg" }
+        %img.corner{ :src => "/assets/svg/corner.svg" }
+        %img.corner{ :src => "/assets/svg/corner.svg" }
     - if @part == 1
         %h2.page-title Ny grupp
         %form.info-group{ :method => "post", :action => "/groups/"}

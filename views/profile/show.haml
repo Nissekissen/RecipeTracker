@@ -4,7 +4,9 @@
     %meta{ :property => "og:type", :content => "website" }
     %meta{ :property => "og:url", :content => "https://receptbasen.se/profile/#{@profile.id}" }
     %meta{ :property => "og:image", :content => @profile.avatar_url }
-    %script{ :src => "/navHelper.js?dkfjaölksdjf", :defer => true }
+    %script{ :src => "/js/navHelper.js?dkfjaölksdjf", :defer => true }
+    %script{ :src => "/js/collectionHelper.js", :defer => true }
+    %script{ :src => "/js/recipeHelper.js", :defer => true }
 
 .profile
     != haml :"profile/_profile_intro", :locals => { :profile => @profile }

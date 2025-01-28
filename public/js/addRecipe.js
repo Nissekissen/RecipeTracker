@@ -7,7 +7,7 @@ document.getElementById('addForm').addEventListener('submit', async (e) => {
 
     submitBtn.classList.add('btn--loading');
 
-    submitBtn.innerHTML = 'Verifierar <img src="/loading.svg" alt="Loading" class="loading-icon" />';
+    submitBtn.innerHTML = 'Verifierar <img src="/assets/svg/loading.svg" alt="Loading" class="loading-icon" />';
 
     const url = document.getElementById('url').value;
     
@@ -30,7 +30,7 @@ document.getElementById('addForm').addEventListener('submit', async (e) => {
         return;
     }
 
-    submitBtn.innerHTML = 'Skapar recept <img src="/loading.svg" alt="Loading" class="loading-icon" />';
+    submitBtn.innerHTML = 'Skapar recept <img src="/assets/svg/loading.svg" alt="Loading" class="loading-icon" />';
 
     response = await fetch('/api/v1/recipes?alreadyVerified=true&url=' + encodeURIComponent(url), {
         method: 'POST'
