@@ -4,7 +4,7 @@
     %meta{ :property => "og:type", :content => "website" }
     %meta{ :property => "og:url", :content => "https://receptbasen.se/groups/#{@group.name}" }
     %script{ :src => "/js/navHelper.js", :defer => true }
-    %script{ :src => "/js/recipeHelper.js", :defer => true }
+    %script{ :src => "/js/recipeHelper.js?#{Time.now}", :defer => true }
     %script{ :src => "/js/collectionHelper.js", :defer => true }
 
 .group

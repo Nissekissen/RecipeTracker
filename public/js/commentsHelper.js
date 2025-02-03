@@ -1,3 +1,7 @@
+var textarea = document.getElementById('notes');
+var statusDisplay = document.getElementById('status-display');
+let timeoutId;
+
 // Function to handle reply button clicks
 function handleReplyClick(event) {
     event.preventDefault(); // Prevent default form submission
@@ -116,6 +120,12 @@ function updateEventListeners() {
     deleteButtons.forEach(button => {
         button.addEventListener('click', handleDeleteClick);
     });
+
+    textarea = document.getElementById('notes');
+    statusDisplay = document.getElementById('status-display');
+
+    if (textarea == undefined) return;
+    textarea.addEventListener('input', debounceSave);
 }
 
 
@@ -124,8 +134,6 @@ async function changeGroup(group) {
     const recipeId = document.querySelector('.recipe').dataset.recipe_id;
     
     const response = await fetch(`/api/v1/recipes/${recipeId}/comments?group_id=${group}`)
-
-    console.log(response);
 
     if (response.status !== 200) {
         document.querySelector('.comment-list').innerHTML = '<div class="error-content"><p>Ett fel uppstod.</p></div>';
@@ -137,6 +145,14 @@ async function changeGroup(group) {
     const commentsContainer = document.querySelector('.comment-list');
     commentsContainer.innerHTML = data;
 
+    if (group === 'private') {
+        // Hide add comment form
+        document.querySelector('.comment-form').style.display = 'none';
+    } else {
+        // Show add comment form
+        document.querySelector('.comment-form').style.display = 'block';
+    }
+
     // Update the add comment form's group_id
     document.getElementById('addCommentGroupID').value = group;
 
@@ -144,11 +160,60 @@ async function changeGroup(group) {
     updateEventListeners();
 }
 
+async function handleNoteFormSubmit(e) {
+    e.preventDefault();
+
+    const recipeId = document.querySelector('.recipe').dataset.recipe_id;
+    const notes = document.getElementById('notes').value;
+
+    const response = await fetch(`/api/v1/recipes/${recipeId}/comments`, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+            content: notes,
+            group_id: 'private'
+        }),
+    });
+}
+
+function saveContent() {
+    const content = textarea.value;
+    const recipeId = document.querySelector('.recipe').dataset.recipe_id;
+
+    fetch(`/api/v1/recipes/${recipeId}/comments`, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+            content: content,
+            group_id: 'private'
+        }),
+    })
+    .then(() => {
+        statusDisplay.textContent = 'Sparat!';
+        setTimeout(() => { statusDisplay.textContent = ''; }, 1000);
+    })
+    .catch(() => {
+        statusDisplay.textContent = 'Kunde inte spara';
+    });
+}
+
+function debounceSave() {
+    clearTimeout(timeoutId);
+    statusDisplay.textContent = 'Sparar...';
+    timeoutId = setTimeout(saveContent, 1000);
+}
+
 setTimeout(async () => {
     // Get group from URL param "group" or default to "public"
 
     const urlParams = new URLSearchParams(window.location.search);
     const group = urlParams.get('group') || 'public';
+
+    document.querySelector('.group-select').value = group;
 
     changeGroup(group);
 }, 100)

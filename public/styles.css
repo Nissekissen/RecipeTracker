@@ -1661,6 +1661,28 @@ p.error-display {
 	background: var(--background-1);
 }
 
+.recipe-notes form {
+	width: 100%;
+	display: flex;
+	flex-direction: column;
+	gap: 1rem;
+}
+
+.recipe-notes textarea {
+	resize: vertical;
+	padding: 0.65rem;
+	font-size: var(--size-text-medium);
+	border-radius: 5px;
+	border: 1px solid #999;
+	color: #333;
+	background: var(--background-1);
+}
+
+.recipe-notes button {
+	width: fit-content;
+}
+
+
 @media screen and (max-width: 1200px) {
 	.recipe {
 		margin: 0;
@@ -1678,7 +1700,7 @@ p.error-display {
 
 	.recipe-content {
 		grid-template-columns: 1fr;
-		grid-template-rows: 1fr 1fr;
+		grid-template-rows: auto auto;
 		grid-template-areas:
 			"ingredients"
 			"discussion";
@@ -1992,4 +2014,11 @@ p.error-display {
 .group-select-menu select:focus {
 	outline: none;
 	border-color: var(--color-primary);
+}
+
+@media screen and (max-width: 1000px) {
+	.group-select-menu {
+		position: static;
+	}
+	
 }

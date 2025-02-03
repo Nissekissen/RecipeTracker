@@ -11,8 +11,18 @@ class MyApp < Sinatra::Application
 
     get '/recipes/:recipe_id/comments' do |recipe_id|
       group_id = params[:group_id]
-      if group_id.nil? || group_id == 'public' || group_id == 'private'
+      if group_id.nil? || group_id == 'public'
         group_id = nil
+      end
+
+      # If group_id is private, make sure the user is logged in and return haml :'comments/_notes', layout: false
+      if group_id == 'private'
+        halt 401 if @user.nil?
+        @recipe = Recipe.where(id: recipe_id).first
+        note = Comment.where(recipe_id: recipe_id, owner_id: @user.id, is_note: 1).first
+        content = note.nil? ? '' : note.content
+        halt haml :'comments/_notes', layout: false, locals: { content: content }
+        
       end
 
       # make sure the user is in the group
@@ -22,7 +32,7 @@ class MyApp < Sinatra::Application
         halt 403 if !group.users.include?(@user)
       end
 
-      comments = Comment.where(recipe_id: recipe_id, group_id: group_id).all
+      comments = Comment.where(recipe_id: recipe_id, group_id: group_id, is_note: 0).all
 
       comments_by_parent = comments.group_by{ |comment| comment.parent_id }
 
@@ -48,14 +58,46 @@ class MyApp < Sinatra::Application
       body = JSON.parse(request.body.read)
 
       group_id = body['group_id']
+      p group_id
       if group_id.nil? || group_id == 'public'
         group_id = nil
       end
+
 
       parent_id = body['parent_id']
 
       content = body['content']
       halt 400, 'content is required' if content.nil?
+
+      if group_id == "private"
+
+        comment = Comment.where(recipe_id: recipe_id, group_id: nil, owner_id: @user.id, is_note: 1).first
+
+
+
+        if comment.nil?
+        
+          Comment.create(
+            recipe_id: recipe_id,
+            owner_id: @user.id,
+            content: content,
+            is_note: 1
+          )
+        else
+
+          if content == ""
+            comment.delete
+            halt 200
+          end
+
+          comment.update(
+            content: content
+          )
+          
+        end
+
+        halt 200
+      end
 
       comment = Comment.create(
         recipe_id: recipe_id,

@@ -27,16 +27,12 @@ async function getSavedRecipes(recipeId) {
 
 function getCollectionsFromInput() {
     const item = JSON.parse(document.getElementById('collections').value);
-    console.log("Getting from input: ");
-    console.log(item);
     return item ? item : [];
 }
 
 function getCollectionsFromLocalStorage() {
 
     const item = JSON.parse(localStorage.getItem('collections'));
-    console.log("Getting from local storage: ");
-    console.log(item);
     return item ? item : [];
 }
 
@@ -47,7 +43,6 @@ function getCollectionsFromAPI() {
 
 function updateSaveBtns(data, updateId) {
     // If collectionId is set, then we update the save button for that collection
-    console.log("data", data);
     const collectionRows = document.querySelectorAll('.modal-row');
     collectionRows.forEach(collectionRow => {
         const saveBtn = collectionRow.querySelector('.save-btn');
@@ -67,8 +62,6 @@ function updateSaveBtns(data, updateId) {
 }
 
 function saveCollectionsToLocalStorage(collections) {
-    console.log("Saving to local storage: ");
-    console.log(collections);
     localStorage.clear();
     localStorage.setItem('collections', JSON.stringify(collections));
 }
@@ -161,7 +154,6 @@ function showCollections(groupId) {
                         console.log("Error");
                     }
 
-                    console.log("Response", response);
                 })
         });
 
@@ -217,8 +209,6 @@ document.getElementById('addCollectionBtn').addEventListener('click', () => {
             document.getElementById('newCollectionBtn').style.display = 'flex';
             document.getElementById('newCollectionInput').classList.remove('show');
 
-            console.log("Group id:", groupId);
-
             showCollections(groupId);
         })
 });
@@ -234,3 +224,22 @@ openBtns.forEach(openBtn => openBtn.addEventListener('click', () => {
     showGroups();
 
 }))
+
+function getCurrentGroup() {
+    console.log('test')
+    // If the current page is a group, then return the group id. If it is showing a profile page, return 'private' and otherwise return 'public'
+    // Get from url
+    const url = window.location.href;
+    const urlParts = url.split('/');
+    if (urlParts.includes('groups')) {
+        return urlParts[urlParts.indexOf('groups') + 1];
+    } else if (urlParts.includes('profile')) {
+        return 'private';
+    } else {
+        return 'public';
+    }
+}
+
+document.querySelectorAll('.img-wrapper a').forEach(element => {
+    element.href += `?group=${getCurrentGroup()}`;
+});

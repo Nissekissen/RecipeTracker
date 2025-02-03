@@ -1,0 +1,5 @@
+.recipe-notes
+    %form#noteForm{ action: '/comments', method: 'post'}
+        %input{ type: 'hidden', name: 'recipe_id', value: @recipe.id }
+        %textarea#notes{ :name => 'content', :placeholder => 'Lägg till en anteckning...', required: true }= content
+        %p#status-display

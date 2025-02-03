@@ -6,7 +6,7 @@
     %meta{ :property => "og:image", :content => @profile.avatar_url }
     %script{ :src => "/js/navHelper.js?dkfjaölksdjf", :defer => true }
     %script{ :src => "/js/collectionHelper.js", :defer => true }
-    %script{ :src => "/js/recipeHelper.js", :defer => true }
+    %script{ :src => "/js/recipeHelper.js?#{Time.now}", :defer => true }
 
 .profile
     != haml :"profile/_profile_intro", :locals => { :profile => @profile }

@@ -1,5 +1,5 @@
 
-document.getElementById('addForm').addEventListener('submit', async (e) => {
+document.getElementById('addForm')?.addEventListener('submit', async (e) => {
     
     e.preventDefault();
 
