@@ -18,6 +18,8 @@ class MyApp < Sinatra::Application
       redirect '/recipes/not-found'
     end
 
+    @comments = []
+
     haml :'recipes/show'
   end
 

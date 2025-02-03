@@ -5,15 +5,16 @@
     %meta{ :property => "og:url", :content => "https://receptbasen.se/groups/new" }
     %script{ :src => "/js/imageHelper.js" }
     %script{ :src => "/js/inviteHelper.js", :defer => true}
+    %script{ :src => "/js/progressBarHelper.js", :defer => true}
 
 -# %h2.page-title Ny grupp
-
 .container.justify-center
     .corners
         %img.corner{ :src => "/assets/svg/corner.svg" }
         %img.corner{ :src => "/assets/svg/corner.svg" }
         %img.corner{ :src => "/assets/svg/corner.svg" }
         %img.corner{ :src => "/assets/svg/corner.svg" }
+    != haml :_progress_bar, :locals => { :part => @part }
     - if @part == 1
         %h2.page-title Ny grupp
         %form.info-group{ :method => "post", :action => "/groups/"}

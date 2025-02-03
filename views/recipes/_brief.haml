@@ -1,9 +1,13 @@
 .card-container
     .card
         .img-wrapper
-            %img.card-image{ :src => recipe.image_url }
-            %button.bookmark-btn.save-recipe{ :title => "Bookmark", :data => { :recipeid => recipe.id } }
-                %img.save-icon{ :src => "/assets/svg/bookmark#{"-fill" if is_saved?(recipe.id)}.svg" }
+            %a{ :href => "/recipes/#{recipe.id}" }
+                %img.card-image{ :src => recipe.image_url }
+            .btn-container
+                %a.recipe-brief-round-btn{ :title => "Läs hela receptet", :href => recipe.url, :target => "_blank" }
+                    %img.btn-icon{ :src => "/assets/svg/external-link.svg" }
+                %button.recipe-brief-round-btn{ :title => "Spara", :data => { :recipeid => recipe.id } }
+                    %img.btn-icon{ :src => "/assets/svg/bookmark#{"-fill" if is_saved?(recipe.id)}.svg" }
         .card-content
             .card-title= recipe.title
             .card-subtitle
@@ -13,8 +17,8 @@
                 .card-subtitle-box
                     %img.icon{ :src => "/assets/svg/#{recipe.difficulty}.svg" }
                     = difficulty_display(recipe.difficulty)
-            .card-btn-row
-                %a.card-btn.card-btn--secondary{ :title => "Mer information", :href => "/recipes/#{recipe.id}" } Mer info
-                %a.card-btn.card-btn--primary{ :title => "Läs hela receptet", :href => recipe.url, :target => "_blank" }
-                    = recipe.site_name 
-                    %img{ :src => "/assets/svg/external-link.svg" }
+            -# .card-btn-row
+                -# %a.card-btn.card-btn--secondary{ :title => "Mer information", :href => "/recipes/#{recipe.id}" } Mer info
+                -# %a.card-btn.card-btn--primary{ :title => "Läs hela receptet", :href => recipe.url, :target => "_blank" }
+                -#     = recipe.site_name 
+                -#     %img{ :src => "/assets/svg/external-link.svg" }

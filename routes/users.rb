@@ -2,6 +2,7 @@ class MyApp < Sinatra::Application
 
   get '/profile/:id' do | id |
     @profile = User[id]
+
     if !@profile
       halt 404, 'Profile not found'
     end

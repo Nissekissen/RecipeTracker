@@ -5,8 +5,9 @@
     %meta{property: "og:url", content: "https://receptbasen.se"}
     %script{ src: "/js/addRecipe.js", defer: true}
     %script{ src: "/js/recipeHelper.js", defer: true}
+    %script{ src: "/js/commentsHelper.js?#{Time.now}", defer: true}
 
-.recipe
+.recipe{ data: { recipe_id: @recipe.id } }
     != haml :"recipes/_recipe_intro", :locals => { :recipe => @recipe }
     .recipe-content
         .recipe-ingredients-container
@@ -16,3 +17,16 @@
                     %li= ingredient.name
         .recipe-discussion-container
             %h3 Diskussion
+            - if @user.nil?
+                .error-content
+                    %p Logga in för att kommentera
+                    %a.btn.btn--primary{ href: "/login" } Logga in  
+            - else
+                .group-select-menu
+                    %select.group-select{ :onchange => "changeGroup(this.value)"}
+                        %option{ :value => "public" } Offentlig diskussion
+                        %option{ :value => "private" } Egna anteckningar
+                        - @user.groups.each do |group|
+                            %option{ :value => group.id } #{group.name}
+                != haml :'comments/_form'
+                .comment-list

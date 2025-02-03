@@ -1,0 +1,20 @@
+-# _comment.haml
+.comment{ data: { comment_id: comment.id } }
+  .comment-content
+    .comment-header
+      %a.username{ :href => "/profile/#{comment.owner.id}" }= comment.owner.name
+      %span.timestamp= "#{time_ago_in_words(comment.created_at)}"
+    .comment-body
+      %p= comment.content
+    .comment-actions
+      %button.comment-btn.reply-btn{ :title => "Svara"}
+        %i.fa.fa-reply
+      - if comment.owner_id == @user.id
+        %button.comment-btn.delete-btn{ :title => "Ta bort"}
+          %i.fa-regular.fa-trash-can
+          
+
+  - if !comment[:children].nil? && comment[:children].any?
+    .nested-comments
+      - comment[:children].each do |reply|
+        != haml :'comments/_comment', locals: { comment: reply }

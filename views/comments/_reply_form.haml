@@ -1,0 +1,5 @@
+-# _reply_form.haml
+%form.comment-form.reply-form{ action: '/comments', method: 'post' }
+  .form-row
+    %textarea{ name: 'body', placeholder: 'Write a reply...', required: true }
+    %button.btn.btn--primary{ type: 'submit' } Post  

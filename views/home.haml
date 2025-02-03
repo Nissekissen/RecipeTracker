@@ -4,16 +4,28 @@
     %meta{ :property => "og:title", :content => "Receptbasen" }
     %meta{ :property => "og:type", :content => "website" }
     %meta{ :property => "og:url", :content => "https://receptbasen.se" }
+    %script{ :src => "https://unpkg.com/fireworks-js@2.x/dist/index.umd.js" }
+    %script{ :src => "/js/recipeHelper.js" }
+    %script{ :src => "/js/cardHelper.js" }
 
-.intro-backdrop
-    %img{ :src => "/assets/food/pollock.jpg"}
-    %img{ :src => "/assets/food/squid.jpg"}
-    %img{ :src => "/assets/food/cod.JPEG"}
-.intro-wrapper
-    .intro
-        %h2.intro-header Spara dina favoritrecept
+.intro
+    .intro-backdrop
+        %img.intro-img{ :src => "/assets/food/pollock.jpg", :alt => "Sej" }
+        %img.intro-img{ :src => "/assets/food/squid.jpg", :alt => "Bläckfisk" }
+        %img.intro-img{ :src => "/assets/food/cod.JPEG", :alt => "Torsk" }
+    .intro-text
+        %h1 Spara dina favoritrecept
+    - if @user.nil?
+        .intro-btns
+            #fireworkContainer
+            %a#fireworkBtn.btn.btn--primary Kom igång
+    - else
         %form#searchForm{ :method => "get", :action => "/search" }
             .search-wrapper
                 %input{ :type => "text", :placeholder => "Sök bland dina recept...", :name => "q" }
                 .search-icon#searchSubmit
                     %img{ :src => "/assets/svg/search.svg", :alt => "search", :width => "32px" }
+.margin-row
+!= haml :'recipes/_row', :locals => { :header => @header_name, :recipes => @recipes }
+
+%script{ :src => "/js/fireworkHandler.js?#{Time.now.to_i}" }

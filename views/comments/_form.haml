@@ -1,0 +1,7 @@
+-# _comment_form.haml
+%form.comment-form{ action: '/comments', method: 'post', id: 'main-comment-form' }
+  .form-row
+    %input#addCommentRecipeID{ type: 'hidden', name: 'recipe_id', value: @recipe.id }
+    %input#addCommentGroupID{ type: 'hidden', name: 'group_id', value: nil }
+    %textarea{ name: 'content', placeholder: 'Add a comment...', required: true }
+    %button.btn.btn--primary{ type: 'submit' } Post

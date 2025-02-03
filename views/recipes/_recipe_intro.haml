@@ -12,6 +12,9 @@
                 .recipe-info-bar-item
                     %img.icon{ :src => "/assets/svg/#{@recipe.difficulty}.svg" }
                     = difficulty_display(@recipe.difficulty)
+                -# .recipe-info-bar-item
+                -#     %i.fa-solid.fa-blender.fa-xl{ :style => "color: #000" }
+                -#     = "#{@recipe.ingredients.length} ingredienser"
             %p.recipe-description= @recipe.description
         .recipe-info-group
             .recipe-info-btns
