@@ -19,7 +19,7 @@ class MyApp < Sinatra::Application
       if group_id == 'private'
         halt 401 if @user.nil?
         @recipe = Recipe.where(id: recipe_id).first
-        note = Comment.where(recipe_id: recipe_id, owner_id: @user.id, is_note: 1).first
+        note = Comment.where(recipe_id: recipe_id, owner_id: @user.id, is_note: true).first
         content = note.nil? ? '' : note.content
         halt haml :'comments/_notes', layout: false, locals: { content: content }
         
@@ -32,7 +32,7 @@ class MyApp < Sinatra::Application
         halt 403 if !group.users.include?(@user)
       end
 
-      comments = Comment.where(recipe_id: recipe_id, group_id: group_id, is_note: 0).all
+      comments = Comment.where(recipe_id: recipe_id, group_id: group_id, is_note: false).all
 
       comments_by_parent = comments.group_by{ |comment| comment.parent_id }
 
@@ -71,7 +71,7 @@ class MyApp < Sinatra::Application
 
       if group_id == "private"
 
-        comment = Comment.where(recipe_id: recipe_id, group_id: nil, owner_id: @user.id, is_note: 1).first
+        comment = Comment.where(recipe_id: recipe_id, group_id: nil, owner_id: @user.id, is_note: true).first
 
 
 

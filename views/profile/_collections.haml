@@ -1,0 +1,5 @@
+%section.profile-collections
+  %button.btn.btn--primary#newCollection{title: "Skapa en ny samling"} Ny Samling
+  %ul.collections-list
+    - @collections.each do |collection|
+      != haml :'profile/_collection', :locals => { :collection => collection }

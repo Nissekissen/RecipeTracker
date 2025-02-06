@@ -22,6 +22,18 @@ namespace :db do
         sync_search_table
         puts "Search table synced"
     end
+
+    task :generate_migration, [:file_name] do |t, args|
+        raise "Usage: rake db:generate_migration[file_name]" if args[:file_name].nil?
+        # get the last migration number
+        last_migration = Dir['migrations/*.rb'].map { |f| f.match(/(\d+)_/)[1].to_i }.max || 0
+        # fill the migration number with zeros
+        migration_number = format('%03d', last_migration + 1)
+
+        migration_file = "migrations/#{migration_number}_#{args[:file_name]}.rb"
+        File.write(migration_file, "\nSequel.migration do\n  change do\n    # write your migration here\n  end\nend\n")
+        puts "Created migration file: #{migration_file}"    
+    end
 end
 
 task :dev do

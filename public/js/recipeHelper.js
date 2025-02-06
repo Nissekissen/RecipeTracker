@@ -1,7 +1,7 @@
 
 const modal = document.getElementById('saveRecipeModal');
 
-const openBtns = document.querySelectorAll('.save-recipe');
+let openBtns = document.querySelectorAll('.save-recipe');
 
 const recipeIdElement = document.getElementById('recipeId');
 
@@ -213,17 +213,21 @@ document.getElementById('addCollectionBtn').addEventListener('click', () => {
         })
 });
 
-openBtns.forEach(openBtn => openBtn.addEventListener('click', () => {
-    modal.style.display = 'block';
-    recipeIdElement.value = openBtn.dataset.recipeid;
-
-    // go through all save buttons and check if the recipe is saved
-
-    // getSavedRecipes(recipeIdElement.value).then(updateSaveBtns);
-    localStorage.setItem('showing', 'groups');
-    showGroups();
-
-}))
+function updateOpenBtns() {
+    openBtns = document.querySelectorAll('.save-recipe');
+    
+    openBtns.forEach(openBtn => openBtn.addEventListener('click', () => {
+        modal.style.display = 'block';
+        recipeIdElement.value = openBtn.dataset.recipeid;
+        
+        // go through all save buttons and check if the recipe is saved
+        
+        // getSavedRecipes(recipeIdElement.value).then(updateSaveBtns);
+        localStorage.setItem('showing', 'groups');
+        showGroups();
+        
+    }))
+}
 
 function getCurrentGroup() {
     console.log('test')
@@ -243,3 +247,5 @@ function getCurrentGroup() {
 document.querySelectorAll('.img-wrapper a').forEach(element => {
     element.href += `?group=${getCurrentGroup()}`;
 });
+
+updateOpenBtns();

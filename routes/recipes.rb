@@ -285,6 +285,9 @@ class MyApp < Sinatra::Application
       else
         recipes = SavedRecipe.where(collection_id: collection_ids, group_id: group_id).map(&:recipe)
       end
+
+      # remove duplicates
+      recipes = recipes.uniq
       
       haml :'recipes/_list', locals: { recipes: recipes }, layout: false
     end

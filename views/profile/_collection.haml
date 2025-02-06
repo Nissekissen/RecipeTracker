@@ -1,0 +1,17 @@
+.collection-card
+    .collection-row
+        .collection-name
+            %span.collection-name-display= collection.name
+            %input.collection-name-input{ type: "text", value: collection.name }
+        .collection-visibility
+            %label.visibility-toggle
+                %input.visibility-checkbox{ type: "checkbox", checked: !collection.is_private, disabled: true }
+                %span.visibility-icon
+                    %i.fa-solid.fa-globe.fa-sm{ class: !collection.is_private ? '' : 'hidden' }
+                    %i.fa-solid.fa-lock.fa-sm{ class: collection.is_private ? '' : 'hidden' }
+                %span.visibility-label= collection.is_private ? "Privat" : "Publik"
+    .collection-actions
+        %button.edit-button{ :aria_label => "Edit collection", :data => { :collection_id => collection.id } }
+            %i.fa-regular.fa-pen-to-square
+        %button.delete-button{ :aria_label => "Delete collection", :data => { :collection_id => collection.id } }
+            %i.fa-regular.fa-trash-can

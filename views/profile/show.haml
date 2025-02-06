@@ -4,9 +4,9 @@
     %meta{ :property => "og:type", :content => "website" }
     %meta{ :property => "og:url", :content => "https://receptbasen.se/profile/#{@profile.id}" }
     %meta{ :property => "og:image", :content => @profile.avatar_url }
-    %script{ :src => "/js/navHelper.js?dkfjaölksdjf", :defer => true }
-    %script{ :src => "/js/collectionHelper.js", :defer => true }
+    %script{ :src => "/js/navHelper.js?#{Time.now}", :defer => true }
     %script{ :src => "/js/recipeHelper.js?#{Time.now}", :defer => true }
+    %script{ :src => "/js/collectionHelper.js?#{Time.now}", :defer => true }
 
 .profile
     != haml :"profile/_profile_intro", :locals => { :profile => @profile }
@@ -15,8 +15,12 @@
             #activeDisplay
             %a.profile-content-nav-item{ :href => "/profile/#{@profile.id}?tab=bookmarks", :class => "#{'active' if @tab == 'bookmarks'}" } Sparade recept
             %a.profile-content-nav-item{ :href => "/profile/#{@profile.id}?tab=groups", :class => "#{'active' if @tab == 'groups'}" } Grupper
+            - if @is_owner
+                %a.profile-content-nav-item{ :href => "/profile/#{@profile.id}?tab=collections", :class => "#{'active' if @tab == 'collections'}" } Samlingar
     .profile-content
         - if @tab == 'bookmarks'
             != haml :"profile/_bookmarks", :locals => { :profile => @profile, :bookmarks => @bookmarks }
         - elsif @tab == 'groups'
             != haml :"profile/_groups", :locals => { :profile => @profile, :groups => @groups }
+        - elsif @tab == 'collections'
+            != haml :"profile/_collections", :locals => { :profile => @profile, :collections => @collections }

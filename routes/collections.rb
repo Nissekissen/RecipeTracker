@@ -7,13 +7,24 @@ class MyApp < Sinatra::Application
     get '/collections' do
       content_type :json
 
+      user_id = params['user_id']
+
       if @user.nil?
         halt 401, { error: 'You must be logged in to view your collections' }.to_json
       end
 
-      collections = Collection.where(owner_id: @user.id).or(
-        group_id: @user.groups.map(&:id)
-      ).all
+
+      collections = []
+
+      if user_id.nil?
+        # current user
+        collections = Collection.where(owner_id: @user.id).or(
+          group_id: @user.groups.map(&:id)
+        ).all
+      else
+        # other user
+        collections = Collection.where(owner_id: user_id, is_private: false, group_id: nil).all
+      end
 
       groups = []
 
@@ -40,9 +51,16 @@ class MyApp < Sinatra::Application
         halt 401
       end
 
-      if params['name'].nil?
+      body = JSON.parse(request.body.read)
+
+      p body
+
+      if params['name'].nil? && body['name'].nil?
         halt 400
       end
+
+      name = params['name']
+      name = body['name'] if name.nil?
 
       group_id = params['group_id']
 
@@ -50,11 +68,60 @@ class MyApp < Sinatra::Application
         group_id = nil
       end
 
-      collection = Collection.create(name: params['name'], owner_id: @user.id, group_id: group_id)
+      is_private = body['is_private']
+      is_private = false if is_private.nil?
+
+      collection = Collection.create(name: name, owner_id: @user.id, group_id: group_id, is_private: is_private)
 
       status 201
       body({ :id => collection.id, :name => collection.name, :group_id => group_id, :recipes => []}.to_json)
 
+    end
+
+    put '/collections/:id' do | id |
+      halt 401 if @user.nil?
+
+      body = JSON.parse(request.body.read)
+
+      p body
+
+      collection = Collection[id]
+      if collection.nil?
+        halt 404
+      end
+
+      if collection.owner_id != @user.id
+        halt 403
+      end
+
+      if !body['name'].nil?
+        collection.name = body['name']
+      end
+
+      if !body['is_private'].nil?
+        collection.is_private = body['is_private']
+      end
+
+      collection.save
+
+      status 204
+    end
+
+    delete '/collections/:id' do | id |
+      halt 401 if @user.nil?
+
+      collection = Collection[id]
+      if collection.nil?
+        halt 404
+      end
+
+      if collection.owner_id != @user.id
+        halt 403
+      end
+
+      collection.destroy
+
+      status 204
     end
 
   end

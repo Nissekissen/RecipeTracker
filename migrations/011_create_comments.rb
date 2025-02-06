@@ -9,7 +9,6 @@ Sequel.migration do
       foreign_key :group_id, :groups
       String :content, null: false, text: true
       DateTime :created_at, default: Sequel::CURRENT_TIMESTAMP
-      Integer :is_note, default: 0
     end
   end
 end

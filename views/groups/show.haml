@@ -5,7 +5,7 @@
     %meta{ :property => "og:url", :content => "https://receptbasen.se/groups/#{@group.name}" }
     %script{ :src => "/js/navHelper.js", :defer => true }
     %script{ :src => "/js/recipeHelper.js?#{Time.now}", :defer => true }
-    %script{ :src => "/js/collectionHelper.js", :defer => true }
+    %script{ :src => "/js/collectionHelper.js?#{Time.now}", :defer => true }
 
 .group
     != haml :"groups/_group_header", :locals => { :group => @group, :member_amount => @member_amount, :is_member => @is_member }
