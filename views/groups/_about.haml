@@ -4,4 +4,4 @@
         %h3 Medlemmar
         .group-members-list
             - @members.each do |member|
-                != haml :'profile/_members_display', :locals => { :member => member }
+                != haml :'profile/_members_display', :locals => { :member => member, :admin_hash => @admin_hash }

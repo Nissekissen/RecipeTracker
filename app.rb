@@ -24,6 +24,11 @@ class MyApp < Sinatra::Application
       DB = Sequel.sqlite('db/development.sqlite3')
     end
 
+    helpers do
+      include Rack::Utils
+      alias_method :h, :escape_html
+    end
+
     def db
         return @db if @db
   

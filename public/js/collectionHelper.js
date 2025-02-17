@@ -37,7 +37,7 @@ async function getFilteredRecipes(checkboxes) {
         }
     }
 
-    console.log(updateOpenBtns);
+    // console.log(updateOpenBtns);
     if (updateOpenBtns != undefined) {
         
         updateOpenBtns();

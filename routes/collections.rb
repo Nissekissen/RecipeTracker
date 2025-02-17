@@ -37,7 +37,11 @@ class MyApp < Sinatra::Application
           groups << arr_group
         end
 
-        arr_group[:collections] << { id: collection.id, name: collection.name, recipes: collection.saved_recipes.map { |r| { id: r.id } } }
+        arr_group[:collections] << {
+          id: collection.id,
+          name: collection.name,
+          recipes: collection.saved_recipes.map { |r| { id: r.id, saved_by: r.user_id } }
+        }
       end
 
       groups.to_json

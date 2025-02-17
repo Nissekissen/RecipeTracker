@@ -41,9 +41,18 @@ class MyApp < Sinatra::Application
         .group(:recipe_id).all
       @members = @group.users
 
+      @admin_hash = {}
+
+      @members.each do | member |
+        # update admin hash
+        @admin_hash[member.id] = is_admin(member, @group)
+      end
+
+      p @admin_hash
+
       @collections = Collection.where(group_id: @group.id).all
 
-      p @collections
+      # p @collections
 
       @member_amount = @members.length
       @is_member = @user.nil? ? false : @user.groups.include?(@group)
@@ -55,62 +64,6 @@ class MyApp < Sinatra::Application
       end
 
       haml :'groups/show'
-    end
-
-    post '/:id/recipes' do | id |
-      # make sure user is logged in and is a member of the group
-      if @user.nil?
-        halt 401, 'You must be logged in to add a recipe to a group'
-      end
-
-      group = Group.where(id: id).first
-
-      if group.nil?
-        halt 404, 'Group not found'
-      end
-
-      if !@user.groups.include?(group)
-        halt 401, 'You must be a member of the group to add a recipe'
-      end
-
-      # get recipe info from request
-      recipe_id = params[:recipe_id]
-
-      if recipe_id.nil?
-        halt 400, 'Missing required parameters'
-      end
-
-      # get recipe
-      recipe = Recipe.where(id: recipe_id).first
-
-      if recipe.nil?
-        halt 404, 'Recipe not found'
-      end
-
-      # add recipe to group
-      SavedRecipe.create(recipe_id: recipe.id, user_id: @user.id, group_id: group.id)
-
-      redirect "/groups/#{group.id}"
-
-    end
-
-    get '/:id/members' do | id |
-      # get group members
-      @group = Group.where(id: id).first
-      
-      
-      if @group.nil?
-        halt 404, 'Group not found'
-      end
-      
-      if @group.is_private
-        if @user.nil? || !@user.groups.include?(@group)
-          halt 401, 'You must be logged in to view this group'
-        end
-      end
-      
-      @members = @group.users
-      haml :'groups/members'
     end
 
     post '/:id/join' do | id |
@@ -203,34 +156,13 @@ class MyApp < Sinatra::Application
 
         @user.add_group(@group)
 
+        # make user group admin
+        set_admin(@user, @group, true)
+
         @part = 3
 
         haml :'groups/new'
       end
-      
-      # # check if user is logged in
-      # if @user.nil?
-      #   halt 401, 'You must be logged in to create a group'
-      # end
-
-      # # get group info from request
-      # name = params[:name]
-      # description = params[:description]
-      # is_private = params[:is_private] == 'on'
-      # image_url = params[:image]
-
-      # if name.nil? || description.nil? || is_private.nil?
-      #   halt 400, 'Missing required parameters'
-      # end
-
-      # # create new group
-      # group = Group.create(name: name, description: description, is_private: is_private, image_url: image_url)
-      
-      # # create group collection
-      # group_collection = Collection.create(owner_id: @user.id, group_id: group.id, name: 'Favoriter')
-
-      # @user.add_group(group)
-      # redirect "/groups/#{group.id}"
     end
   end
 

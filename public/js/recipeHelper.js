@@ -55,8 +55,13 @@ function updateSaveBtns(data, updateId) {
         saveBtn.dataset.clicked = saved.saved ? 'true' : 'false';
         if (saved.saved) {
             saveBtn.innerHTML = `<img src="/assets/svg/bookmark-fill.svg" alt="Save">`;
+            // console.log(saved);
+            if (saved.savedBy != undefined) {
+                collectionRow.querySelector('.collection-owner').innerHTML = `Sparat av ${saved.savedBy}`;
+            }
         } else {
             saveBtn.innerHTML = `<img src="/assets/svg/bookmark.svg" alt="Save">`;
+            collectionRow.querySelector('.collection-owner').innerHTML = '';
         }
     })
 }
@@ -108,6 +113,7 @@ function showCollections(groupId) {
     
     const groups = getCollectionsFromLocalStorage();
     
+    // Private collections
     if (groupId == "null") {
         groupId = groups[0].id;
     }
@@ -129,7 +135,18 @@ function showCollections(groupId) {
     collections.forEach(collection => {
         const collectionElement = document.createElement('div');
         collectionElement.classList.add('modal-row');
-        collectionElement.appendChild(document.createTextNode(collection.name));
+
+        const collectionText = document.createElement('span');
+        collectionText.classList.add('collection-text');
+        collectionText.appendChild(document.createTextNode(collection.name));
+        
+        const collectionOwner = document.createElement('span');
+        collectionOwner.classList.add('collection-owner');
+        // collectionOwner.appendChild(document.createTextNode(collection.owner));
+
+        collectionText.appendChild(collectionOwner);
+
+        collectionElement.appendChild(collectionText);
         collectionElement.dataset.collectionId = collection.id;
 
 
@@ -151,7 +168,13 @@ function showCollections(groupId) {
             fetch(url, { method: 'GET' })
                 .then(response => {
                     if (response.status < 200 || response.status >= 300) {
-                        console.log("Error");
+                        // Revert the button to the previous state
+                        saveBtn.dataset.clicked = saveBtn.dataset.clicked === 'true' ? 'false' : 'true';
+                        if (saveBtn.dataset.clicked === 'true') {
+                            saveBtn.innerHTML = `<img src="/assets/svg/bookmark-fill.svg" alt="Save">`;
+                        } else {
+                            saveBtn.innerHTML = `<img src="/assets/svg/bookmark.svg" alt="Save">`;
+                        }
                     }
 
                 })
@@ -190,7 +213,7 @@ document.getElementById('addCollectionBtn').addEventListener('click', () => {
     fetch(`/api/v1/collections?name=${newCollectionName}&group_id=${groupId}`, { method: 'POST' })
         .then(response => {
             if (response.status < 200 || response.status >= 300) {
-                console.log("Error");
+                // console.log("Error");
             }
             return response.json();
         })
@@ -230,7 +253,7 @@ function updateOpenBtns() {
 }
 
 function getCurrentGroup() {
-    console.log('test')
+    // console.log('test')
     // If the current page is a group, then return the group id. If it is showing a profile page, return 'private' and otherwise return 'public'
     // Get from url
     const url = window.location.href;

@@ -42,7 +42,7 @@ class MyApp < Sinatra::Application
 
     # get the title and image from the url
     recipe_data = get_recipe_data(params['url'])
-
+    
     title = recipe_data[:title]
     image = recipe_data[:image]
     description = recipe_data[:description]
@@ -126,19 +126,34 @@ class MyApp < Sinatra::Application
 
       halt 404 if collection.nil?
 
-      # If the saved recipe exists, delete it. Otherwise, create it
-      saved_recipe = SavedRecipe.where(recipe_id: recipe.id, user_id: @user.id, collection_id: collection.id).first
-
-      group_id = nil
-      if saved_recipe.nil?
-        # if the collection has a group_id, make sure the user is a member of the group
-        if !collection.group_id.nil? && !@user.groups.any? { |group| group.id == collection.group_id }
+      group = nil
+      # if the collection has a group, save it to group
+      if !collection.group_id.nil?
+        # make sure the user is a member of the group
+        if !@user.groups.any? { |group| group.id == collection.group_id }
           halt 403
         end
 
+        group = Group[collection.group_id]
+
+      end
+
+      # If the saved recipe exists, delete it. Otherwise, create it
+      saved_recipe = SavedRecipe.where(recipe_id: recipe.id, collection_id: collection.id).first
+
+      group_id = nil
+      if saved_recipe.nil?
+
         saved_recipe = SavedRecipe.create(recipe_id: recipe.id, user_id: @user.id, collection_id: collection.id, created_at: Time.now.to_i, group_id: collection.group_id)
       else
+
+        # make sure the user is the owner of the recipe or a group admin
+        if !group.nil? && (!is_admin(@user, group) || saved_recipe.user_id != @user.id)
+          halt 403
+        end
+
         saved_recipe.delete
+
       end
       status 200
     end
@@ -159,9 +174,16 @@ class MyApp < Sinatra::Application
       ).all
 
       result = collections.map do |collection|
+
+        saved_by_id = collection.saved_recipes.select { |saved_recipe| saved_recipe.recipe_id == recipe.id }.map(&:user_id).first
+
+        if !saved_by_id.nil? && saved_by_id != @user.id
+          saved_by = User[saved_by_id]
+        end
         {
           collection_id: collection.id,
-          saved: collection.saved_recipes.any? { |saved_recipe| saved_recipe.recipe_id == recipe.id }
+          saved: collection.saved_recipes.any? { |saved_recipe| saved_recipe.recipe_id == recipe.id },
+          savedBy: saved_by.nil? ? nil : saved_by.name
         }
       end
 

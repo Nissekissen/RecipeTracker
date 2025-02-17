@@ -984,6 +984,16 @@ td {
 	font-size: var(--size-text-medium);
 }
 
+.collection-text {
+	display: flex;
+	align-items: center;
+	gap: 1rem;
+}
+
+.collection-owner {
+	font-size: 14px;
+}
+
 .modal-row .save-btn,
 .modal-arrow {
 	background: none;
@@ -1482,6 +1492,12 @@ form.info-group {
 	display: flex;
 	flex-direction: column;
 	gap: 0.5rem;
+}
+
+.member .status {
+	padding: 2px 8px;
+	border-radius: 5px;
+	border: 1px solid #555;
 }
 
 .container form {

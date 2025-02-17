@@ -5,8 +5,8 @@
     %meta{ :property => "og:type", :content => "website" }
     %meta{ :property => "og:url", :content => "https://receptbasen.se" }
     %script{ :src => "https://unpkg.com/fireworks-js@2.x/dist/index.umd.js" }
-    %script{ :src => "/js/recipeHelper.js" }
-    %script{ :src => "/js/cardHelper.js" }
+    %script{ :src => "/js/recipeHelper.js", :defer => true }
+    %script{ :src => "/js/cardHelper.js", :defer => true }
 
 .intro
     .intro-backdrop

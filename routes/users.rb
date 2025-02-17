@@ -21,8 +21,16 @@ class MyApp < Sinatra::Application
     if @tab == "bookmarks"
       is_private = [false]
       is_private << true if @is_owner
-      p is_private
-      @bookmarks = Recipe.join(:saved_recipes, recipe_id: :id).select(Sequel[:recipes][:id], :title, :description, :image_url, :url, :site_name, :servings, :time, :difficulty).where(user_id: @profile.id).group(:recipe_id).all
+      
+      # chatgpt clutch
+      @bookmarks = Recipe.join(:saved_recipes, recipe_id: :id)
+               .join(:collections, id: Sequel[:saved_recipes][:collection_id])
+               .where(Sequel[:saved_recipes][:user_id] => @profile.id)
+               .where(Sequel[:collections][:group_id] => nil)
+
+      @bookmarks = @bookmarks.where(Sequel[:collections][:is_private] => false) unless @is_owner
+      @bookmarks = @bookmarks.select_all(:recipes).all
+
       @collections = Collection.where(owner_id: @profile.id, group_id: nil, is_private: is_private).all
     elsif @tab == "groups"
       @groups = @profile.groups.filter { |group| !group.is_private || group.users.include?(@user) }

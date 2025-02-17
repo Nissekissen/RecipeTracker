@@ -16,6 +16,7 @@ class MyApp < Sinatra::Application
         p @recipes
         @recipes = @recipes + new_arr
       end
+      @recipes = @recipes.uniq
     end
     haml :home
   end
