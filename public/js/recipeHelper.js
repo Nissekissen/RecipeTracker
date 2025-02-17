@@ -256,7 +256,7 @@ function getCurrentGroup() {
     // console.log('test')
     // If the current page is a group, then return the group id. If it is showing a profile page, return 'private' and otherwise return 'public'
     // Get from url
-    const url = window.location.href;
+    const url = window.location.pathname;
     const urlParts = url.split('/');
     if (urlParts.includes('groups')) {
         return urlParts[urlParts.indexOf('groups') + 1];

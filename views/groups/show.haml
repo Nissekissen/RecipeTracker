@@ -7,6 +7,7 @@
     %script{ :src => "/js/recipeHelper.js?#{Time.now}", :defer => true }
     %script{ :src => "/js/collectionHelper.js?#{Time.now}", :defer => true }
 
+%input#groupid{ :type => "hidden", :value => @group.id }
 .group
     != haml :"groups/_group_header", :locals => { :group => @group, :member_amount => @member_amount, :is_member => @is_member }
     .group-nav
@@ -14,9 +15,12 @@
             #activeDisplay
             %a{ :href => "/groups/#{@group.id}?tab=recipes", :class => "group-content-nav-item #{'active' if @tab == 'recipes'}" } Recept
             %a{ :href => "/groups/#{@group.id}?tab=about",   :class => "group-content-nav-item #{'active' if @tab == 'about'}" } Om
+            %a{ :href => "/groups/#{@group.id}?tab=collections",   :class => "group-content-nav-item #{'active' if @tab == 'collections'}" } Samlingar
     .group-content
         - if @tab == 'recipes'
             != haml :"groups/_recipes", :locals => { :group => @group, :recipes => @recipes, :collections => @collections }
         - elsif @tab == 'about'
             != haml :"groups/_about", :locals => { :group => @group, :members => @members }
+        - elsif @tab == 'collections'
+            != haml :"profile/_collections", :locals => { :collections => @collections }
         

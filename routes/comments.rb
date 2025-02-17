@@ -27,7 +27,8 @@ class MyApp < Sinatra::Application
 
       # make sure the user is in the group
       if !group_id.nil?
-        group = Group.where(id: group_id).first
+        group = Group[group_id]
+        p group_id
         halt 404 if group.nil?
         halt 403 if !group.users.include?(@user)
       end

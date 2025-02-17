@@ -57,8 +57,6 @@ class MyApp < Sinatra::Application
 
       body = JSON.parse(request.body.read)
 
-      p body
-
       if params['name'].nil? && body['name'].nil?
         halt 400
       end
@@ -119,7 +117,9 @@ class MyApp < Sinatra::Application
         halt 404
       end
 
-      if collection.owner_id != @user.id
+
+
+      if collection.owner_id != @user.id || ( collection.group_id != nil && !@user.groups.map(&:id).include?(collection.group_id) )
         halt 403
       end
 

@@ -2,6 +2,10 @@ const dropdown = document.querySelector('.collections-dropdown');
 const toggleButton = document.querySelector('.collections-dropdown-toggle');
 const menu = document.querySelector('.collections-dropdown-menu');
 
+if (document.getElementById('groupid') != null) {
+    var groupId = document.getElementById('groupid').value;
+}
+
 async function getFilteredRecipes(checkboxes) {
     let checked = Array.from(checkboxes)
         .filter(checkbox => checkbox.checked)
@@ -175,7 +179,7 @@ function saveChangesToServer(collectionId, name, isPrivate) {
                 console.error('Error saving changes:', error);
             });
     } else {
-        fetch(`/api/v1/collections`, {
+        fetch(`/api/v1/collections${(groupId != undefined ? "?group_id=" + groupId : "")}`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',

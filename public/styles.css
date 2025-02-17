@@ -1118,7 +1118,7 @@ td {
 }
 
 .btn {
-	padding: 0.65rem 0.85rem;
+	padding: 0.65rem 1rem;
 	border: none;
 	font-size: var(--size-text-medium);
 	border-radius: 5px;

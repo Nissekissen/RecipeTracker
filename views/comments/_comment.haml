@@ -2,10 +2,10 @@
 .comment{ data: { comment_id: comment.id } }
   .comment-content
     .comment-header
-      %a.username{ :href => "/profile/#{comment.owner.id}" }= comment.owner.name
+      %a.username{ :href => "/profile/#{comment.owner.id}" }= h comment.owner.name
       %span.timestamp= "#{time_ago_in_words(comment.created_at)}"
     .comment-body
-      %p= comment.content
+      %p= h comment.content
     .comment-actions
       %button.comment-btn.reply-btn{ :title => "Svara"}
         %i.fa.fa-reply
