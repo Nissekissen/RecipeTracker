@@ -1388,6 +1388,12 @@ td {
 	font-size: var(--size-subtitle);
 }
 
+.group-members-header {
+	display: flex;
+	align-items: center;
+	gap: 1rem;
+}
+
 @media screen and (max-width: 1000px) {
 	.group-info--text .group-name {
 		font-size: var(--size-subtitle);
@@ -1438,7 +1444,8 @@ form.info-group {
 }
 
 .input-group input,
-.input-group textarea {
+.input-group textarea,
+.input-group select {
 	padding: 0.65rem;
 	font-size: var(--size-text-small);
 	border-radius: 5px;

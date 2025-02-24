@@ -15,37 +15,58 @@ module OpenAI
     return @client
   end
 
-  def get_recipe_data_with_ai(url)
+  def clean_html(html)
+    # Remove <script> and <style> tags with their contents
+    html.gsub!(/<script.*?>.*?<\/script>/m, '')
+    html.gsub!(/<style.*?>.*?<\/style>/m, '')
+    
+    # Remove HTML comments
+    html.gsub!(/<!--.*?-->/m, '')
 
+    # Optionally, strip unnecessary attributes (like event handlers or data attributes)
+    html.gsub!(/\s(?:id|class|data-[^=]+|onclick|onmouseover)="[^"]*"/, '')
+
+    html
+  end
+
+  def get_recipe_data_with_ai(url)
     # get raw html from url
     data = URI(url).open(&:read)
 
     # split the data into head and body
-
-
     data_body = data.split("</head>")[1]
+    data_body = clean_html(data_body)
+
+    opengraph_data = parse_recipe_opengraph(url)
+
+    # Check for missing keys in opengraph_data
+    required_keys = %w[description image site]
+    missing_keys = required_keys.select { |key| opengraph_data[key].nil? }
+
+    # Prepare the query for OpenAI
+    query_content = 'You are a recipe bot. To the following partial HTML data, please provide me with the recipe data in the current JSON format. Answer in the same language as the recipe.
+    {
+      "title": "string",
+      "time": "string" (number of minutes, no unit),
+      "servings": "string",
+      "ingredients": ["string"],
+      "difficulty": "string" (answer with easy, medium or hard in english),
+      "tags": ["string"] (at least 5 keywords that help to identify the recipe. Might be cousine, diet, priceclass, main ingredient etc.)
+    }'
+
+    unless missing_keys.empty?
+      query_content += "\nOh, it seems like you need to add these keys as well: #{missing_keys.join(', ')}. Please provide the missing values in JSON format (similar to above)."
+    end
+
+    p opengraph_data
+    p query_content
 
     response = client.chat(
       parameters: {
         model: 'gpt-4o-mini',
         messages: [
-          {
-            role: 'developer', 
-            content: 'You are a recipe bot. 
-            To the following partial HTML data, please provide me with the recipe data in the current JSON format. Answer in the same language as the recipe.
-            {
-              "title": "string",
-              "description": "string",
-              "image_url": "string",
-              "time": "string" (number of minutes, no unit),
-              "site": "string" (arla.se, koket.se, etc),
-              "servings": "string",
-              "ingredients": ["string"],
-              "difficulty": "string" (answer with easy, medium or hard in english),
-              "tags": ["string"] (at least 5 keywords that help to identify the recipe. Might be cousine, diet, priceclass, main ingredient etc.)
-            }'
-          },
-          {role: 'user', content: data_body}
+          { role: 'developer', content: query_content },
+          { role: 'user', content: data_body }
         ]
       }
     )
@@ -56,6 +77,9 @@ module OpenAI
     raw_data = raw_data[7..-4]
 
     json_data = JSON.parse(raw_data)
+
+    # merge opengraph_data with json_data
+    json_data = json_data.merge(opengraph_data)
 
     return json_data
   end

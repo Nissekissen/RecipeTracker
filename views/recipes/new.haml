@@ -3,7 +3,7 @@
     %meta{property: "og:title", content: "Receptbasen"}
     %meta{property: "og:type", content: "website"}
     %meta{property: "og:url", content: "https://receptbasen.se"}
-    %script{ src: "/js/addRecipe.js", defer: true}
+    %script{ src: "/js/addRecipe.js?#{Time.now}", defer: true}
 
 .container.justify-center
     .corners
@@ -18,6 +18,12 @@
         .input-group
             %label{ :for => "url" } Länk till recept
             %input#url{ :name => "url", :placeholder => "Länk till recept", :type => "text" }
+        .input-group
+            %label{ :for => "collection" } Samling
+            %select#collection{ :title => "Samlingar", :name => "collection", :selected => @default_collection.id }
+                - @collections.each do | collection |
+                    %option{ :value => collection.id }= "#{collection.group.nil? ? "" : collection.group.name + " - "}#{collection.name}"
+
         %button#submitBtn.btn.btn--primary.full-width{ :type => "submit"} Lägg till recept
     
 

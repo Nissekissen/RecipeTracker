@@ -8,6 +8,17 @@ class MyApp < Sinatra::Application
   end
 
   get '/recipes/new' do
+    halt 401 if @user.nil?
+    @collections = Collection.where(owner_id: @user.id).or(
+      group_id: @user.groups.map(&:id)
+    ).all
+
+    # the users "favoriter" collection
+    @default_collection = Collection.where(owner_id: @user.id, name: "Favoriter").first
+    if @default_collection.nil?
+      @default_collection = Collection.where(owner_id: @user).first
+    end
+
     haml :'recipes/new'
   end
 
@@ -72,7 +83,7 @@ class MyApp < Sinatra::Application
     # Save the recipe for the user
 
     recipe = Recipe.where(url: params['url']).first
-    saved_recipe = SavedRecipe.create(user_id: @user.id, recipe_id: recipe.id, created_at: Time.now.to_i, collection_id: collection.id)
+    SavedRecipe.create(user_id: @user.id, recipe_id: recipe.id, created_at: Time.now.to_i, collection_id: collection.id)
 
     # redirect to recipes
     redirect "/recipes"
@@ -210,29 +221,29 @@ class MyApp < Sinatra::Application
 
 
       if @user.nil?
-        halt 401
+        halt 401, {error: "Du måste vara inloggad för att spara recept"}.to_json
       end
 
       url = params['url']
+      collection = params['collection']
+      collection = Collection[collection] if !collection.nil?
+      if collection.nil?
+        collection = Collection.where(owner_id: @user.id, name: "Favoriter").first
+        collection = Collection.first(owner_id: @user.id).first if collection.nil?
+      end
       verified = params['alreadyVerified']
 
       if url.nil?
-        halt 400
+        halt 400, {error: "URL krävs"}.to_json
       end
 
       # if the recipe already exists, save it for the user
       recipe = Recipe.where(url: url).first
 
-      p recipe
-
       if !recipe.nil?
-        # get the user collections
-        collection = Collection.where(owner_id: @user.id, name: "Favoriter").first
-        
-        collection = Collection.first(owner_id: @user.id).first if collection.nil?
 
         # Save the recipe for the user
-        saved_recipe = SavedRecipe.create(user_id: @user.id, recipe_id: recipe.id, created_at: Time.now.to_i, collection_id: collection.id)
+        SavedRecipe.create(user_id: @user.id, recipe_id: recipe.id, created_at: Time.now.to_i, collection_id: collection.id)
 
         status 200
         halt
@@ -240,16 +251,14 @@ class MyApp < Sinatra::Application
 
       if verified.nil? || verified == false
         if !is_valid_recipe_with_ai(url)
-          halt 400
+          halt 400, {error: "Ogiltigt recept"}.to_json
         end
       end
 
       recipe_data = get_recipe_data_with_ai(url)
 
-      p recipe_data
-
       title = recipe_data["title"]
-      image = recipe_data["image_url"]
+      image = recipe_data["image"]
       description = recipe_data["description"]
       time = recipe_data["time"]
       servings = recipe_data["servings"]
@@ -281,15 +290,8 @@ class MyApp < Sinatra::Application
         Tag.create(recipe_id: recipe.id, name: tag)
       end
 
-      # get the user collections
-      collection = Collection.where(owner_id: @user.id, name: "Favoriter").first
-
-      if collection.nil?
-        collection = Collection.first(owner_id: @user.id).first
-      end
-
       # Save the recipe for the user
-      saved_recipe = SavedRecipe.create(user_id: @user.id, recipe_id: recipe.id, created_at: Time.now.to_i, collection_id: collection.id)
+      SavedRecipe.create(user_id: @user.id, recipe_id: recipe.id, created_at: Time.now.to_i, collection_id: collection.id)
 
       status 200
     end
