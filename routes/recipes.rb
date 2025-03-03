@@ -22,6 +22,58 @@ class MyApp < Sinatra::Application
     haml :'recipes/new'
   end
 
+  get '/recipes/manual' do
+    haml :'recipes/manual'
+  end
+
+  post '/recipes' do
+    # for manual recipes
+
+    halt 401 if @user.nil?
+
+    p params
+
+    title = params['title']
+    description = params['description']
+    image = params['image']
+    instructions = params['instructions']
+    time = params['time']
+    servings = params['servings']
+    ingredients = params['ingredient']
+    difficulty = params['difficulty']
+
+
+    halt 400 if [title, description, instructions, time, servings, ingredients].any?(&:nil?)
+    halt 400 if !['easy', 'medium', 'hard'].include?(difficulty)
+
+    recipe = Recipe.create(
+      title: title,
+      description: description,
+      image_url: image,
+      site_name: "Manuellt recept",
+      url: "Manuellt recept",
+      time: time,
+      servings: servings,
+      difficulty: difficulty,
+      is_manual: true,
+      instructions: instructions
+    )
+
+    ingredients.each do |ingredient|
+      Ingredient.create(recipe_id: recipe.id, name: ingredient)
+    end
+
+    collection = Collection.where(owner_id: @user.id, name: "Favoriter").first
+    if collection.nil?
+      collection = Collection.where(owner_id: @user.id).first
+    end
+
+    SavedRecipe.create(user_id: @user.id, recipe_id: recipe.id, created_at: Time.now.to_i, collection_id: collection.id)
+
+    redirect "/recipes/#{recipe.id}"
+
+  end
+
   get '/recipes/:id' do | id |
     @recipe = Recipe[id]
     if @recipe.nil?
@@ -32,62 +84,6 @@ class MyApp < Sinatra::Application
     @comments = []
 
     haml :'recipes/show'
-  end
-
-  post '/recipes' do
-
-    # make sure user is logged in
-    if @user.nil?
-      halt 401, 'You must be logged in to save a recipe'
-    end
-
-    # make sure all the headers are there
-    if !params['url']
-      halt 400, 'url is required'
-    end
-
-    # make sure the recipe doesn't already exist
-    if Recipe.where(url: params['url']).first
-      halt 400, 'Recipe already exists'
-    end
-
-    # get the title and image from the url
-    recipe_data = get_recipe_data(params['url'])
-    
-    title = recipe_data[:title]
-    image = recipe_data[:image]
-    description = recipe_data[:description]
-    time = recipe_data[:time]
-    servings = recipe_data[:servings]
-    ingredients = recipe_data[:ingredients]
-    site = recipe_data[:site]
-
-    # create a new recipe
-    Recipe.create(
-      title: title,
-      description: description,
-      image_url: image,
-      site_name: site,
-      url: params['url'],
-      time: time,
-      servings: servings,
-    )
-
-    # get the user collections
-    collection = Collection.where(owner_id: @user.id, name: "Favoriter").first
-
-    if collection.nil?
-      collection = Collection.first(owner_id: @user.id).first
-    end
-
-    # Save the recipe for the user
-
-    recipe = Recipe.where(url: params['url']).first
-    SavedRecipe.create(user_id: @user.id, recipe_id: recipe.id, created_at: Time.now.to_i, collection_id: collection.id)
-
-    # redirect to recipes
-    redirect "/recipes"
-
   end
 
   get '/recipes' do
@@ -177,7 +173,7 @@ class MyApp < Sinatra::Application
       
       halt 404 if recipe.nil?
 
-      saved_recipes = SavedRecipe.where(user_id: @user.id, recipe_id: recipe.id)
+      SavedRecipe.where(user_id: @user.id, recipe_id: recipe.id)
 
       # get all collections
       collections = Collection.where(owner_id: @user.id).or(

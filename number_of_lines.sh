@@ -1,0 +1,1 @@
+git ls-files | grep -vE '\.(JPEG|png|jpg|svg)' | xargs wc -l  

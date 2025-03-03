@@ -1,0 +1,44 @@
+- content_for :head do
+    %title Receptbasen - Nytt recept
+    %meta{property: "og:title", content: "Receptbasen"}
+    %meta{property: "og:type", content: "website"}
+    %meta{property: "og:url", content: "https://receptbasen.se"}
+    %script{ src: "/js/manualRecipe.js?#{Time.now}", defer: true }
+
+.static-container
+    %h2.page-title Nytt Recept
+    %form{ :method => "POST", :action => "/recipes" }
+        .input-group
+            %label{ :for => "title" } Namn
+            %input#title{ :type => "text", :name => "title", :placeholder => "Receptnamn" }
+        .input-group
+            %label{ :for => "image" } Bild URL
+            %input#image{ :type => "text", :name => "image", :placeholder => "URL till bild" }
+        .input-group
+            %label{ :for => "description" } Kort beskrivning
+            %textarea#description{ :name => "description", :placeholder => "En kort beskrivning av receptet", :style => "resize: vertical" }
+        .input-group
+            %label Ingredienser
+            .add-ingredient-list
+                .add-ingredient
+                    %input{ :type => "text", :name => "ingredient[]", :placeholder => "Ingrediens", :required => true}
+                    %button.btn.btn--secondary{ :type => "button", :onclick => "removeIngredient(this)" } Ta bort
+            %button#addIngredient.btn.btn--primary{ :type => "button" } Ny ingrediens
+        .input-group
+            %label{ :for => "instructions" } Gör så här
+            %textarea#instructions{ :name => "instructions", :placeholder => "Gör så här...", :style => "resize: vertical" }
+        .input-group
+            %label{ :for => "servings" } Antal portioner
+            %input#servings{ :type => "text", :name => "servings", :placeholder => "Antal portioner" }
+        .input-group
+            %label{ :for => "time" } Ungefärlig tid
+            %input#time{ :type => "text", :name => "time", :placeholder => "Ungefärlig tid" }
+        .input-group
+            %label{ :for => "difficulty" } Svårhetsgrad
+            %select#difficulty{ :name => "difficulty" }
+                %option{ :value => "easy" } Lätt
+                %option{ :value => "medium" } Medel
+                %option{ :value => "hard" } Svårt
+        
+        %button.btn.btn--primary{ :type => "submit" } Skicka
+    

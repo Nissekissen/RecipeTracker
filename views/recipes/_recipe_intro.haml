@@ -15,6 +15,10 @@
                 -# .recipe-info-bar-item
                 -#     %i.fa-solid.fa-blender.fa-xl{ :style => "color: #000" }
                 -#     = "#{@recipe.ingredients.length} ingredienser"
+                - if @recipe.is_manual
+                    .recipe-info-bar-item
+                        %img.icon{ :src => "/assets/svg/chalkboard.svg" }
+                        Manuellt
             %p.recipe-description= @recipe.description
         .recipe-info-group
             .recipe-info-btns
@@ -22,10 +26,11 @@
                     .info-btn-content
                         %img.info-btn-icon{ :src => "/assets/svg/bookmark.svg" }
                         Spara
-                %button.recipe-info-btn{ :title => "Läs hela receptet", :onclick => "window.open('#{@recipe.url}', '_blank')"}
-                    .info-btn-content
-                        %img.info-btn-icon{ :src => "/assets/svg/external-link.svg" }
-                        Läs
+                - if !@recipe.is_manual
+                    %button.recipe-info-btn{ :title => "Läs hela receptet", :onclick => "window.open('#{@recipe.url}', '_blank')"}
+                        .info-btn-content
+                            %img.info-btn-icon{ :src => "/assets/svg/external-link.svg" }
+                            Läs
                 %button.recipe-info-btn{ :title => "Lägg till i inköpslisa"}
                     .info-btn-content
                         %img.info-btn-icon{ :src => "/assets/svg/cart.svg" }

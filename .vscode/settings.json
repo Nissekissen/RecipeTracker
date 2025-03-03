@@ -1,6 +1,7 @@
 {
     "vim.handleKeys": {
         "<C-p>": false,
-        "<C-i>": false
+        "<C-i>": false,
+        "<A-S-f>": false
     }
 }

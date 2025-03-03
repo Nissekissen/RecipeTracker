@@ -145,7 +145,7 @@ class MyApp < Sinatra::Application
     content = params[:content]
     halt 400, 'content is required' if content.nil?
 
-    comment = Comment.create(
+    Comment.create(
       recipe_id: recipe_id,
       owner_id: @user.id,
       parent_id: parent_id,
