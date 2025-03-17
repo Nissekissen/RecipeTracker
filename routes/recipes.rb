@@ -68,6 +68,13 @@ class MyApp < Sinatra::Application
       collection = Collection.where(owner_id: @user.id).first
     end
 
+    # create a recipe interaction
+    RecipeInteraction.create(
+      recipe_id: recipe.id,
+      user_id: @user.id,
+      interaction_type: 'save'
+    )
+    
     SavedRecipe.create(user_id: @user.id, recipe_id: recipe.id, created_at: Time.now.to_i, collection_id: collection.id)
 
     redirect "/recipes/#{recipe.id}"
@@ -81,9 +88,34 @@ class MyApp < Sinatra::Application
       redirect '/recipes/not-found'
     end
 
+    # create a recipe interaction
+    if !@user.nil?
+      RecipeInteraction.create(
+        recipe_id: @recipe.id,
+        user_id: @user.id,
+        interaction_type: 'view'
+      )
+    end
+
     @comments = []
 
     haml :'recipes/show'
+  end
+
+  get '/recipes/:id/external' do | id |
+    @recipe = Recipe[id]
+    halt 404 if @recipe.nil?
+
+    # create a recipe interaction
+    if !@user.nil?
+      RecipeInteraction.create(
+        recipe_id: @recipe.id,
+        user_id: @user.id,
+        interaction_type: 'view'
+      )
+    end
+
+    redirect @recipe.url
   end
 
   get '/recipes' do
@@ -148,8 +180,14 @@ class MyApp < Sinatra::Application
       # If the saved recipe exists, delete it. Otherwise, create it
       saved_recipe = SavedRecipe.where(recipe_id: recipe.id, collection_id: collection.id).first
 
-      group_id = nil
       if saved_recipe.nil?
+
+        # create a recipe interaction
+        RecipeInteraction.create(
+          recipe_id: recipe.id,
+          user_id: @user.id,
+          interaction_type: 'save'
+        )        
 
         saved_recipe = SavedRecipe.create(recipe_id: recipe.id, user_id: @user.id, collection_id: collection.id, created_at: Time.now.to_i, group_id: collection.group_id)
       else

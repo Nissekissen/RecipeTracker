@@ -26,6 +26,8 @@
                 .search-icon#searchSubmit
                     %img{ :src => "/assets/svg/search.svg", :alt => "search", :width => "32px" }
 .margin-row
-!= haml :'recipes/_row', :locals => { :header => @header_name, :recipes => @recipes }
+
+- @recipe_rows.each do |row|
+    != haml :'recipes/_row', :locals => { header: row[:name], recipes: row[:recipes] }
 
 %script{ :src => "/js/fireworkHandler.js?#{Time.now.to_i}" }

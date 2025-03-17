@@ -10,3 +10,5 @@ require_relative 'openai'
 MyApp.helpers OpenAI
 require_relative 'groups'
 MyApp.helpers Groups
+require_relative 'recommendation'
+MyApp.helpers Recommendation

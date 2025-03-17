@@ -5,18 +5,21 @@ class MyApp < Sinatra::Application
   # enable :sessions
 
   get '/' do
-    @recipes = Recipe.all
-    @header_name = "Alla recept"
-    if !@user.nil?
-      @header_name = "Dina recept"
-      @recipes = SavedRecipe.where(user_id: @user.id).all.map(&:recipe)
-      # append recipes that are saved in a group that the user is a member of
-      @user.groups.each do |group|
-        new_arr = SavedRecipe.where(group_id: group.id).all.map(&:recipe)
-        p @recipes
-        @recipes = @recipes + new_arr
+    halt 401 if @user.nil?
+    @recipe_rows = []
+    landing_page = generate_landing_page(@user.id)
+    landing_page.each do |row|
+      recipe_ids = row.get_recipes
+      p recipe_ids
+      next if recipe_ids.empty?
+
+      @recipe_rows << { :name => row.name, :recipes => [] }
+
+      # row.get_recipes returns an array of recipe ids. We need to convert them to Recipe objects
+      recipe_ids.each do |recipe_id|
+        recipe = Recipe[recipe_id]
+        @recipe_rows.last[:recipes] << recipe unless recipe.nil?
       end
-      @recipes = @recipes.uniq
     end
     haml :home
   end

@@ -1696,7 +1696,7 @@ p.error-display {
 	padding: 1rem;
 	border-radius: 5px;
 	width: 100%;
-	height: fit-content;
+	/* height: fit-content; */
 }
 
 .recipe h3 {
@@ -1934,7 +1934,7 @@ p.error-display {
 	background-color: #ffbc47;
 	transition: width 0.5s ease-in-out;
 }
-.active:not(.profile-content-nav-item):not(.group-content-nav-item) {
+.active:not(.profile-content-nav-item):not(.group-content-nav-item):not(.tab-button) {
 	background-color: #ffbc47;
 	color: white;
 }
@@ -2297,4 +2297,23 @@ p.error-display {
 	.collections-container {
 		grid-template-columns: 1fr;
 	}
+}
+
+.tab-buttons {
+    display: flex;
+    gap: 1rem;
+    margin-bottom: 2rem;
+}
+
+.tab-content {
+    display: none;
+    padding: 1rem;
+    background-color: white;
+    border-radius: 5px;
+	position: relative;
+	height: calc(100% - 45.6px - 2rem);
+}
+
+.tab-button.active {
+	color: black;
 }

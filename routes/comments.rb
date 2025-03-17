@@ -100,6 +100,13 @@ class MyApp < Sinatra::Application
         halt 200
       end
 
+      # create recipe interaction
+      RecipeInteraction.create(
+        recipe_id: recipe_id,
+        user_id: @user.id,
+        interaction_type: 'comment'
+      )
+
       comment = Comment.create(
         recipe_id: recipe_id,
         owner_id: @user.id,
@@ -107,8 +114,6 @@ class MyApp < Sinatra::Application
         group_id: group_id,
         content: content
       )
-
-      p get_comment_depth(comment.id)
 
       # return the comment as html
       haml :'comments/_comment', locals: { comment: comment }, layout: false
@@ -144,6 +149,13 @@ class MyApp < Sinatra::Application
 
     content = params[:content]
     halt 400, 'content is required' if content.nil?
+
+    # create recipe interaction
+    RecipeInteraction.create(
+      recipe_id: recipe_id,
+      user_id: @user.id,
+      interaction_type: 'comment'
+    )
 
     Comment.create(
       recipe_id: recipe_id,

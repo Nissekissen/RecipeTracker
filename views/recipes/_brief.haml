@@ -4,8 +4,9 @@
             %a{ :href => "/recipes/#{recipe.id}" }
                 %img.card-image{ :src => recipe.image_url }
             .btn-container
-                %a.recipe-brief-round-btn{ :title => "Läs hela receptet", :href => recipe.url, :target => "_blank" }
-                    %img.btn-icon{ :src => "/assets/svg/external-link.svg" }
+                - if !recipe.is_manual
+                    %a.recipe-brief-round-btn{ :title => "Läs hela receptet", :href => "recipes/#{recipe.id}/external", :target => "_blank" }
+                        %img.btn-icon{ :src => "/assets/svg/external-link.svg" }
                 %button.recipe-brief-round-btn.save-recipe{ :title => "Spara", :data => { :recipeid => recipe.id } }
                     %img.btn-icon{ :src => "/assets/svg/bookmark#{"-fill" if is_saved?(recipe.id)}.svg" }
         .card-content

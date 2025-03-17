@@ -23,6 +23,8 @@ module OGParser
       url: og_data['url'] || url
     }
 
+    p recipe
+
     recipe
   end
 end

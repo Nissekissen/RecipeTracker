@@ -6,6 +6,7 @@
     %script{ src: "/js/addRecipe.js?#{Time.now}", defer: true}
     %script{ src: "/js/recipeHelper.js", defer: true}
     %script{ src: "/js/commentsHelper.js?#{Time.now}", defer: true}
+    %script{ src: "/js/tabs.js", defer: true}
 
 .recipe{ data: { recipe_id: @recipe.id } }
     != haml :"recipes/_recipe_intro", :locals => { :recipe => @recipe }
@@ -15,18 +16,25 @@
             %ul
                 - @recipe.ingredients.each do |ingredient|
                     %li= ingredient.name
-        .recipe-discussion-container
-            %h3 Diskussion
-            - if @user.nil?
-                .error-content
-                    %p Logga in för att kommentera
-                    %a.btn.btn--primary{ href: "/login" } Logga in  
-            - else
-                .group-select-menu
-                    %select.group-select{ :onchange => "changeGroup(this.value)"}
-                        %option{ :value => "public" } Offentlig diskussion
-                        %option{ :value => "private" } Egna anteckningar
-                        - @user.groups.each do |group|
-                            %option{ :value => group.id } #{group.name}
-                != haml :'comments/_form'
-                .comment-list
+        .recipe-tabs
+            %div.tab-buttons
+                %button.btn.btn--primary.tab-button{ onclick: "openTab(event, 'instructions')" } Instruktioner
+                %button.btn.btn--primary.tab-button{ onclick: "openTab(event, 'discussion')" } Diskussion
+            %div.tab-content#instructions
+                %h3 Instruktioner
+                %p= @recipe.instructions
+            %div.tab-content#discussion
+                %h3 Diskussion
+                - if @user.nil?
+                    .error-content
+                        %p Logga in för att kommentera
+                        %a.btn.btn--primary{ href: "/login" } Logga in  
+                - else
+                    .group-select-menu
+                        %select.group-select{ :onchange => "changeGroup(this.value)"}
+                            %option{ :value => "public" } Offentlig diskussion
+                            %option{ :value => "private" } Egna anteckningar
+                            - @user.groups.each do |group|
+                                %option{ :value => group.id } #{group.name}
+                    != haml :'comments/_form'
+                    .comment-list

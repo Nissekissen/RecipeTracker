@@ -51,7 +51,7 @@ module OpenAI
       "servings": "string",
       "ingredients": ["string"],
       "difficulty": "string" (answer with easy, medium or hard in english),
-      "tags": ["string"] (at least 5 keywords that help to identify the recipe. Might be cousine, diet, priceclass, main ingredient etc.)
+      "tags": ["string"] (One must be the main ingredient of the dish (e.g. chicken, beef, etc.), one must be the type of dish (e.g. soup, salad, etc.), and one must be the cuisine (e.g. italian, mexican, etc.), one must be the diet type (e.g. vegetarian, vegan, etc.), one must be the meal type (e.g. breakfast, lunch, dinner, dessert, etc.), and one must be the occasion (e.g. party, picnic, etc.). Add more tags preferably if you can find them.),
     }'
 
     unless missing_keys.empty?
@@ -90,12 +90,16 @@ module OpenAI
 
     # get the head of the html data without parsing.
     data_head = data.split("</head>")[0]
+    data_head = clean_html(data_head)
+
+    p data_head
+    
 
     response = client.chat(
       parameters: {
         model: 'gpt-4o-mini',
         messages: [
-          {role: 'developer', content: 'You are a recipe bot. To the following partial HTML data, please tell me if this is a valid recipe or not. You will response with either true or false.'},
+          {role: 'developer', content: 'You are a recipe bot. To the following partial HTML data, please tell me if the data is from a webpage that displayed a recipe or not. You will response with either true or false.'},
           {role: 'user', content: data_head}
         ]
       }
@@ -103,7 +107,7 @@ module OpenAI
 
     raw_data = response.dig("choices", 0, "message", "content")
 
-    # p raw_data
+    p raw_data
 
     return raw_data == "true"
   end
