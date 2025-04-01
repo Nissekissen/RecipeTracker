@@ -6,4 +6,4 @@
     %meta{ :property => "og:url", :content => "https://receptbasen.se" }
     %script{ src: "/js/recipeHelper.js", defer: true }
 
-!= haml :'recipes/_list', locals: { recipes: @recipes }
+!= haml :'recipes/_list', :locals => {:recipes => @recipes}

@@ -20,3 +20,9 @@ gem 'dotenv'
 gem 'shrine'
 gem 'ruby-openai'
 gem 'open-uri'
+gem 'rdoc'
+
+group :test do
+  gem 'rspec'
+  gem 'rack-test'
+end

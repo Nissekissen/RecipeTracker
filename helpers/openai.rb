@@ -51,7 +51,7 @@ module OpenAI
       "servings": "string",
       "ingredients": ["string"],
       "difficulty": "string" (answer with easy, medium or hard in english),
-      "tags": ["string"] (One must be the main ingredient of the dish (e.g. chicken, beef, etc.), one must be the type of dish (e.g. soup, salad, etc.), and one must be the cuisine (e.g. italian, mexican, etc.), one must be the diet type (e.g. vegetarian, vegan, etc.), one must be the meal type (e.g. breakfast, lunch, dinner, dessert, etc.), and one must be the occasion (e.g. party, picnic, etc.). Add more tags preferably if you can find them.),
+      "tags": ["string"] (One must be the main ingredient of the dish (e.g. chicken, beef, etc.), one must be the type of dish (e.g. soup, salad, etc.), and one must be the cuisine (e.g. italian, mexican, etc.), one must be the diet type (e.g. vegetarian, vegan, etc.), one must be the meal type (e.g. breakfast, lunch, dinner, dessert, etc.), and one must be the occasion (e.g. party, picnic, etc.). Add more tags preferably if you can find them. They should always be in english.),
     }'
 
     unless missing_keys.empty?
@@ -99,7 +99,7 @@ module OpenAI
       parameters: {
         model: 'gpt-4o-mini',
         messages: [
-          {role: 'developer', content: 'You are a recipe bot. To the following partial HTML data, please tell me if the data is from a webpage that displayed a recipe or not. You will response with either true or false.'},
+          {role: 'developer', content: 'You are a recipe bot. To the following partial HTML data, please tell me if the data is from a webpage that displayed a recipe or not. You will response with either true or false. No additional formatting.'},
           {role: 'user', content: data_head}
         ]
       }
@@ -121,12 +121,19 @@ module OpenAI
         messages: [
           {role: 'developer', content: '
           You are a recipe bot that helps users find recipes.
-          To the following query, please provide me with keywords that can be used to find recipes.
+          To the following query, please provide me with keywords that can be used to find recipes. Here are some common keyword types that you should include:
+          - Main ingredient (e.g. chicken, beef, etc.)
+          - Type of dish (e.g. soup, salad, etc.)
+          - Cuisine (e.g. italian, mexican, etc.)
+          - Diet type (e.g. vegetarian, vegan, etc.)
+          - Meal type (e.g. breakfast, lunch, dinner, dessert, etc.)
+          - Occasion (e.g. party, picnic, etc.)
+          The keywords should always be in english.
           Keywords should be in the following json format:
           {
             "keywords": ["string"]
           }
-          Respond only with the keywords.'},
+          Respond only with the keywords. No additional formatting.'},
           {role: 'user', content: query}
         ]
       }
@@ -134,9 +141,11 @@ module OpenAI
 
     raw_data = response.dig("choices", 0, "message", "content")
 
+    p raw_data
+
     # remove the ```json from the beginning and ``` from end of the string
 
-    raw_data = raw_data[7..-4]
+    # raw_data = raw_data[7..-4]
 
     return JSON.parse(raw_data)
   end

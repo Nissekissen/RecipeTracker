@@ -12,3 +12,5 @@ require_relative 'groups'
 MyApp.helpers Groups
 require_relative 'recommendation'
 MyApp.helpers Recommendation
+require_relative 'search'
+MyApp.helpers Search
