@@ -17,7 +17,7 @@ class MyApp < Sinatra::Application
   end
 
   error 401 do
-    redirect '/auth/google?redirect=' + request.path
+    redirect '/auth/sign-in?redirect=' + request.path
   end
 
 
@@ -89,7 +89,16 @@ class MyApp < Sinatra::Application
         
     end
 
-    get '/signin' do
+    get '/sign-in' do
+      @redirect = params[:redirect]
+      if @redirect.nil?
+          @redirect = '/'
+      end
+
+      if !@user.nil?
+        redirect @redirect
+      end
+      
       haml :'auth/signin'
     end
 

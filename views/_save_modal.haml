@@ -3,7 +3,7 @@
     .save-recipe-modal-content#saveRecipeModalContent
         - if @user.nil?
             %h3.modal-header Logga in för att spara recept
-            %a.modal-btn-primary#loginBtn{ :href => "auth/google"} Logga in
+            %a.modal-btn-primary#loginBtn{ :href => "auth/sign-in"} Logga in
         - else
             -# - if !@collections.nil?
                 -# %input#collections{type: "hidden", value: @collections.map { |c| { id: c[:collection][:id], name: c[:collection][:name], recipes: c[:recipes].map {|r| { id: r[:id] }} } }.to_json }

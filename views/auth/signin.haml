@@ -1,3 +1,16 @@
-%h2.page-title Logga in
+- content_for :head do
+    %title Receptbasen - Logga in
+    %meta{property: "og:title", content: "Receptbasen"}
+    %meta{property: "og:type", content: "website"}
+    %meta{property: "og:url", content: "https://receptbasen.se"}
 
-%a.google-sign-in{ :href => "/auth/google" } Logga in med google
+.container
+    .corners
+        %img.corner{src: "/assets/svg/corner.svg"}
+        %img.corner{src: "/assets/svg/corner.svg"}
+        %img.corner{src: "/assets/svg/corner.svg"}
+        %img.corner{src: "/assets/svg/corner.svg"}
+    
+    %h2.page-title Logga in
+
+    %a.google-log-in{ :href => "/auth/google?redirect=#{@redirect}" } Logga in med Google

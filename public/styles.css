@@ -2325,3 +2325,17 @@ p.error-display {
 .tab-button.active {
 	color: black;
 }
+
+.google-log-in {
+	padding: 0.65rem 1.5rem;
+	background: white;
+	color: black;
+	border-radius: 5px;
+	border: 1px solid #999;
+	text-decoration: none;
+}
+
+.google-log-in:hover {
+	background: #eee;
+	cursor: pointer;
+}

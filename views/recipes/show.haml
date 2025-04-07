@@ -29,7 +29,7 @@
                 - if @user.nil?
                     .error-content
                         %p Logga in för att kommentera
-                        %a.btn.btn--primary{ href: "/login" } Logga in  
+                        %a.btn.btn--primary{ href: "/auth/sign-in" } Logga in  
                 - else
                     .group-select-menu
                         %select.group-select{ :onchange => "changeGroup(this.value)"}

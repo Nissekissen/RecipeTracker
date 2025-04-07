@@ -55,6 +55,6 @@ document.getElementById('fireworkBtn').addEventListener('click', () => {
     document.getElementById('fireworkContainer').style.zIndex = '10';
     fireworks.launch(2);
     setTimeout(() => {
-        window.location.href = '/login';
+        window.location.href = '/auth/sign-in';
     }, 500)
 });
