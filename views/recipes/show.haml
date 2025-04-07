@@ -17,13 +17,14 @@
                 - @recipe.ingredients.each do |ingredient|
                     %li= ingredient.name
         .recipe-tabs
-            %div.tab-buttons
-                %button.btn.btn--primary.tab-button{ onclick: "openTab(event, 'instructions')" } Instruktioner
-                %button.btn.btn--primary.tab-button{ onclick: "openTab(event, 'discussion')" } Diskussion
-            %div.tab-content#instructions
-                %h3 Instruktioner
-                %p= @recipe.instructions
-            %div.tab-content#discussion
+            - if @recipe.is_manual
+                %div.tab-buttons
+                    %button.btn.btn--primary.tab-button{ onclick: "openTab(event, 'instructions')" } Instruktioner
+                    %button.btn.btn--primary.tab-button{ onclick: "openTab(event, 'discussion')" } Diskussion
+                %div.tab-content#instructions
+                    %h3 Instruktioner
+                    %p= @recipe.instructions
+            %div.tab-content#discussion{ :style => @recipe.is_manual ? "" : "display: block;", :class => @recipe.is_manual ? "" : "alone" }
                 %h3 Diskussion
                 - if @user.nil?
                     .error-content

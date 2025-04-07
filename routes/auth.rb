@@ -12,6 +12,7 @@ class MyApp < Sinatra::Application
     user_session = Session.find(token: cookies[:session])
     if !session.nil? && valid_session_token?(cookies[:session])
       @user = User.find(id: user_session.user_id)
+      @jwt = user_session.token
     end
   end
 
@@ -105,5 +106,20 @@ class MyApp < Sinatra::Application
 
   get '/logout' do
     redirect '/auth/signout'
+  end
+
+  get '/api/v1/get-user' do
+    # get user from jwt
+    if @user.nil?
+      halt 401, { error: 'Unauthorized' }.to_json
+    end
+    
+    user = {
+      id: @user.id,
+      name: @user.name,
+      avatar_url: @user.avatar_url
+    }
+
+    user.to_json
   end
 end

@@ -8,10 +8,10 @@
       %p= h comment.content
     .comment-actions
       %button.comment-btn.reply-btn{ :title => "Svara"}
-        %i.fa.fa-reply
+        %img{ :src => "/assets/svg/reply.svg" }
       - if comment.owner_id == @user.id
         %button.comment-btn.delete-btn{ :title => "Ta bort"}
-          %i.fa-regular.fa-trash-can
+          %img{ :src => "/assets/svg/trash_bin.svg" }
           
 
   - if !comment[:children].nil? && comment[:children].any?

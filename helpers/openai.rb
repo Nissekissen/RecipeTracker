@@ -120,20 +120,45 @@ module OpenAI
         model: 'gpt-4o-mini',
         messages: [
           {role: 'developer', content: '
-          You are a recipe bot that helps users find recipes.
-          To the following query, please provide me with keywords that can be used to find recipes. Here are some common keyword types that you should include:
-          - Main ingredient (e.g. chicken, beef, etc.)
-          - Type of dish (e.g. soup, salad, etc.)
-          - Cuisine (e.g. italian, mexican, etc.)
-          - Diet type (e.g. vegetarian, vegan, etc.)
-          - Meal type (e.g. breakfast, lunch, dinner, dessert, etc.)
-          - Occasion (e.g. party, picnic, etc.)
-          The keywords should always be in english.
-          Keywords should be in the following json format:
-          {
-            "keywords": ["string"]
-          }
-          Respond only with the keywords. No additional formatting.'},
+          You are a recipe bot that helps users find recipes.  
+Given the following search query, extract relevant keywords that can be used to find recipes. Your goal is to find all relevant recipes. Categorize them into the following types:  
+- Main Ingredients (e.g., chicken, beef, tofu)  
+- Dish Type (e.g., soup, salad, curry)  
+- Cuisine (e.g., Italian, Mexican, Thai)  
+- Diet Type (e.g., vegetarian, vegan, keto)  
+- Meal Type (e.g., breakfast, lunch, dinner)  
+- Occasion (e.g., party, picnic, holiday)  
+
+Always return the response in this JSON format:  
+{
+  "ingredients": ["string"],
+  "dish_types": ["string"],
+  "cuisines": ["string"],
+  "diet_types": ["string"],
+  "meal_types": ["string"],
+  "occasions": ["string"]
+}
+
+Rules:  
+- Extract only the most relevant keywords.  
+- Do not include general words like "recipe," "easy," or "delicious."  
+- All keywords should be in lowercase English.  
+- If a category has no matches, return an empty array.  
+
+Example Query → Response:  
+User Query: "Looking for a quick and easy vegan Mexican taco recipe for a family dinner."  
+ChatGPT Response:  
+{
+  "ingredients": ["taco"],
+  "dish_types": ["taco"],
+  "cuisines": ["mexican"],
+  "diet_types": ["vegan"],
+  "meal_types": ["dinner"],
+  "occasions": ["family"]
+}  
+
+Respond only with the JSON. No explanations, no additional text.
+'},
           {role: 'user', content: query}
         ]
       }

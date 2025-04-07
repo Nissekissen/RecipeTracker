@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <script src="popup.js" defer></script>
+    <link rel="stylesheet" href="popup.css">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+</head>
+<body>
+    <div class="container">
+        <h1>Receptbasen</h1>
+        <div id="notLoggedIn">
+            <div class="btn btn-primary" id="logIn">Logga in</div>
+        </div>
+        <div id="loggedIn">
+            <div id="canBeSaved">
+                <button class="btn btn-primary" id="saveRecipe">Spara recept</button>
+            </div>
+            <div id="canNotBeSaved">
+                <button class="btn btn-primary btn-disabled">Spara recept</button>
+                <p>Detta recept kan inte sparas.</p>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

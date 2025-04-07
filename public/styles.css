@@ -1699,6 +1699,10 @@ p.error-display {
 	/* height: fit-content; */
 }
 
+.recipe-content:has(.alone) .recipe-ingredients-container {
+	height: fit-content;
+}
+
 .recipe h3 {
 	font-size: var(--size-subtitle);
 	text-align: center;
@@ -2312,6 +2316,10 @@ p.error-display {
     border-radius: 5px;
 	position: relative;
 	height: calc(100% - 45.6px - 2rem);
+}
+
+.tab-content.alone {
+	height: fit-content;
 }
 
 .tab-button.active {

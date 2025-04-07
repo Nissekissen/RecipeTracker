@@ -5,11 +5,13 @@ require 'haml'
 require 'googleauth'
 require 'googleauth/stores/file_token_store'
 require 'sequel'
+require_relative 'rate_limiter'
 # Haml::Template.options[:hyphenate_data_attrs] = false
 
 class MyApp < Sinatra::Application
     enable :sessions
 
+    use RateLimiter, limit: 100, period: 60 # 100 requests per minute
 
 
     configure do

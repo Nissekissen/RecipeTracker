@@ -3,7 +3,12 @@ require 'sequel'
 module Search
 
   def get_recipes_from_query(query)
-    keywords = get_keywords_from_query(query)["keywords"]
+    keywords_dict = get_keywords_from_query(query)
+
+    keywords = keywords_dict.values.flatten.uniq
+    keywords = keywords.map { |keyword| keyword.downcase.strip }
+
+    p keywords
 
     # search the tags and ingredients for the keywords.
     # Score the recipes based on how many tags and ingredients match the keywords.
@@ -20,9 +25,9 @@ module Search
     p tag_matches
 
     weights = {
-      :ingredient => 5,
-      :tag => 1,
-      :title => 3
+      :ingredient => 4,
+      :tag => 2,
+      :title => 5
     }
 
     # score the recipes based on the number of matches
@@ -51,7 +56,7 @@ module Search
     @recipes = Recipe.where(id: recipe_scores.keys).all
 
     # remove recipes with score < 3
-    @recipes = @recipes.select { |recipe| recipe_scores[recipe.id] >= 3 }
+    # @recipes = @recipes.select { |recipe| recipe_scores[recipe.id] >= 3 }
 
     @recipes = @recipes.sort_by { |recipe| -recipe_scores[recipe.id] }
     

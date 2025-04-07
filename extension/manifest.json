@@ -1,0 +1,44 @@
+{
+    "name": "Receptbasen",
+    "description": "Spara dina favoritrecept",
+    "version": "1.0",
+    "manifest_version": 3,
+    "action": {
+        "default_popup": "popup.html"
+    },
+    "permissions": ["storage", "scripting"],
+    "host_permissions": ["https://receptbasen.se/*", "http://localhost:9292/*"],
+    "background": {
+        "service_worker": "background.js"
+    },
+    "content_scripts": [
+        {
+            "matches": ["https://receptbasen.se/*", "http://localhost:9292/*"],
+            "js": ["content.js"]
+        },
+        {
+            "matches": [
+                "*://*.arla.se/recept/*",
+                "*://*.tasteline.com/recept/*"
+            ],
+            "exclude_matches": [
+                "*://*.arla.se/recept/samling/*",
+                "*://*.arla.se/recept/",
+                "*://*.tasteline.com/recept/"
+            ],
+            "js": ["recipe_content.js"]
+        },
+        {
+            "matches": [
+                "*://*.ica.se/recept/*",
+                "*://*.koket.se/*"
+            ],
+            "exclude_matches": [
+                "*://*.ica.se/recept/",
+                "*://*.koket.se/recept/*",
+                "*://*.koket.se/mat/*"
+            ],
+            "js": ["filter_recipe_content.js"]
+        }
+    ]
+}

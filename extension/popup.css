@@ -1,0 +1,75 @@
+
+:root {
+    --background-1: #f4f4f4;
+	--background-2: #eeeeee;
+	--background-3: #dddddd;
+
+    --color-primary-soft: #f7e4b8;
+	--color-primary-soft-dark: #e6d3a5;
+	--text: #050316;
+	--background: #fbfbfe;
+	--color-primary: #ffbc47;
+	--color-primary-dark: #eaa42b;
+	--color-secondary: #e4e2ff;
+	--color-secondary-dark: #c1bdef;
+	--color-accent: #443dff;
+}
+
+*,
+*::before,
+*::after {
+	box-sizing: border-box;
+	margin: 0;
+	padding: 0;
+	font-family: "PT sans", sans-serif;
+}
+
+body {
+    background-color: var(--background-1);
+    color: var(--text);
+    font-size: 16px;
+    line-height: 1.5;
+    width: 300px;
+    border-radius: 3px;
+}
+
+.btn {
+    border-radius: 5px;
+    padding: 10px 15px;
+    font-size: 14px;
+    font-weight: 500;
+}
+
+.btn.btn-primary {
+    background-color: var(--color-primary);
+    color: var(--text);
+    border: none;
+    cursor: pointer;
+}
+
+.btn.btn-primary:hover {
+    background-color: var(--color-primary-dark);
+}
+.btn.btn-secondary {
+    background-color: var(--color-secondary);
+    color: var(--text);
+    border: none;
+    cursor: pointer;
+}
+.btn.btn-secondary:hover {
+    background-color: var(--color-secondary-dark);
+}
+
+.btn.btn-disabled {
+    background-color: var(--color-primary-dark);
+    color: var(--text);
+    border: none;
+    cursor: not-allowed;
+}
+
+.container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 1rem;
+}

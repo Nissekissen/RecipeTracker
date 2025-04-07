@@ -9,8 +9,11 @@
     %meta{ :name => "viewport", :content => "width=device-width, initial-scale=1.0" }
     %script{ :src => "/js/searchHelper.js?#{Time.now}", :defer => true }
     %script{ :src => "https://kit.fontawesome.com/e3620f2009.js", :crossorigin => "anonymous" }
+    %script{ :src => "/js/extensionHelper.js?#{Time.now}", :defer => true }
     = yield_content :head
   %body
+    - if !@user.nil?
+      %input#jwt{ :type => "hidden", :value => @jwt }
     != haml :_header
     %main
       != haml :_save_modal
