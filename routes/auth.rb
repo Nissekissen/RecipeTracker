@@ -117,18 +117,21 @@ class MyApp < Sinatra::Application
     redirect '/auth/signout'
   end
 
-  get '/api/v1/get-user' do
-    # get user from jwt
-    if @user.nil?
-      halt 401, { error: 'Unauthorized' }.to_json
-    end
-    
-    user = {
-      id: @user.id,
-      name: @user.name,
-      avatar_url: @user.avatar_url
-    }
+  namespace '/api/v1' do
 
-    user.to_json
+    get '/get-user' do        
+      # get user from jwt
+      if @user.nil?
+        halt 401, { error: 'Unauthorized' }.to_json
+      end
+      
+      user = {
+        id: @user.id,
+        name: @user.name,
+        avatar_url: @user.avatar_url
+      }
+
+      user.to_json
+    end
   end
 end

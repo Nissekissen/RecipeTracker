@@ -17,6 +17,10 @@
             "js": ["content.js"]
         },
         {
+            "matches": ["<all_urls>"],
+            "js": ["all_content.js"]
+        },
+        {
             "matches": [
                 "*://*.arla.se/recept/*",
                 "*://*.tasteline.com/recept/*"

@@ -9,6 +9,11 @@ class MyApp < Sinatra::Application
       { error: 'not found' }.to_json
     end
 
+    error 401 do
+      content_type :json
+      { error: 'Unauthorized'}.to_json
+    end
+
     get '/recipes/:recipe_id/comments' do |recipe_id|
       group_id = params[:group_id]
       if group_id.nil? || group_id == 'public'

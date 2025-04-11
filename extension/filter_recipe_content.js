@@ -21,7 +21,7 @@ const isRecipePage = () => {
 console.log("Is recipe page:", isRecipePage());
 
 if (isRecipePage()) {
-    console.log("Recipe page detected.");
+    console.log("Recipe page detected (filter).");
     // Optionally, send a message to the popup
     chrome.runtime.sendMessage({ type: 'RECIPE_PAGE_DETECTED' });
 }
