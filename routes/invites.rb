@@ -3,6 +3,7 @@ require 'json'
 
 class MyApp < Sinatra::Application
 
+  # Multi-part form for creating a new invite to a group.
   get '/invites/new' do
 
     # make sure user is logged in
@@ -25,6 +26,7 @@ class MyApp < Sinatra::Application
     haml :'invites/new'
   end
 
+  # Create invite, multi-part.
   post '/invites' do
     # create invite
 
@@ -50,6 +52,7 @@ class MyApp < Sinatra::Application
     haml :'invites/new'
   end
 
+  # Join a group through an invite.
   get '/invite/:token' do | token |
     # get invite
 
@@ -74,6 +77,7 @@ class MyApp < Sinatra::Application
     haml :'invites/show'
   end
 
+  # Accept an invite.
   get '/invite/:token/accept' do | token |
     # accept invite
 
@@ -117,6 +121,7 @@ class MyApp < Sinatra::Application
 
   namespace '/api/v1' do
 
+    # Create an invite. Requires group_id and uses.
     post '/invites' do
       # create invite
 

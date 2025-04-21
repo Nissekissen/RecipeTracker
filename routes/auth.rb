@@ -23,6 +23,7 @@ class MyApp < Sinatra::Application
 
   namespace '/auth' do
 
+    # log in with google
     get '/google' do
       db_session = Session[cookies[:session]]
 
@@ -89,6 +90,7 @@ class MyApp < Sinatra::Application
         
     end
 
+    # main login page
     get '/sign-in' do
       @redirect = params[:redirect]
       if @redirect.nil?
@@ -119,6 +121,7 @@ class MyApp < Sinatra::Application
 
   namespace '/api/v1' do
 
+    # used by chrome extension to get user information
     get '/get-user' do        
       # get user from jwt
       if @user.nil?

@@ -2,8 +2,10 @@ require 'sinatra/namespace'
 
 class MyApp < Sinatra::Application
 
+  # Collections are only fetched using javascript, so only API is needed.
   namespace '/api/v1' do
 
+    # Get all collections for a user. User params['user_id'] or the currently logged in user. The response will include collections from groups the user is a member of.
     get '/collections' do
       content_type :json
 
@@ -49,6 +51,7 @@ class MyApp < Sinatra::Application
 
     end
 
+    # Create a new collection. Saved for the currently logged in user. If group_id is provided, the collection will be created for that group. Name is required.
     post '/collections' do
 
       if @user.nil?
@@ -80,6 +83,7 @@ class MyApp < Sinatra::Application
 
     end
 
+    # Update a collection
     put '/collections/:id' do | id |
       halt 401 if @user.nil?
 
@@ -109,6 +113,7 @@ class MyApp < Sinatra::Application
       status 204
     end
 
+    # Delete a collection
     delete '/collections/:id' do | id |
       halt 401 if @user.nil?
 

@@ -52,7 +52,7 @@ module Recommendation
         .where(user_id: similar_users)
         .exclude(recipe_id: recipe_scores.keys)
         .group_by(:recipe_id)
-        .order(Sequel.desc(:count))
+        .order(Sequel.desc(Sequel.function(:COUNT, :id)))
         .limit(10)
         .select_map(:recipe_id)
     

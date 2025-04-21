@@ -2,6 +2,8 @@ require 'sinatra/namespace'
 require 'json'
 
 class MyApp < Sinatra::Application
+
+  # Comments are only fetched using javascript, so only API is needed.
   namespace '/api/v1' do
 
     error 404 do
@@ -14,6 +16,7 @@ class MyApp < Sinatra::Application
       { error: 'Unauthorized'}.to_json
     end
 
+    # Get comments for a specific recipe. group_id specifies which group the comments are for. Private means private notes for the user (stored as a comment). It returns the comments nested.
     get '/recipes/:recipe_id/comments' do |recipe_id|
       group_id = params[:group_id]
       if group_id.nil? || group_id == 'public'
@@ -57,6 +60,7 @@ class MyApp < Sinatra::Application
       haml :'comments/index', locals: { comments: root_comments }, layout: false
     end
 
+    # Create a new comment. Provide group_id (see above) and parent_id (for nested comments). 
     post '/recipes/:recipe_id/comments' do |recipe_id|
       # make sure user is logged in
       halt 401 if @user.nil?
@@ -124,6 +128,7 @@ class MyApp < Sinatra::Application
       haml :'comments/_comment', locals: { comment: comment }, layout: false
     end
 
+    # Delete a comment. You can only delete your own comments.
     delete '/recipes/:recipe_id/comments/:comment_id' do |recipe_id, comment_id|
       # make sure user is logged in
       halt 401 if @user.nil?
@@ -138,6 +143,7 @@ class MyApp < Sinatra::Application
     
   end
 
+  # This is the non-API version of the comment creation. It is used for the recipe page.
   post '/comments' do
     # make sure user is logged in
     halt 401 if @user.nil?

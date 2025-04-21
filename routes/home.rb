@@ -4,6 +4,7 @@ require 'sinatra/cookies'
 class MyApp < Sinatra::Application
   # enable :sessions
 
+  # A simple landing page. Currently it sends you to a log in page if you are not logged in, but I will probably change that.
   get '/' do
     halt 401 if @user.nil?
     @recipe_rows = []

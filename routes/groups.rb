@@ -4,6 +4,7 @@ class MyApp < Sinatra::Application
   
   namespace '/groups' do
 
+    # A multi-part form for creating a new group.
     get '/new' do 
 
       @part = 1
@@ -11,6 +12,7 @@ class MyApp < Sinatra::Application
       haml :'groups/new'
     end
 
+    # View a group
     get '/:id' do | id |
       # get group info
       @group = Group.where(id: id).first
@@ -66,6 +68,7 @@ class MyApp < Sinatra::Application
       haml :'groups/show'
     end
 
+    # Try to join a group.
     post '/:id/join' do | id |
       # join public group
 
@@ -111,15 +114,15 @@ class MyApp < Sinatra::Application
 
       redirect "/groups/#{group.id}"
     end
-
+    
+    # get all groups
     get '/' do 
-      # get all groups
       @groups = Group.all
       haml :'groups/index'
     end
 
+    # create new group. Multi-part form.
     post '/' do
-      # create new group
 
       if params[:part].nil?
         halt 400, 'Missing required parameters'

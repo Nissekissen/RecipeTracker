@@ -2,6 +2,7 @@
 
 class MyApp < Sinatra::Application
 
+  # simple search algorithm.
   get '/search' do
     
     @query = params[:q]

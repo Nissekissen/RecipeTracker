@@ -1,5 +1,6 @@
 class MyApp < Sinatra::Application
 
+  # Show a user profile
   get '/profile/:id' do | id |
     @profile = User[id]
 
@@ -41,14 +42,17 @@ class MyApp < Sinatra::Application
     haml :'profile/show'
   end
 
+  # Show a user's saved recipes.
   get '/profile/:id/bookmarks' do | id |
     redirect "/profile/#{id}?tab=bookmarks"
   end
 
+  # Show the user's groups.
   get '/profile/:id/groups' do | id |
     redirect "/profile/#{id}?tab=groups"
   end
 
+  # Show the user's collections.
   get '/profile/:id/collections' do | id |
     redirect "/profile/#{id}?tab=collections"
   end

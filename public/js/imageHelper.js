@@ -47,11 +47,12 @@ const checkurl = async (url) => {
         if (url.trim() == "") {
             resolve(false)
         }
-        fetch(url).then(res => {
+        fetch(url, { mode: 'no-cors' }).then(res => {
             const img = new Image();
             img.src = url;
             img.onload = () => {
-                if (res.status == 200 && !(img.width == 0)) {
+                console.log(res.status, img.width)
+                if ((res.status == 200 || res.status == 0) && !(img.width == 0)) {
                     resolve(true)
                 } else {
                     resolve(false)

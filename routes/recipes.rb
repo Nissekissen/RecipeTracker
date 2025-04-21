@@ -3,10 +3,12 @@ require 'sinatra/namespace'
 
 class MyApp < Sinatra::Application
 
+  # error 404
   get '/recipes/not-found' do
     haml :'recipes/not_found'
   end
 
+  # Create a new recipe form.
   get '/recipes/new' do
     halt 401 if @user.nil?
     @collections = Collection.where(owner_id: @user.id).or(
@@ -22,10 +24,12 @@ class MyApp < Sinatra::Application
     haml :'recipes/new'
   end
 
+  # Create a new recipe form (manual)
   get '/recipes/manual' do
     haml :'recipes/manual'
   end
-
+  
+  # Create a new recipe post (manual). For non-manual recipes, see /api/v1/recipes
   post '/recipes' do
     # for manual recipes
 
@@ -81,6 +85,7 @@ class MyApp < Sinatra::Application
 
   end
 
+  # Show a recipe.
   get '/recipes/:id' do | id |
     @recipe = Recipe[id]
     if @recipe.nil?
@@ -102,6 +107,7 @@ class MyApp < Sinatra::Application
     haml :'recipes/show'
   end
 
+  # Send the user to the external recipe page.
   get '/recipes/:id/external' do | id |
     @recipe = Recipe[id]
     halt 404 if @recipe.nil?
@@ -118,6 +124,7 @@ class MyApp < Sinatra::Application
     redirect @recipe.url
   end
 
+  # Show all recipes. (should probably be removed)
   get '/recipes' do
     @recipes = Recipe.all
 
@@ -147,6 +154,7 @@ class MyApp < Sinatra::Application
 
   namespace '/api/v1' do
 
+    # Save a recipe in the specified collection. If the collection is in a group, the user must have permission to save to it.
     get '/recipes/:id/save' do | id |
 
       halt 401 if @user.nil?
@@ -203,6 +211,7 @@ class MyApp < Sinatra::Application
       status 200
     end
 
+    # Get whether a recipe is saved by the user or not. 
     get '/recipes/:id/saved' do | id |
       
       halt 401 if @user.nil?
@@ -238,6 +247,7 @@ class MyApp < Sinatra::Application
       
     end
 
+    # Check if a recipe is valid or not. Used when creating a new recipe.
     get '/recipes/check' do
       # check if a recipe is valid or not by using the helper function
       url = params['url']
@@ -251,6 +261,7 @@ class MyApp < Sinatra::Application
       return {valid: is_valid_recipe_with_ai(url)}.to_json
     end
 
+    # Create a new recipe. This is used when the user saves a recipe from the web.
     post '/recipes' do
 
 
@@ -330,6 +341,7 @@ class MyApp < Sinatra::Application
       status 200
     end
 
+    # Filter recipes by collection on either a profile or group page.
     post '/recipes/filter' do 
       halt 401 if @user.nil?
 

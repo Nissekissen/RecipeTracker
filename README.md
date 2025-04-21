@@ -14,14 +14,14 @@
       - [x] Ta bort collection
   - [x] Ingredienser
     - [x] Egen tabell
-- [ ] Sök
-  - [ ] Sök bland recept m.h.a taggar och ingredienser
+- [x] Sök
+  - [x] Sök bland recept m.h.a taggar och ingredienser
   - [x] Filter
 - [x] Användare
   - [x] Inlogg med Google
   - [x] Profilsida
     - [x] Prototyp
-- [ ] Taggar
+- [x] Taggar
   - [x] Automatiska recepttaggar
 - [x] Grupper
   - [x] Gruppsida
