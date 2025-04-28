@@ -3,12 +3,18 @@ require 'sinatra/namespace'
 
 class MyApp < Sinatra::Application
 
-  # error 404
+  # @!group Routes
+
+  # Displays a 404 error page for recipes.
+  #
+  # @return [Haml] Rendered 404 error page.
   get '/recipes/not-found' do
     haml :'recipes/not_found'
   end
 
-  # Create a new recipe form.
+  # Displays a form for creating a new recipe.
+  #
+  # @return [Haml] Rendered form for creating a new recipe.
   get '/recipes/new' do
     halt 401 if @user.nil?
     @collections = Collection.where(owner_id: @user.id).or(
@@ -23,13 +29,25 @@ class MyApp < Sinatra::Application
 
     haml :'recipes/new'
   end
-
-  # Create a new recipe form (manual)
+  
+  # Displays a form for manually creating a new recipe.
+  #
+  # @return [Haml] Rendered form for manually creating a new recipe.
   get '/recipes/manual' do
     haml :'recipes/manual'
   end
   
-  # Create a new recipe post (manual). For non-manual recipes, see /api/v1/recipes
+  # Creates a new recipe (manual).
+  #
+  # @param title [String] The title of the recipe.
+  # @param description [String] The description of the recipe.
+  # @param image [String] The URL of the recipe image.
+  # @param instructions [String] The instructions for the recipe.
+  # @param time [String] The preparation time for the recipe.
+  # @param servings [String] The number of servings the recipe makes.
+  # @param ingredient [Array<String>] The ingredients for the recipe.
+  # @param difficulty [String] The difficulty of the recipe (easy, medium, hard).
+  # @return [Haml] Redirects to the newly created recipe page.
   post '/recipes' do
     # for manual recipes
 
@@ -85,7 +103,10 @@ class MyApp < Sinatra::Application
 
   end
 
-  # Show a recipe.
+  # Shows a specific recipe.
+  #
+  # @param id [String] The ID of the recipe to show.
+  # @return [Haml] Rendered recipe page.
   get '/recipes/:id' do | id |
     @recipe = Recipe[id]
     if @recipe.nil?
@@ -107,8 +128,12 @@ class MyApp < Sinatra::Application
     haml :'recipes/show'
   end
 
-  # Send the user to the external recipe page.
-  get '/recipes/:id/external' do | id |
+  # @route GET /recipes/:id/external
+  # Redirects the user to the external recipe page.
+  #
+  # @param id [String] The ID of the recipe.
+  # @return [Haml] Redirects to the external recipe URL.
+  get'/recipes/:id/external' do | id |
     @recipe = Recipe[id]
     halt 404 if @recipe.nil?
 
@@ -123,38 +148,15 @@ class MyApp < Sinatra::Application
 
     redirect @recipe.url
   end
-
-  # Show all recipes. (should probably be removed)
-  get '/recipes' do
-    @recipes = Recipe.all
-
-    # get the user collections and saved recipes
-    if @user.nil?
-      halt haml :'recipes/index'
-    end
-
-    # user_groups = @user.groups
-
-    # get all collections where the user is the owner or a member of the group that owns it
-    @collections = Collection.where(owner_id: @user.id).or(
-      group_id: @user.groups.map(&:id)
-    ).all
-
-    p @collections
-
-    haml :'recipes/index'
-  end
   
-
-  # before '/api/v1/*' do
-  #   if @user.nil?
-  #     halt 401, 'Not logged in'
-  #   end
-  # end
 
   namespace '/api/v1' do
 
-    # Save a recipe in the specified collection. If the collection is in a group, the user must have permission to save to it.
+    # Saves a recipe in the specified collection.
+    #
+    # @param id [String] The ID of the recipe to save.
+    # @param collection_id [String] The ID of the collection to save the recipe to.
+    # @return [JSON] Status 200 on success.
     get '/recipes/:id/save' do | id |
 
       halt 401 if @user.nil?
@@ -168,7 +170,6 @@ class MyApp < Sinatra::Application
       halt 400 if collection_id.nil?
 
       # make sure the collection exists
-
       collection = Collection[collection_id]
 
       halt 404 if collection.nil?
@@ -196,7 +197,7 @@ class MyApp < Sinatra::Application
           user_id: @user.id,
           interaction_type: 'save'
         )        
-
+        # create a saved recipe
         saved_recipe = SavedRecipe.create(recipe_id: recipe.id, user_id: @user.id, collection_id: collection.id, created_at: Time.now.to_i, group_id: collection.group_id)
       else
 
@@ -211,7 +212,10 @@ class MyApp < Sinatra::Application
       status 200
     end
 
-    # Get whether a recipe is saved by the user or not. 
+    # Gets whether a recipe is saved by the user or not.
+    #
+    # @param id [String] The ID of the recipe.
+    # @return [JSON] JSON representation of whether the recipe is saved or not.
     get '/recipes/:id/saved' do | id |
       
       halt 401 if @user.nil?
@@ -247,7 +251,10 @@ class MyApp < Sinatra::Application
       
     end
 
-    # Check if a recipe is valid or not. Used when creating a new recipe.
+    # Checks if a recipe is valid or not.
+    #
+    # @param url [String] The URL of the recipe to check.
+    # @return [JSON] JSON representation of whether the recipe is valid or not.
     get '/recipes/check' do
       # check if a recipe is valid or not by using the helper function
       url = params['url']
@@ -256,12 +263,18 @@ class MyApp < Sinatra::Application
       halt 400 if url.nil?
 
       recipe = Recipe.where(url: url).first
+      
       return {valid: true}.to_json if !recipe.nil?
 
       return {valid: is_valid_recipe_with_ai(url)}.to_json
     end
 
-    # Create a new recipe. This is used when the user saves a recipe from the web.
+    # Creates a new recipe.
+    #
+    # @param url [String] The URL of the recipe.
+    # @param collection [String] The ID of the collection to save the recipe to.
+    # @param alreadyVerified [Boolean] Whether the recipe has already been verified.
+    # @return [JSON] Status 200 on success.
     post '/recipes' do
 
 
@@ -341,7 +354,11 @@ class MyApp < Sinatra::Application
       status 200
     end
 
-    # Filter recipes by collection on either a profile or group page.
+    # Filters recipes by collection.
+    #
+    # @param group_id [String] The ID of the group to filter by.
+    # @param collections [Array<String>] The IDs of the collections to filter by.
+    # @return [Haml] Rendered list of filtered recipes.
     post '/recipes/filter' do 
       halt 401 if @user.nil?
 
@@ -363,5 +380,5 @@ class MyApp < Sinatra::Application
     end
 
   end
-
+  # @!endgroup
 end

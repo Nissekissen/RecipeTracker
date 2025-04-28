@@ -1,0 +1,5 @@
+--readme README.md
+--title 'Receptbasen dokumentation'
+--charset utf-8
+--markup markdown
+'routes/**/*.rb' - '*.md'

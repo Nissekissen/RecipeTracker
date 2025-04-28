@@ -1,30 +1,43 @@
-
-
 module Recommendation
 
+  # Represents a row of recommendations.
   class RecommendationRow
     
     attr_accessor :name, :recipes_method
     attr_reader :recipes
 
+    # Initializes a new RecommendationRow.
+    #
+    # @param name [String] The name of the recommendation row.
     def initialize(name)
       @name = name
 
       self
     end
 
+    # Sets the method to use to get the recipes for this row.
+    #
+    # @param method [Proc] The method to use to get the recipes.
+    # @return [self]
     def set_method method
       @recipes_method = method
 
       self
     end
 
+    # Gets the recipes for this row.
+    #
+    # @return [Array] The recipes for this row.
     def get_recipes
       return nil if @recipes_method.nil?
       @recipes = @recipes_method.call
     end
   end
   
+  # Gets recommended recipes for a user.
+  #
+  # @param user_id [Integer] The ID of the user.
+  # @return [Array] An array of recipe IDs.
   def recommended_recipes(user_id)
     user_interactions = RecipeInteraction
       .where(user_id: user_id)
@@ -90,6 +103,10 @@ module Recommendation
     (recommended_recipe_ids + similar_recipe_ids).uniq.first(5)
   end
 
+  # Gets previously saved recipes for a user.
+  #
+  # @param user_id [Integer] The ID of the user.
+  # @return [Array] An array of recipe IDs.
   def previously_saved_recipes(user_id)
     SavedRecipe
       .join(:recipes, id: :recipe_id)
@@ -100,22 +117,39 @@ module Recommendation
       .select_map(:recipe_id)
   end
 
+  # Gets recipes from groups that the user is a member of.
+  #
+  # @param user_id [Integer] The ID of the user.
+  # @return [Array] An array of recipe IDs.
   def recipes_from_groups(user_id)
     
   end
 
+  # Gets group recommendations for a user.
+  #
+  # @param user_id [Integer] The ID of the user.
+  # @return [Array] An array of recipe IDs.
   def group_recommendations(user_id)
     
   end
 
+  # Gets trending recipes.
+  #
+  # @return [Array] An array of recipe IDs.
   def trending_recipes
     
   end
 
+  # Gets seasonal recipes.
+  #
+  # @return [Array] An array of recipe IDs.
   def seasonal_recipes
     
   end
   
+  # Gets a time-based variation of recipes.
+  #
+  # @return [RecommendationRow] A recommendation row with recipes based on the current time of day.
   def time_based_variation
     hour = Time.now.hour
     if hour < 9
@@ -129,6 +163,9 @@ module Recommendation
     end
   end
 
+  # Gets breakfast recipes.
+  #
+  # @return [Array] An array of recipe IDs.
   def breakfast_recipes
     
     breakfast_recipe_ids = Tag
@@ -142,6 +179,9 @@ module Recommendation
     breakfast_recipe_ids
   end
 
+  # Gets brunch recipes.
+  #
+  # @return [Array] An array of recipe IDs.
   def brunch_recipes
 
     brunch_recipe_ids = Tag
@@ -155,6 +195,9 @@ module Recommendation
     brunch_recipe_ids
   end
 
+  # Gets lunch recipes.
+  #
+  # @return [Array] An array of recipe IDs.
   def lunch_recipes
     
     lunch_recipe_ids = Tag
@@ -168,6 +211,9 @@ module Recommendation
     lunch_recipe_ids
   end
 
+  # Gets dinner recipes.
+  #
+  # @return [Array] An array of recipe IDs.
   def dinner_recipes
     
     dinner_recipe_ids = Tag
@@ -182,6 +228,10 @@ module Recommendation
     dinner_recipe_ids
   end
   
+  # Generates the landing page.
+  #
+  # @param user_id [Integer] The ID of the user.
+  # @return [Array] An array of recommendation rows.
   def generate_landing_page(user_id)
     selected_recipes = Set.new
 

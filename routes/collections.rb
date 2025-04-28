@@ -5,7 +5,10 @@ class MyApp < Sinatra::Application
   # Collections are only fetched using javascript, so only API is needed.
   namespace '/api/v1' do
 
-    # Get all collections for a user. User params['user_id'] or the currently logged in user. The response will include collections from groups the user is a member of.
+    # @route GET /api/v1/collections
+    #
+    # Get all collections for a user. If user_id is not provided, get the collections for the current user.
+    # If user_id is provided, get the public collections for that user.
     get '/collections' do
       content_type :json
 
@@ -51,7 +54,13 @@ class MyApp < Sinatra::Application
 
     end
 
-    # Create a new collection. Saved for the currently logged in user. If group_id is provided, the collection will be created for that group. Name is required.
+    # @route POST /api/v1/collections
+    #
+    # Create a new collection for the current user.
+    #
+    # @param name [String] The name of the collection.
+    # @param group_id [Integer] The id of the group to add the collection to.
+    # @param is_private [Boolean] Whether the collection is private or not.
     post '/collections' do
 
       if @user.nil?
@@ -83,7 +92,13 @@ class MyApp < Sinatra::Application
 
     end
 
-    # Update a collection
+    # @route PUT /api/v1/collections/:id
+    #
+    # Update a collection.
+    #
+    # @param id [Integer] The id of the collection to update.
+    # @param name [String] The new name of the collection.
+    # @param is_private [Boolean] Whether the collection is private or not.
     put '/collections/:id' do | id |
       halt 401 if @user.nil?
 
@@ -113,7 +128,11 @@ class MyApp < Sinatra::Application
       status 204
     end
 
-    # Delete a collection
+    # @route DELETE /api/v1/collections/:id
+    #
+    # Delete a collection.
+    #
+    # @param id [Integer] The id of the collection to delete.
     delete '/collections/:id' do | id |
       halt 401 if @user.nil?
 

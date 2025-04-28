@@ -1,6 +1,9 @@
-
-
 module Invites
+  # Validates an invite.
+  #
+  # @param user [User] The user to validate the invite for.
+  # @param invite [Invite] The invite to validate.
+  # @raise [Sinatra::Halt] If the invite is not found, the user is already in the group, the invite has expired, or the invite has no uses left.
   def validate_invite(user, invite)
     if invite.nil?
       halt 404, 'Invite not found'

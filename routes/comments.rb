@@ -1,4 +1,3 @@
-require 'sinatra/namespace'
 require 'json'
 
 class MyApp < Sinatra::Application
@@ -16,7 +15,12 @@ class MyApp < Sinatra::Application
       { error: 'Unauthorized'}.to_json
     end
 
-    # Get comments for a specific recipe. group_id specifies which group the comments are for. Private means private notes for the user (stored as a comment). It returns the comments nested.
+    # @route GET /api/v1/recipes/:recipe_id/comments
+    #
+    # Get all comments for a recipe.
+    #
+    # @param recipe_id [String] The id of the recipe.
+    # @param group_id [String] The id of the group. If nil, returns public comments. If 'private', returns the user's private note.
     get '/recipes/:recipe_id/comments' do |recipe_id|
       group_id = params[:group_id]
       if group_id.nil? || group_id == 'public'
@@ -60,7 +64,14 @@ class MyApp < Sinatra::Application
       haml :'comments/index', locals: { comments: root_comments }, layout: false
     end
 
-    # Create a new comment. Provide group_id (see above) and parent_id (for nested comments). 
+    # @route POST /api/v1/recipes/:recipe_id/comments
+    #
+    # Create a new comment for a recipe.
+    #
+    # @param recipe_id [String] The id of the recipe.
+    # @param group_id [String] The id of the group. If nil, the comment is public. If 'private', the comment is a private note for the user.
+    # @param parent_id [String] The id of the parent comment. If nil, the comment is a root comment.
+    # @param content [String] The content of the comment.
     post '/recipes/:recipe_id/comments' do |recipe_id|
       # make sure user is logged in
       halt 401 if @user.nil?
@@ -128,7 +139,12 @@ class MyApp < Sinatra::Application
       haml :'comments/_comment', locals: { comment: comment }, layout: false
     end
 
-    # Delete a comment. You can only delete your own comments.
+    # @route DELETE /api/v1/recipes/:recipe_id/comments/:comment_id
+    #
+    # Delete a comment.
+    #
+    # @param recipe_id [String] The id of the recipe.
+    # @param comment_id [String] The id of the comment to delete.
     delete '/recipes/:recipe_id/comments/:comment_id' do |recipe_id, comment_id|
       # make sure user is logged in
       halt 401 if @user.nil?
@@ -143,7 +159,14 @@ class MyApp < Sinatra::Application
     
   end
 
-  # This is the non-API version of the comment creation. It is used for the recipe page.
+  # @route POST /comments
+  #
+  # Create a new comment. Redirects to the recipe page.
+  #
+  # @param recipe_id [String] The id of the recipe.
+  # @param group_id [String] The id of the group. If nil, the comment is public.
+  # @param parent_id [String] The id of the parent comment. If nil, the comment is a root comment.
+  # @param content [String] The content of the comment.
   post '/comments' do
     # make sure user is logged in
     halt 401 if @user.nil?

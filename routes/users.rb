@@ -1,6 +1,11 @@
 class MyApp < Sinatra::Application
 
-  # Show a user profile
+  # @!group Routes
+
+  # Shows a user profile.
+  #
+  # @param id [String] The ID of the user profile to show.
+  # @return [Haml] Rendered user profile page.
   get '/profile/:id' do | id |
     @profile = User[id]
 
@@ -42,18 +47,28 @@ class MyApp < Sinatra::Application
     haml :'profile/show'
   end
 
-  # Show a user's saved recipes.
+  # Redirects to the user's bookmarks tab.
+  #
+  # @param id [String] The ID of the user.
+  # @return [Haml] Redirects to the bookmarks tab on the user's profile.
   get '/profile/:id/bookmarks' do | id |
     redirect "/profile/#{id}?tab=bookmarks"
   end
 
-  # Show the user's groups.
+  # Redirects to the user's groups tab.
+  #
+  # @param id [String] The ID of the user.
+  # @return [Haml] Redirects to the groups tab on the user's profile.
   get '/profile/:id/groups' do | id |
     redirect "/profile/#{id}?tab=groups"
   end
 
-  # Show the user's collections.
+  # Redirects to the user's collections tab.
+  #
+  # @param id [String] The ID of the user.
+  # @return [Haml] Redirects to the collections tab on the user's profile.
   get '/profile/:id/collections' do | id |
     redirect "/profile/#{id}?tab=collections"
   end
+  # @!endgroup
 end

@@ -4,7 +4,10 @@ require 'sinatra/cookies'
 class MyApp < Sinatra::Application
   # enable :sessions
 
-  # A simple landing page. Currently it sends you to a log in page if you are not logged in, but I will probably change that.
+  # @!group Routes
+  # Route for the landing page.
+  #
+  # @return [Haml] Rendered home page.
   get '/' do
     halt 401 if @user.nil?
     @recipe_rows = []
@@ -16,7 +19,7 @@ class MyApp < Sinatra::Application
 
       @recipe_rows << { :name => row.name, :recipes => [] }
 
-      # row.get_recipes returns an array of recipe ids. We need to convert them to Recipe objects
+      # Converts recipe ids to Recipe objects.
       recipe_ids.each do |recipe_id|
         recipe = Recipe[recipe_id]
         @recipe_rows.last[:recipes] << recipe unless recipe.nil?
@@ -25,7 +28,11 @@ class MyApp < Sinatra::Application
     haml :home
   end
 
+  # Route for handling 404 errors (page not found).
+  #
+  # @return [Haml] Rendered not_found error page.
   not_found do
     haml :'errors/not_found'
   end
+  # @!endgroup
 end

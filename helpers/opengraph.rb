@@ -3,6 +3,10 @@ require 'nokogiri'
 require 'dotenv/load'
 
 module OGParser
+  # Parses recipe opengraph data from a given URL.
+  #
+  # @param url [String] The URL of the recipe page.
+  # @return [Hash] A hash containing the recipe's title, description, image, site name, and URL.
   def parse_recipe_opengraph(url)
     html = RestClient.get(url).body
     doc = Nokogiri::HTML(html)

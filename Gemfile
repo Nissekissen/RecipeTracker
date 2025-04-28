@@ -21,6 +21,8 @@ gem 'shrine'
 gem 'ruby-openai'
 gem 'open-uri'
 gem 'rdoc'
+gem 'yard'
+gem 'yard-sinatra'
 
 group :test do
   gem 'rspec'

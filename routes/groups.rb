@@ -4,7 +4,7 @@ class MyApp < Sinatra::Application
   
   namespace '/groups' do
 
-    # A multi-part form for creating a new group.
+    # Route for displaying the form to create a new group.
     get '/new' do 
 
       @part = 1
@@ -12,7 +12,8 @@ class MyApp < Sinatra::Application
       haml :'groups/new'
     end
 
-    # View a group
+    # Route for viewing a specific group.
+    # @param id [Integer] the id of the group
     get '/:id' do | id |
       # get group info
       @group = Group.where(id: id).first
@@ -58,14 +59,26 @@ class MyApp < Sinatra::Application
 
       @member_amount = @members.length
       @is_member = @user.nil? ? false : @user.groups.include?(@group)
+      @is_admin = is_admin(@user, @group)
+      @is_owner = @user.id == @group.owner_id
 
-      @invites = @group.invites.map do | invite |
-        owner_id = invite.owner_id
-        owner = User.where(id: owner_id).first
-        { :invite => invite, :owner => owner }
+      @invite_token = params["invite_token"]
+
+      @is_invited = false
+
+      if !@invite_token.nil?
+        @invite = Invite.where(token: @invite_token).first
+        if !@invite.nil?
+          @is_invited = true
+        end
       end
 
-      haml :'groups/show'
+      if @tab == "recipes"
+        haml :'groups/show'
+      elsif @tab == "members"
+        haml :'groups/members'
+      end
+
     end
 
     # Try to join a group.

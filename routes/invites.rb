@@ -3,7 +3,13 @@ require 'json'
 
 class MyApp < Sinatra::Application
 
-  # Multi-part form for creating a new invite to a group.
+  # @!group Routes
+
+  # Displays a form for creating a new invite to a group.
+  #
+  # @route GET /invites/new
+  # @param group_id [String] The ID of the group to invite users to.
+  # @return [Haml] Rendered form for creating a new invite.
   get '/invites/new' do
 
     # make sure user is logged in
@@ -26,7 +32,12 @@ class MyApp < Sinatra::Application
     haml :'invites/new'
   end
 
-  # Create invite, multi-part.
+  # Creates a new invite to a group.
+  #
+  # @route POST /invites
+  # @param group_id [String] The ID of the group to invite users to.
+  # @param uses [Integer] The number of times the invite can be used.
+  # @return [Haml] Rendered form for creating a new invite.
   post '/invites' do
     # create invite
 
@@ -52,7 +63,11 @@ class MyApp < Sinatra::Application
     haml :'invites/new'
   end
 
-  # Join a group through an invite.
+  # Joins a group through an invite.
+  #
+  # @route GET /invite/:token
+  # @param token [String] The invite token.
+  # @return [Haml] Rendered page for accepting the invite.
   get '/invite/:token' do | token |
     # get invite
 
@@ -77,7 +92,11 @@ class MyApp < Sinatra::Application
     haml :'invites/show'
   end
 
-  # Accept an invite.
+  # Accepts an invite.
+  #
+  # @route GET /invite/:token/accept
+  # @param token [String] The invite token.
+  # @return [Haml] Redirects to the group page.
   get '/invite/:token/accept' do | token |
     # accept invite
 
@@ -121,7 +140,12 @@ class MyApp < Sinatra::Application
 
   namespace '/api/v1' do
 
-    # Create an invite. Requires group_id and uses.
+    # Creates an invite. Requires group_id and uses.
+    #
+    # @route POST /api/v1/invites
+    # @param group_id [String] The ID of the group to invite users to.
+    # @param uses [Integer] The number of times the invite can be used.
+    # @return [JSON] JSON representation of the created invite.
     post '/invites' do
       # create invite
 
@@ -153,5 +177,5 @@ class MyApp < Sinatra::Application
     end
 
   end
-
+  # @!endgroup
 end

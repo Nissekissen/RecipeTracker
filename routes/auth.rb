@@ -45,7 +45,8 @@ class MyApp < Sinatra::Application
 
     get '/google/callback' do
       credentials, redirect_uri = handle_auth_callback(request)
-
+      # Exchange the authorization code for credentials
+      # credentials = settings.authorizer.get_and_store_credentials_from_code(request: request, code: code, redirect_uri: 'http://localhost:9292/auth/google/callback')
       access_token = credentials.access_token
       refresh_token = credentials.refresh_token
       expires_at = credentials.expires_at
@@ -73,7 +74,6 @@ class MyApp < Sinatra::Application
 
       # create new session
       session_token = generate_session_token(db_user.id)
-
       Session.create(user_id: db_user.id, token: session_token, expires_at: expires_at.to_i)
 
       cookies[:session] = session_token
@@ -115,13 +115,20 @@ class MyApp < Sinatra::Application
     end
   end
 
+  # GET /logout
+  #
+  # Redirects to the signout route.
   get '/logout' do
     redirect '/auth/signout'
   end
 
   namespace '/api/v1' do
 
-    # used by chrome extension to get user information
+    # GET /api/v1/get-user
+    #
+    # Returns the current user as JSON.
+    #
+    # @return [JSON] The current user.
     get '/get-user' do        
       # get user from jwt
       if @user.nil?
